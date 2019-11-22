@@ -143,7 +143,7 @@ bool SdInit()
 
 bool logToSd(const char *str)
 {
-    char endChar = str[inputLength - 1];
+    char endChar = str[strlen(str) - 1];
 
     if (!appendFile(SD_MMC, getLatestLogPath(), str))
         return false;

@@ -24,7 +24,7 @@ void ConnectWifi()
 
     while (WiFi.status() != WL_CONNECTED)
     {
-        info(".")
+        info(".");
     }
     info("Wifi Connected");
 };
@@ -100,24 +100,22 @@ bool ConnectTcpServer()
 {
     if (!client.connect(serverIp, serverPort))
     {
-        Serial.println("Failed to connect to server");
+        info("Failed to connect to server");
         return false;
     }
     return true;
 };
 
-bool TcpRead()
+char *TcpRead()
 {
+    static char received[DEFAULT_CHAR_ARRAY_SIZE];
     if (client.available())
     {
         String input = client.readString();
-
-        // store results somewhere
-
-        // return read
-        return true;
+        input.trim();
+        // stringToCharArr(received, input);
     }
-    return false;
+    return received;
 };
 
 bool TcpWrite(char write[]){

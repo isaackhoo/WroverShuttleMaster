@@ -18,7 +18,7 @@ extern char* getCurrentDate();
 extern char* getCurrentTime();
 
 extern bool ConnectTcpServer();
-extern bool TcpRead();
+extern char* TcpRead();
 extern bool TcpWrite(char*);
 
 #endif
