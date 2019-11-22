@@ -3,6 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Program Files (x86)\\Arduino\\libraries\\WROVER_KIT_LCD-master\\src",
+                "C:\\Program Files (x86)\\Arduino\\libraries\\Adafruit_GFX_Library",
                 "C:\\Users\\Isaac\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\**",
                 "C:\\Users\\Isaac\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.4\\**"
             ],

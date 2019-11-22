@@ -1,9 +1,18 @@
-void setup() {
+#include "Network.h"
+#include "Helper.h"
+
+#include "LCD.h"
+
+void setup()
+{
   // put your setup code here, to run once:
-  Serial.begin(115200);
+  initPrinter();
+  // ConnectWifi();
+  // ConnectTcpServer();
 }
 
-void loop() {
+void loop()
+{
   // put your main code here, to run repeatedly:
-  Serial.println("hello there");
+  
 }
