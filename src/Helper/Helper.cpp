@@ -1,6 +1,6 @@
 #include "Helper.h"
-#include "LCD.h"
-#include "SD.h"
+#include <string.h>
+#include <stdio.h>
 
 // Append char
 void appendChar(char *s, char c)
@@ -16,40 +16,25 @@ void GET_TWO_DIGIT_STRING(char *output, int x)
     sprintf(output, "%02d", x);
 };
 
-char *GET_TWO_DIGIT_STRING(int x)
-{
-    static char output[4];
-    GET_TWO_DIGIT_STRING(output, x);
-    return output;
-};
-
 // Convert to c string
-char *toCString(int i)
+void toCString(char* output, int i)
 {
-    static char intCStr[DEFAULT_CHAR_ARRAY_SIZE];
-    sprintf(intCStr, "%d", i);
-    return intCStr;
+    sprintf(output, "%d", i);
 };
 
-char *toCString(long li)
+void toCString(char* output, long li)
 {
-    static char longCStr[DEFAULT_CHAR_ARRAY_SIZE];
-    sprintf(longCStr, "%li", li);
-    return longCStr;
+    sprintf(output, "%li", li);
 };
 
-char *toCString(double d)
+void toCString(char* output, double d)
 {
-    static char doubleCStr[DEFAULT_CHAR_ARRAY_SIZE];
-    sprintf(doubleCStr, "%lf", d);
-    return doubleCStr;
+    sprintf(output, "%lf", d);
 };
 
-char *toCString(float f)
+void toCString(char* output, float f)
 {
-    static char floatCStr[DEFAULT_CHAR_ARRAY_SIZE];
-    sprintf(floatCStr, "%f", f);
-    return floatCStr;
+    sprintf(output, "%f", f);
 };
 
 // Char array substring
@@ -141,42 +126,3 @@ int reverseFindIndex(char *str, char c)
         return ptr - str;
     return -1;
 }
-
-// Serial / LCD toggle
-void initSerial()
-{
-    Serial.begin(DEFAULT_SERIAL_BAUD_RATE);
-};
-
-void initLcdSd()
-{
-    // initialises lcd and sd card reader
-    initSerial();
-    SdInit();
-    LcdInit();
-};
-
-void outToLcd(char *str)
-{
-    if (strlen(str) <= 0)
-        return;
-    Serial.println("sending to lcd");
-    Serial.println(str);
-    LcdScrollText(str);
-    Serial.println("done printing");
-};
-
-void outToLcdSd(char *str)
-{
-    LcdScrollText(str);
-    logToSd(str);
-};
-
-// String to char array
-// void stringToCharArr(char *c, String s)
-// {
-//     int stringLength = s.length();
-//     for (int i = 0; i < stringLength; i++)
-//         c[i] = s[i];
-//     c[stringLength] = '\0';
-// }

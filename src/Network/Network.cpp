@@ -1,16 +1,16 @@
 #include <time.h>
 #include <WiFi.h>
 
-#include "Helper.h"
 #include "Network.h"
+#include "../Helper/Helper.h"
 
 // -----------------------------
 // NETWORK VARIABLE DEFINITION
 // -----------------------------
-const char *ssid = "LSH-UNIFI-MAIN";
-const char *password = "PowerLSH@@";
+// const char *ssid; // in keys folder
+// const char *password; // in keys folder
 
-const char *serverIp = "192.168.201.45";
+// const char *serverIp; // in keys folder
 const int serverPort = 55555;
 
 WiFiClient client;
@@ -18,15 +18,20 @@ WiFiClient client;
 // -----------------------------
 // NETWORK METHODS DEFINITION
 // -----------------------------
-void ConnectWifi()
+bool ConnectWifi()
 {
     WiFi.begin(ssid, password);
+    unsigned long connectionTimeout = 10 * 1000; // 10s
+    unsigned long startTime = millis();
 
     while (WiFi.status() != WL_CONNECTED)
     {
-        info(".");
+        if (millis() - startTime > connectionTimeout)
+        {
+            return false;
+        }
     }
-    info("Wifi Connected");
+    return true;
 };
 
 bool isWifiConnected()
@@ -36,7 +41,7 @@ bool isWifiConnected()
     return true;
 }
 
-char *getCurrentDate()
+void getCurrentDate(char *output)
 {
     if (WiFi.status() != WL_CONNECTED)
         ConnectWifi();
@@ -47,8 +52,6 @@ char *getCurrentDate()
     delay(2000); // wait for server response
     tmstruct.tm_year = 0;
     getLocalTime(&tmstruct, 5000); // 5 seconds time out to get local time
-
-    static char output[11]; // yyyy/mm/dd\0
 
     char yearbuf[5];
     sprintf(yearbuf, "%d", tmstruct.tm_year + 1900);
@@ -62,11 +65,9 @@ char *getCurrentDate()
     strcat(output, monthbuf);
     strcat(output, "_");
     strcat(output, daybuf);
-
-    return output;
 };
 
-char *getCurrentTime()
+void getCurrentTime(char *output)
 {
     if (WiFi.status() != WL_CONNECTED)
         ConnectWifi();
@@ -77,8 +78,6 @@ char *getCurrentTime()
     delay(2000); // wait for server response
     tmstruct.tm_year = 0;
     getLocalTime(&tmstruct, 5000); // 5 seconds time out to get local time
-
-    static char output[9]; // hh:mm:ssid
 
     char hourbuf[3];
     GET_TWO_DIGIT_STRING(hourbuf, tmstruct.tm_hour);
@@ -92,32 +91,27 @@ char *getCurrentTime()
     strcat(output, minutebuf);
     strcat(output, ":");
     strcat(output, secondsbuf);
-
-    return output;
 }
 
 bool ConnectTcpServer()
 {
     if (!client.connect(serverIp, serverPort))
-    {
-        info("Failed to connect to server");
         return false;
-    }
     return true;
 };
 
-char *TcpRead()
+bool TcpRead(char *received)
 {
-    static char received[DEFAULT_CHAR_ARRAY_SIZE];
     if (client.available())
     {
         String input = client.readString();
         input.trim();
         // stringToCharArr(received, input);
+        return true;
     }
-    return received;
+    return false;
 };
 
-bool TcpWrite(char write[]){
+bool TcpWrite(char *toWrite){
 
 };

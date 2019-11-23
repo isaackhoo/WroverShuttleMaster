@@ -1,22 +1,27 @@
-#include "Network.h"
-#include "Helper.h"
+#include "./src/Network/Network.h"
 
 void setup()
 {
   // put your setup code here, to run once:
-  initPrinter();
-  // ConnectWifi();
-  // ConnectTcpServer();
+  Serial.begin(115200);
 
-  char* test = "\x02Hello there\x03";
-  int pos = reverseFindIndex(test, '\x03');
-  char* poscstr = "testing";
-  Serial.println(poscstr);
-  info(poscstr);
+  if (ConnectWifi())
+  {
+    char date[11];
+    getCurrentDate(date);
+    char time[10];
+    getCurrentTime(time);
+
+    Serial.println(date);
+    Serial.println(time);
+  }
+  else
+  {
+    Serial.println("Failed to connect to wifi");
+  }
 }
 
 void loop()
 {
   // put your main code here, to run repeatedly:
-
 }

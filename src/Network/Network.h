@@ -12,13 +12,13 @@ extern const int serverPort;
 // -----------------------------
 // NETWORK METHODS DECLARATION
 // -----------------------------
-extern void ConnectWifi();
+extern bool ConnectWifi();
 extern bool isWifiConnected();
-extern char* getCurrentDate();
-extern char* getCurrentTime();
+extern void getCurrentDate(char*);
+extern void getCurrentTime(char*);
 
 extern bool ConnectTcpServer();
-extern char* TcpRead();
+extern bool TcpRead(char*);
 extern bool TcpWrite(char*);
 
 #endif

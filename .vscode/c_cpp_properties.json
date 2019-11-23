@@ -3,6 +3,12 @@
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Users\\Zac\\Documents\\Arduino\\libraries\\WROVER_KIT_LCD-master\\src",
+                "C:\\Users\\Zac\\Documents\\Arduino\\libraries\\Adafruit_GFX_Library",
+                "C:\\Users\\Zac\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\**",
+                "C:\\Users\\Zac\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.4\\**",
+                "C:\\Users\\Zac\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
+                "C:\\Users\\Zac\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.1\\**",
                 "C:\\Program Files (x86)\\Arduino\\libraries\\WROVER_KIT_LCD-master\\src",
                 "C:\\Program Files (x86)\\Arduino\\libraries\\Adafruit_GFX_Library",
                 "C:\\Users\\Isaac\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\**",
