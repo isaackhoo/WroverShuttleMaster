@@ -1,7 +1,7 @@
 #include "LCD.h"
 #include <SPI.h>
-#include <Adafruit_GFX.h>
-#include <WROVER_KIT_LCD.h>
+#include <WROVER_KIT_LCD.h> // adafruit GFX not required. Already included in wrover kit lcd library
+#include <stdint.h>
 
 // lcd screen variable
 WROVER_KIT_LCD tft;
@@ -48,36 +48,31 @@ int LcdDoScroll(int lines, int wait)
         tft.scrollTo(yStart);
         delay(wait);
     }
+    return yTemp;
 };
 
-int LcdScrollText(const char *str)
+int LcdScrollText(char *str)
 {
     // retrieves last char in input string. if it is not newline char,
     // will print and additional newline after printing input
-    Serial.println("entered lcdscroll");
-    int inputLength = strlen(str);
-    if (inputLength > 0)
-    {
-        char endChar = str[inputLength - 1];
 
-        if (scrollPosY == -1)
-            scrollPosY = tft.getCursorY();
-        scrollPosX = tft.getCursorX();
-        if (scrollPosY >= (lcdScreenHeight - scrollBottomFixedArea))
-            scrollPosY = (scrollPosY % (lcdScreenHeight - scrollBottomFixedArea)) + scrollTopFixedArea;
-        tft.getTextBounds(str, scrollPosX, scrollPosY, &x1_tmp, &y1_tmp, &w_tmp, &h_tmp);
-        if (scrollPosX == 0)
-            tft.fillRect(0, scrollPosY, lcdScreenWidth, h_tmp, WROVER_BLACK);
-        else
-            tft.fillRect(0, scrollPosY, w_tmp, h_tmp, WROVER_BLACK);
-        tft.setCursor(scrollPosX, scrollPosY);
-        LcdDoScroll(h_tmp, 5); // scroll lines, 5ms per line
-        tft.print(str);
-        if (endChar != '\n')
-            tft.print("\n");
+    char endChar = str[strlen(str) - 1];
+
+    if (scrollPosY == -1)
         scrollPosY = tft.getCursorY();
-        delay(5);
-        return h_tmp;
-    }
-    return -1;
+    scrollPosX = tft.getCursorX();
+    if (scrollPosY >= (lcdScreenHeight - scrollBottomFixedArea))
+        scrollPosY = (scrollPosY % (lcdScreenHeight - scrollBottomFixedArea)) + scrollTopFixedArea;
+    tft.getTextBounds(str, scrollPosX, scrollPosY, &x1_tmp, &y1_tmp, &w_tmp, &h_tmp);
+    if (scrollPosX == 0)
+        tft.fillRect(0, scrollPosY, lcdScreenWidth, h_tmp, WROVER_BLACK);
+    else
+        tft.fillRect(0, scrollPosY, w_tmp, h_tmp, WROVER_BLACK);
+    tft.setCursor(scrollPosX, scrollPosY);
+    LcdDoScroll(h_tmp, 5); // scroll lines, 5ms per line
+    tft.print(str);
+    if (endChar != '\n')
+        tft.print("\n");
+    scrollPosY = tft.getCursorY();
+    return h_tmp;
 };

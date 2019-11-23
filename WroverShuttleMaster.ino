@@ -1,24 +1,20 @@
 #include "./src/Network/Network.h"
+#include "./src/Logger/Logger.h"
+#include "./src/Helper/Helper.h"
 
 void setup()
 {
   // put your setup code here, to run once:
-  Serial.begin(115200);
+  initLogger();
 
-  if (ConnectWifi())
-  {
-    char date[11];
-    getCurrentDate(date);
-    char time[10];
-    getCurrentTime(time);
-
-    Serial.println(date);
-    Serial.println(time);
-  }
-  else
-  {
-    Serial.println("Failed to connect to wifi");
-  }
+  char *testing = "\x02Hello World\x03";
+  info(testing);
+  int pos = reverseFindIndex(testing, '\x03');
+  info("searched for position index");
+  char posStr[3];
+  toCString(posStr, pos);
+  info(posStr);
+  info("done");
 }
 
 void loop()

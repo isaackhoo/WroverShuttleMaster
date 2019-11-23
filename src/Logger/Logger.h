@@ -2,13 +2,23 @@
 #define LOGGER_H
 
 // Serial / LCD toggle
-// #define DEV_ENV // comment out during production
+// comment out during production
+
+// ---------------------------------
+// DEV_NOTE:
+// info() and log() can only accept
+// c_string inputs. 
+// Convert all other data types
+// into c_string before using logger
+// ---------------------------------
+
+// #define DEV_ENV
 #ifdef DEV_ENV
-#define initPrinter() initSerial()
+#define initLogger() initSerial()
 #define info(x) Serial.println(x)
 #define log(x) Serial.println(x)
 #else
-#define initPrinter() initLcdSd()
+#define initLogger() initLcdSd()
 #define info(x) outToLcd(x)
 #define log(x) outToLcdSd(x)
 #endif
@@ -17,8 +27,8 @@
 extern void initSerial();
 #else
 extern void initLcdSd();
-extern void outToLcd(char*);
-extern void outToLcdSd(char*);
+extern void outToLcd(char *);
+extern void outToLcdSd(char *);
 #endif
 
 #endif
