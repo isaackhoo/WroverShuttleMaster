@@ -8,7 +8,7 @@ extern void appendChar(char *, char);
 #define GET_ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 
 // Char array size
-#define DEFAULT_CHAR_ARRAY_SIZE 128
+#define DEFAULT_CHAR_ARRAY_SIZE 64
 
 // Char array substring
 extern bool charArrSubString(char *, char *, int, int);

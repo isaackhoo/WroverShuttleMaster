@@ -4,13 +4,15 @@
 // Serial / LCD toggle
 // comment out during production
 
-// ---------------------------------
+// -----------------------------------
 // DEV_NOTE:
 // info() and log() can only accept
 // c_string inputs. 
 // Convert all other data types
 // into c_string before using logger
-// ---------------------------------
+// cString conversion helpers
+// are provided in the helper library
+// -----------------------------------
 
 // #define DEV_ENV
 #ifdef DEV_ENV
