@@ -14,7 +14,7 @@
 // are provided in the helper library
 // -----------------------------------
 
-// #define DEV_ENV
+//#define DEV_ENV
 #ifdef DEV_ENV
 #define initLogger() initSerial()
 #define info(x) Serial.println(x)

@@ -1,19 +1,7 @@
 #include <time.h>
 #include <WiFi.h>
-
-#include "Network.h"
-#include "../Helper/Helper.h"
-
-// -----------------------------
-// NETWORK VARIABLE DEFINITION
-// -----------------------------
-// const char *ssid; // in keys folder
-// const char *password; // in keys folder
-
-// const char *serverIp; // in keys folder
-const int serverPort = 55555;
-
-WiFiClient client;
+#include "WifiNetwork.h"
+#include "../../Helper/Helper.h"
 
 // -----------------------------
 // NETWORK METHODS DEFINITION
@@ -98,28 +86,3 @@ void getCurrentTime(char *output)
     strcat(output, ":");
     strcat(output, secondsbuf);
 }
-
-bool ConnectTcpServer()
-{
-    if (!client.connect(serverIp, serverPort))
-        return false;
-    return true;
-};
-
-bool TcpRead(char *received)
-{
-    if (client.available())
-    {
-        String input = client.readString();
-        input.trim();
-        // stringToCharArr(received, input);
-        return true;
-    }
-    return false;
-};
-
-bool TcpWrite(char *toWrite)
-{
-    if (strlen(toWrite) <= 0)
-        return false;    
-};

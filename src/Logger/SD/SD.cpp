@@ -1,7 +1,7 @@
 #include "SD.h"
 #include "FS.h"
 #include "SD_MMC.h"
-#include "../../Network/Network.h"
+#include "../../../src/Network/Wifi/WifiNetwork.h"
 #include "../../Helper/Helper.h"
 
 // -----------------------------
@@ -10,7 +10,8 @@
 const char *LogsDirectory = "/Logs";
 const char *ShuttleDirectory = "/State";
 
-const int timestampInterval = 1000 * 60 * 5; // every 5 minutes
+// const int timestampInterval = 1000 * 60 * 5; // every 5 minutes
+const int timestampInterval = 1000 * 5; // every 5 sec
 unsigned long lastMillis = 0;
 
 // -----------------------------
@@ -122,22 +123,6 @@ char *getLatestLogPath()
     return pathname;
 }
 
-bool logTimestampToSd()
-{
-    char timeString[9];
-    getCurrentTime(timeString);
-
-    static char timestamp[15];
-
-    // create time stamp
-    strcpy(timestamp, "[");
-    strcat(timestamp, timeString);
-    strcat(timestamp, "]");
-
-    // append time stamp to sd
-    logToSd(timestamp);
-}
-
 // -----------------------------
 // SD PUBLIC METHODS
 // -----------------------------
@@ -153,9 +138,7 @@ bool SdInit()
     // create logs directory if it does not exist
     createDir(SD_MMC, LogsDirectory);
     // create a log text file if it does not exist
-    char *latestLogFilename = getLatestLogFilename();
-    logTimestampToSd();
-    lastMillis = millis();
+    logTimestampCallback(0, 0, 0);
     logToSd(initMsg);
 
     return true;
@@ -173,13 +156,19 @@ bool logToSd(const char *str)
     return true;
 }
 
-void nextTimestampInterval()
+void logTimestampCallback(int idx, int v, int up)
 {
-    unsigned long currentMillis = millis();
-    if (millis() - lastMillis >= timestampInterval) {
-        lastMillis = currentMillis;
-        logTimestampToSd();
-    }
+    char timeString[9];
+    getCurrentTime(timeString);
+    static char timestamp[15];
+
+    // create time stamp
+    strcpy(timestamp, "[");
+    strcat(timestamp, timeString);
+    strcat(timestamp, "]");
+
+    // append time stamp to sd
+    logToSd(timestamp);
 }
 
 // ------------------------

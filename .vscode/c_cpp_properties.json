@@ -3,6 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Users\\Zac\\Documents\\Arduino\\libraries\\Automaton-master\\src",
                 "C:\\Users\\Zac\\Documents\\Arduino\\libraries\\WROVER_KIT_LCD-master\\src",
                 "C:\\Users\\Zac\\Documents\\Arduino\\libraries\\Adafruit_GFX_Library",
                 "C:\\Users\\Zac\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\**",
