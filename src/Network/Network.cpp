@@ -31,6 +31,12 @@ bool ConnectWifi()
             return false;
         }
     }
+
+    WiFi.onEvent([](WiFiEvent_t wifiEvent, WiFiEventInfo_t wifiEventInfo){
+        // attempt to reconnect on disconnection
+        ConnectWifi();
+    }, WiFiEvent_t::SYSTEM_EVENT_STA_DISCONNECTED);
+
     return true;
 };
 
@@ -112,6 +118,8 @@ bool TcpRead(char *received)
     return false;
 };
 
-bool TcpWrite(char *toWrite){
-
+bool TcpWrite(char *toWrite)
+{
+    if (strlen(toWrite) <= 0)
+        return false;    
 };

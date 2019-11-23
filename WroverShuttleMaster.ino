@@ -7,6 +7,9 @@ void setup()
   // put your setup code here, to run once:
   initLogger();
 
+  // connect to the internet
+  ConnectWifi();
+
   char *testing = "\x02Hello World\x03";
   info(testing);
   int pos = reverseFindIndex(testing, '\x03');
@@ -19,5 +22,11 @@ void setup()
 
 void loop()
 {
-  // put your main code here, to run repeatedly:
+// -----------------------------------
+// Code to loop every cycle
+// -----------------------------------
+#ifndef DEV_ENV
+  nextTimestampInterval();
+#endif
+
 }

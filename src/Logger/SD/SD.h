@@ -4,6 +4,6 @@
 // sd public methods
 extern bool SdInit();
 extern bool logToSd(const char*);
-extern bool logTimestampToSd();
+extern void nextTimestampInterval();
 
 #endif
