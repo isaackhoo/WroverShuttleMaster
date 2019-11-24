@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef LOGGER_H
 #define LOGGER_H
 
@@ -18,11 +20,11 @@
 #ifdef DEV_ENV
 #define initLogger() initSerial()
 #define info(x) Serial.println(x)
-#define log(x) Serial.println(x)
+#define logSd(x) Serial.println(x)
 #else
 #define initLogger() initLcdSd()
 #define info(x) outToLcd(x)
-#define log(x) outToLcdSd(x)
+#define logSd(x) outToLcdSd(x)
 #endif
 
 #ifdef DEV_ENV

@@ -1,6 +1,6 @@
 #include "LCD.h"
 #include <SPI.h>
-#include <WROVER_KIT_LCD.h> // adafruit GFX not required. Already included in wrover kit lcd library
+#include <WROVER_KIT_LCD.h> // do not include adafruit.GFX here as it is already included in wrover lcd. Will cause collisions.
 #include <stdint.h>
 
 // lcd screen variable
@@ -27,7 +27,6 @@ void LcdInit()
     tft.setRotation(0); // requried portrait mode for scrolling
     tft.setTextColor(WROVER_WHITE);
     tft.fillScreen(WROVER_DARKGREY);
-
     // start from top of screen
     tft.setCursor(0, scrollTopFixedArea);
     // setup scrollable area
@@ -56,6 +55,8 @@ int LcdScrollText(char *str)
     // retrieves last char in input string. if it is not newline char,
     // will print and additional newline after printing input
 
+    // *note: print will overflow to top of screen if it exceeds screen width
+
     char endChar = str[strlen(str) - 1];
 
     if (scrollPosY == -1)
@@ -69,7 +70,7 @@ int LcdScrollText(char *str)
     else
         tft.fillRect(0, scrollPosY, w_tmp, h_tmp, WROVER_BLACK);
     tft.setCursor(scrollPosX, scrollPosY);
-    LcdDoScroll(h_tmp, 5); // scroll lines, 5ms per line
+    LcdDoScroll(h_tmp, 5); // Scroll lines, 5ms per line
     tft.print(str);
     if (endChar != '\n')
         tft.print("\n");

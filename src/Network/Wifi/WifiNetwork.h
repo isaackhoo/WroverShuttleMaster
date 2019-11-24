@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef WIFINETWORK_H
 #define WIFINETWORK_H
 // -----------------------------

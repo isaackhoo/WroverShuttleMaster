@@ -10,8 +10,7 @@
 const char *LogsDirectory = "/Logs";
 const char *ShuttleDirectory = "/State";
 
-// const int timestampInterval = 1000 * 60 * 5; // every 5 minutes
-const int timestampInterval = 1000 * 5; // every 5 sec
+const int timestampInterval = 1000 * 60 * 5; // every 5 minutes
 unsigned long lastMillis = 0;
 
 // -----------------------------
@@ -140,6 +139,9 @@ bool SdInit()
     // create a log text file if it does not exist
     logTimestampCallback(0, 0, 0);
     logToSd(initMsg);
+
+    // TODO
+    // pull from status folder and update status
 
     return true;
 }

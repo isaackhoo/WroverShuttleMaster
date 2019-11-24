@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef SD_H
 #define SD_H
 
