@@ -3,6 +3,8 @@
 #ifndef HELPER_H
 #define HELPER_H
 
+#include "WString.h"
+
 // Append char
 extern void appendChar(char *, char);
 

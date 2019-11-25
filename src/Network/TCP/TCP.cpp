@@ -1,5 +1,4 @@
 #include "TCP.h"
-#include "WString.h"
 #include "../../Helper/Helper.h"
 
 // ----------------------------
@@ -22,6 +21,7 @@ bool TcpRead(char *received)
     if (client.available())
     {
         String input = client.readString();
+        input.trim();
         strcpy(received, input.c_str());
         return true;
     }

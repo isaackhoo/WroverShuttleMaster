@@ -53,13 +53,15 @@ private:
   bool interpret(char *);
   void perform();
   void handle(int);
+  bool send(char *);
   bool send();
   void pullCurrentStatus();
 
 public:
   void init(void);
   void run(void);
-  bool send(char *);
+  bool sendJobCompletionNotification(const char *, const char *);
+  bool updateStateChange();
 };
 
 #endif

@@ -3,6 +3,7 @@
 #include "../Network/TCP/TCP.h"
 #include "../Network/Wifi/WifiNetwork.h"
 #include "../Status/Status.h"
+#include "../SlaveHandler/SlaveHandler.h"
 
 // --------------------------
 // Wcs Public Variables
@@ -59,6 +60,9 @@ bool WcsHandler::interpret(char *input)
     // get remaining instructions
     if (strlen(copyInput) > 0)
         strcpy(this->wcsIn.instructions, copyInput);
+
+    // set information on shuttle status as well
+    status.setWcsInputs(this->wcsIn.actionEnum, this->wcsIn.instructions);
 };
 
 void WcsHandler::perform()
@@ -68,12 +72,14 @@ void WcsHandler::perform()
     {
     case LOGIN:
     {
-        info("[REC WCS::LOGIN]");
+        info("REC WCS::LOGIN");
+        status.setId(this->wcsIn.id);
         break;
     }
     case LOGOUT:
     {
-        info("[REC WCS::LOGOUT]");
+        info("REC WCS::LOGOUT");
+        // do nothing for now
         break;
     }
     case PING:
@@ -86,27 +92,33 @@ void WcsHandler::perform()
     }
     case RETRIEVEBIN:
     {
-        info("[REC WCS::RETRIEVAL]");
+        info("REC WCS::RETRIEVAL");
+        slaveHandler.createRetrievalSteps(this->wcsIn.instructions);
+        slaveHandler.beginNextStep();
         break;
     }
     case STOREBIN:
     {
-        info("[REC WCS::STORAGE]");
+        info("REC WCS::STORAGE");
+        slaveHandler.createStorageSteps(this->wcsIn.instructions);
+        slaveHandler.beginNextStep();
         break;
     }
     case MOVE:
     {
-        info("[REC WCS::MOVE]");
+        info("REC WCS::MOVE");
+        slaveHandler.createMovementSteps(this->wcsIn.instructions);
+        slaveHandler.beginNextStep();
         break;
     }
     case BATTERY:
     {
-        info("[REC WCS::BATTERY]");
+        info("REC WCS::BATTERY");
         break;
     }
     case STATE:
     {
-        info("[REC WCS::STATE]");
+        info("REC WCS::STATE");
         break;
     }
     case ERROR:
@@ -131,6 +143,9 @@ void WcsHandler::handle(int pos)
     char pureInput[DEFAULT_CHAR_ARRAY_SIZE];
     cutStr(handleBuffer, pureInput, 1, strlen(handleBuffer) - 2);
 
+    info("handling server input");
+    info(pureInput);
+
     // interpret inputs
     bool interpretRes = this->interpret(pureInput);
     if (!interpretRes)
@@ -138,6 +153,27 @@ void WcsHandler::handle(int pos)
 
     // perform action
     this->perform();
+}
+
+bool WcsHandler::send(char *str)
+{
+    // 1    - STX
+    // 2-5  - shuttle ID
+    // 6-7  - shuttle action
+    // 8-x  - other information encoded to enum
+    // x+1  - ETX
+
+    static char writeString[DEFAULT_CHAR_ARRAY_SIZE * 3];
+    strcpy(writeString, STX);
+    strcat(writeString, str);
+    strcat(writeString, ETX);
+    bool res = TcpWrite(writeString);
+
+    writeString[0] = '\0';
+
+    if (!res)
+        return false;
+    return true;
 }
 
 bool WcsHandler::send()
@@ -164,8 +200,10 @@ void WcsHandler::pullCurrentStatus()
 // --------------------------
 void WcsHandler::init(void)
 {
+    info("Connecting to Wifi");
     ConnectWifi();
     info("Wifi connected");
+    info("Connecting to WCS Server");
     bool tcpConnectionRes = ConnectTcpServer();
     if (!tcpConnectionRes)
     {
@@ -185,30 +223,30 @@ void WcsHandler::init(void)
 void WcsHandler::run(void)
 {
     int pos = this->read();
-    while (pos >= 0)
+    while (pos > 0)
     {
         this->handle(pos);
         pos = hasCompleteInstructions();
     }
 }
 
-bool WcsHandler::send(char *str)
+bool WcsHandler::sendJobCompletionNotification(const char *actionEnum, const char *inst)
 {
-    // 1    - STX
-    // 2-5  - shuttle ID
-    // 6-7  - shuttle action
-    // 8-x  - other information encoded to enum
-    // x+1  - ETX
+    strcpy(this->wcsOut.id, status.getId());
+    strcpy(this->wcsOut.actionEnum, actionEnum);
+    if (strlen(inst) > 0)
+        strcpy(this->wcsOut.instructions, inst);
+    this->send();
+};
 
-    static char writeString[DEFAULT_CHAR_ARRAY_SIZE * 3];
-    strcpy(writeString, STX);
-    strcat(writeString, str);
-    strcat(writeString, ETX);
-    bool res = TcpWrite(writeString);
-
-    writeString[0] = '\0';
-
-    if (!res)
-        return false;
-    return true;
-}
+bool WcsHandler::updateStateChange()
+{
+    strcpy(this->wcsOut.id, status.getId());
+    char stateActionString[3];
+    GET_TWO_DIGIT_STRING(stateActionString, STATE);
+    strcpy(this->wcsOut.actionEnum, stateActionString);
+    char currentStateString[3];
+    GET_TWO_DIGIT_STRING(currentStateString, status.getState());
+    strcpy(this->wcsOut.instructions, currentStateString);
+    this->send();
+};

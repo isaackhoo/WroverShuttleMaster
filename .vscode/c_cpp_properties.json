@@ -3,6 +3,9 @@
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Users\\LshAsrs\\Documents\\Arduino\\libraries\\WROVER_KIT_LCD\\src",
+                "C:\\Users\\LshAsrs\\Documents\\Arduino\\libraries\\WROVER_KIT_LCD",
+                "C:\\Users\\LshAsrs\\Documents\\Arduino\\libraries\\WROVER_KIT_LCD-master-20191125T034057Z-001",
                 "C:\\Users\\Zac\\Documents\\Arduino\\libraries\\Automaton-master\\src",
                 "C:\\Users\\Zac\\Documents\\Arduino\\libraries\\WROVER_KIT_LCD-master\\src",
                 "C:\\Users\\Zac\\Documents\\Arduino\\libraries\\Adafruit_GFX_Library",
@@ -13,7 +16,9 @@
                 "C:\\Program Files (x86)\\Arduino\\libraries\\WROVER_KIT_LCD-master\\src",
                 "C:\\Program Files (x86)\\Arduino\\libraries\\Adafruit_GFX_Library",
                 "C:\\Users\\Isaac\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\**",
-                "C:\\Users\\Isaac\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.4\\**"
+                "C:\\Users\\Isaac\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.4\\**",
+                "C:\\Users\\LshAsrs\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.4\\**",
+                "C:\\Users\\LshAsrs\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\**"
             ],
             "forcedInclude": [],
             "intelliSenseMode": "msvc-x64"

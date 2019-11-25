@@ -2,6 +2,7 @@
 #include "./src/Logger/Logger.h"
 #include "./src/Helper/Helper.h"
 #include "./src/WcsHandler/WcsHandler.h"
+#include "./src/SlaveHandler/SlaveHandler.h"
 
 void setup()
 {
@@ -10,10 +11,14 @@ void setup()
 
   // initialize wcs handler, connects to the internet and the server
   wcsHandler.init();
+
+  // initialize slave handler
+  slaveHandler.init();
 }
 
 void loop()
 {
   automaton.run();
   wcsHandler.run();
+  slaveHandler.run();
 }

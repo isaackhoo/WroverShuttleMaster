@@ -1,5 +1,6 @@
 #include "Status.h"
 #include <string.h>
+#include "../WcsHandler/WcsHandler.h"
 
 // -------------------------
 // Status Public Variables
@@ -18,7 +19,6 @@ Status::Status()
     setId(DEFAULT_ID);
     setLevel(DEFAULT_LEVEL);
     setPos(DEFAUULT_POS);
-    setIsActive(DEFAULT_ISACTIVE);
 }
 
 Status::~Status(){};
@@ -53,9 +53,58 @@ bool Status::setPos(const int pos)
     this->currentPos = pos;
 };
 
-bool Status::setIsActive(const bool isActive)
+bool Status::setState(SHUTTLE_STATE currentState)
 {
-    this->isActive = isActive;
+    if (currentState < 0 || currentState > Num_Of_Shuttle_States)
+        return false;
+    if (this->getState() != currentState)
+    {
+        this->state = currentState;
+        wcsHandler.updateStateChange();
+    }
+};
+
+bool Status::setActiveState()
+{
+    // sets state based on current action enum
+    SHUTTLE_STATE activeState = IDLE;
+    switch ((ENUM_WCS_ACTIONS)atoi(actionEnum))
+    {
+    case RETRIEVEBIN:
+    {
+        activeState = RETRIEVING;
+        break;
+    }
+    case STOREBIN:
+    {
+        activeState = STORING;
+        break;
+    }
+    case MOVE:
+    {
+        activeState = MOVING;
+        break;
+    }
+    default:
+        break;
+    }
+    this->setState(activeState);
+};
+
+bool Status::setIsCarryingBin(bool isCarryingBin)
+{
+    this->isCarryingBin = isCarryingBin;
+};
+
+bool Status::setIsFingerExtended(bool isFingerExtended)
+{
+    this->isFingerExtended = isFingerExtended;
+};
+
+bool Status::setWcsInputs(const char *actionEnum, const char *inst)
+{
+    this->setActionEnum(actionEnum);
+    this->setInstructions(inst);
 };
 
 // GETTERS
@@ -64,4 +113,6 @@ char *Status::getActionEnum() { return this->actionEnum; };
 char *Status::getInstructions() { return this->instructions; };
 int Status::getLevel() { return this->currentLevel; };
 int Status::getPos() { return this->currentPos; };
-bool Status::getIsActive() { return this->isActive; };
+SHUTTLE_STATE Status::getState() { return this->state; };
+bool Status::getIsCarryingBin() { return this->isCarryingBin; };
+bool Status::getIsFingerExtended() { return this->isFingerExtended; };
