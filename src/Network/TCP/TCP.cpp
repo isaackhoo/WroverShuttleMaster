@@ -1,5 +1,6 @@
 #include "TCP.h"
 #include "../../Helper/Helper.h"
+#include "../../Logger/Logger.h"
 
 // ----------------------------
 // TCP Client Variables
@@ -11,6 +12,7 @@ WiFiClient client;
 // --------------------------
 bool ConnectTcpServer()
 {
+    client.setNoDelay(true);
     if (!client.connect(serverIp, serverPort))
         return false;
     return true;
@@ -20,6 +22,7 @@ bool TcpRead(char *received)
 {
     if (client.available())
     {
+        // does not cause heap fragmentation. tested
         String input = client.readString();
         input.trim();
         strcpy(received, input.c_str());

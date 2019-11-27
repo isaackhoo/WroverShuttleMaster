@@ -143,9 +143,6 @@ void WcsHandler::handle(int pos)
     char pureInput[DEFAULT_CHAR_ARRAY_SIZE];
     cutStr(handleBuffer, pureInput, 1, strlen(handleBuffer) - 2);
 
-    info("handling server input");
-    info(pureInput);
-
     // interpret inputs
     bool interpretRes = this->interpret(pureInput);
     if (!interpretRes)
@@ -201,13 +198,18 @@ void WcsHandler::pullCurrentStatus()
 void WcsHandler::init(void)
 {
     info("Connecting to Wifi");
-    ConnectWifi();
+    bool wifiConnectionRes = ConnectWifi();
+    if (!wifiConnectionRes)
+    {
+        logSd("Failed to connect to wifi.");
+        ESP.restart();
+    }
     info("Wifi connected");
     info("Connecting to WCS Server");
     bool tcpConnectionRes = ConnectTcpServer();
     if (!tcpConnectionRes)
     {
-        logSd("Failed to connect to server. Restarting chip");
+        logSd("Failed to connect to server.");
         ESP.restart();
     }
     info("server connected");
