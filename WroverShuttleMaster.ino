@@ -9,11 +9,13 @@ void setup()
   // initializes logger. Serial if dev_env, or lcd and sd if prod
   initLogger();
 
-  // initialize wcs handler, connects to the internet and the server
-  wcsHandler.init();
-
   // initialize slave handler
-  slaveHandler.init();
+  info("initialising slaveHandler");
+  slaveHandler.init(&Serial);
+
+  // initialize wcs handler, connects to the internet and the server
+  info("initialising wcsHandler");
+  wcsHandler.init();
 }
 
 void loop()

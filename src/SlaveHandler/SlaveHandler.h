@@ -3,7 +3,8 @@
 #ifndef SLAVEHANDLER_H
 #define SLAVEHANDLER_H
 
-#include "./SlaveSerial/SlaveSerial.h"
+#include <HardwareSerial.h>
+// #include "./SlaveSerial/SlaveSerial.h"
 #include "./Step/Step.h"
 
 // --------------------------------
@@ -92,8 +93,14 @@ extern SlaveHandler slaveHandler;
 // --------------------------------
 class SlaveHandler
 {
-private:
-    SlaveSerial ss;
+  private:
+    // SlaveSerial ss;
+    HardwareSerial *ss;
+    char readString[DEFAULT_CHAR_ARRAY_SIZE];
+    bool serialRead();
+    bool serialWrite(char *);
+
+    // steps handler
     Step steps[MAX_STEP_SIZE];
 
     int totalSteps = 0;
@@ -106,18 +113,19 @@ private:
     bool overallStepsCompleted = false;
     void setOverallStepsCompleted(bool);
 
+    // helper functions
     void getBinPosition(char *, char *, char *);
     int getArmExtensionDirection(char *);
     int getArmExtensionDepth(char *);
     void getPullingFingers(int, char *);
     void getPushingFingers(int, char *);
 
+    // comms
     void handle(char *);
     void reset();
-    bool send(char *);
 
-public:
-    void init();
+  public:
+    void init(HardwareSerial *);
     void run();
     void beginNextStep();
     bool createStorageSteps(char *);

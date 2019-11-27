@@ -16,6 +16,27 @@ SlaveHandler slaveHandler;
 // --------------------------------
 // SLAVE HANDLER PRIVATE METHODS
 // --------------------------------
+bool SlaveHandler::serialRead()
+{
+    if (this->ss->available() > 0)
+    {
+        String in = this->ss->readStringUntil('\n');
+        if (strlen(this->readString) > 0)
+            strcat(this->readString, in.c_str());
+        else
+            strcpy(this->readString, in.c_str());
+        return true;
+    }
+    return false;
+};
+
+bool SlaveHandler::serialWrite(char *slaveInst)
+{
+    if (strlen(slaveInst) <= 0)
+        return false;
+    return this->ss->println(slaveInst);
+};
+
 void SlaveHandler::setTotalSteps(int total)
 {
     this->totalSteps = total;
@@ -273,42 +294,33 @@ void SlaveHandler::reset()
     this->setOverallStepsCompleted(false);
 };
 
-bool SlaveHandler::send(char *slaveInst)
-{
-    if (!this->ss.ready())
-        return false;
-    if (strlen(slaveInst) <= 0)
-        return false;
-    return this->ss.ssWrite(slaveInst);
-};
-
 // --------------------------------
 // SLAVE HANDLER PUBLIC METHODS
 // --------------------------------
-void SlaveHandler::init()
+void SlaveHandler::init(HardwareSerial *serialPort)
 {
-    // initialise slave serial
-    this->ss.init(&Serial, "SlaveMain");
+    this->ss = serialPort;
+    this->ss->begin(DEFAULT_SERIAL_BAUD_RATE);
+    info("Slave Serial started");
 };
 
 void SlaveHandler::run()
 {
     // checks slave serial for input
-    if (this->ss.ssRead())
+    if (this->serialRead())
     {
-        this->handle(this->ss.getReadString());
+        this->handle(this->readString);
     }
 };
 
 void SlaveHandler::beginNextStep()
 {
-    info("Starting next step");
     // change step status to active/pending
     steps[this->currentStepIndex].setStatus(STEP_PENDING);
     // set shuttle status to active
     status.setActiveState();
     // send instructions over slave serial
-    this->send(steps[this->currentStepIndex].getSlaveString());
+    this->serialWrite(steps[this->currentStepIndex].getSlaveString());
 };
 
 bool SlaveHandler::createStorageSteps(char *storageInst)
@@ -536,12 +548,12 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
 
 bool SlaveHandler::createMovementSteps(char *movementInst)
 {
-     info("Creating movement steps for");
+    info("Creating movement steps for");
     info(movementInst);
 
     if (strlen(movementInst) != EXPECTED_POS_INST_LENGTH)
         return false;
-    
+
     // find movement position
     POSITIONS posToMoveTo = (POSITIONS)atoi(movementInst);
     // retrieve long for position

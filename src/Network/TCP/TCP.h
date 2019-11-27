@@ -3,7 +3,7 @@
 #ifndef TCP_H
 #define TCP_H
 
-#include <WiFi.h>
+#include <WiFiClient.h>
 
 // --------------------------
 // TCP Client Variables
