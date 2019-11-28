@@ -208,7 +208,7 @@ void SlaveHandler::getPushingFingers(int armExtensionDirection, char *output)
     }
 };
 
-void SlaveHandler::SlaveHandler::handle(char *serialInput)
+void SlaveHandler::handle(char *serialInput)
 {
     // if shuttle is not in active status, it is receiving delayed
     // responses. ignore these.

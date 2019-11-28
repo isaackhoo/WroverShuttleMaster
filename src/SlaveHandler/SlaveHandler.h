@@ -106,7 +106,7 @@ class SlaveHandler
     int totalSteps = 0;
     void setTotalSteps(int);
 
-    int currentStepIndex;
+    int currentStepIndex = 0;
     void incCurrentStepIndex();
     void resetCurrentStepIndex();
 
