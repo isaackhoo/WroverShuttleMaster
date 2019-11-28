@@ -1,3 +1,4 @@
+#include <string.h>
 #include "TCP.h"
 #include "../../Helper/Helper.h"
 #include "../../Logger/Logger.h"
@@ -25,6 +26,7 @@ bool TcpRead(char *received)
         // does not cause heap fragmentation. tested
         String input = client.readString();
         input.trim();
+        // strcpy_s(received, sizeof received, input.c_str());
         strcpy(received, input.c_str());
         return true;
     }

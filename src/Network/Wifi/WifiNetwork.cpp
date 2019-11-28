@@ -1,3 +1,4 @@
+#include <string.h>
 #include <time.h>
 #include <WiFi.h>
 #include "WifiNetwork.h"
@@ -20,10 +21,11 @@ bool ConnectWifi()
         }
     }
 
-    WiFi.onEvent([](WiFiEvent_t wifiEvent, WiFiEventInfo_t wifiEventInfo){
+    WiFi.onEvent([](WiFiEvent_t wifiEvent, WiFiEventInfo_t wifiEventInfo) {
         // attempt to reconnect on disconnection
         ConnectWifi();
-    }, WiFiEvent_t::SYSTEM_EVENT_STA_DISCONNECTED);
+    },
+                 WiFiEvent_t::SYSTEM_EVENT_STA_DISCONNECTED);
 
     return true;
 };
@@ -54,6 +56,12 @@ void getCurrentDate(char *output)
     char daybuf[3];
     GET_TWO_DIGIT_STRING(daybuf, tmstruct.tm_mday);
 
+    // strcpy_s(output, sizeof output, yearbuf);
+    // strcat_s(output, sizeof output, "_");
+    // strcat_s(output, sizeof output, monthbuf);
+    // strcat_s(output, sizeof output, "_");
+    // strcat_s(output, sizeof output, daybuf);
+
     strcpy(output, yearbuf);
     strcat(output, "_");
     strcat(output, monthbuf);
@@ -79,6 +87,12 @@ void getCurrentTime(char *output)
     GET_TWO_DIGIT_STRING(minutebuf, tmstruct.tm_min);
     char secondsbuf[3];
     GET_TWO_DIGIT_STRING(secondsbuf, tmstruct.tm_sec);
+
+    // strcpy_s(output, sizeof output, hourbuf);
+    // strcat_s(output, sizeof output, ":");
+    // strcat_s(output, sizeof output, minutebuf);
+    // strcat_s(output, sizeof output, ":");
+    // strcat_s(output, sizeof output, secondsbuf);
 
     strcpy(output, hourbuf);
     strcat(output, ":");

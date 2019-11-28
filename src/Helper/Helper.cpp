@@ -1,6 +1,5 @@
 #include "Helper.h"
 #include <string.h>
-#include <stdio.h>
 
 // Append char
 void appendChar(char *s, char c)

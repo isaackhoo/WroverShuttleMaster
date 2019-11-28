@@ -1,3 +1,4 @@
+#include <string.h>
 #include "SD.h"
 #include "FS.h"
 #include "SD_MMC.h"
@@ -104,6 +105,8 @@ char *getLatestLogFilename()
     char currentDate[11];
     getCurrentDate(currentDate);
     static char output[15];
+    // strcpy_s(output, sizeof output, currentDate);
+    // strcat_s(output, sizeof output, ".txt");
     strcpy(output, currentDate);
     strcat(output, ".txt");
 
@@ -114,6 +117,10 @@ char *getLatestLogPath()
 {
     char *latestLogFilename = getLatestLogFilename();
     static char pathname[21]; // /Logs/yyyy_mm_dd.txt;
+
+    // strcpy_s(pathname, sizeof pathname, LogsDirectory);
+    // strcat_s(pathname, sizeof pathname, "/");
+    // strcat_s(pathname, sizeof pathname, latestLogFilename);
 
     strcpy(pathname, LogsDirectory);
     strcat(pathname, "/");
@@ -165,6 +172,10 @@ void logTimestampCallback(int idx, int v, int up)
     static char timestamp[15];
 
     // create time stamp
+    // strcpy_s(timestamp, sizeof timestamp, "[");
+    // strcat_s(timestamp, sizeof timestamp, timeString);
+    // strcat_s(timestamp, sizeof timestamp, "]");
+
     strcpy(timestamp, "[");
     strcat(timestamp, timeString);
     strcat(timestamp, "]");

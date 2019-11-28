@@ -1,5 +1,5 @@
-#include "Status.h"
 #include <string.h>
+#include "Status.h"
 #include "../WcsHandler/WcsHandler.h"
 
 // -------------------------
@@ -28,18 +28,21 @@ bool Status::setId(const char *id)
 {
     if (strlen(id) != DEFAULT_ID_LENGTH)
         return false;
+    // strcpy_s(this->id, sizeof this->id, id);
     strcpy(this->id, id);
     return true;
 };
 
 bool Status::setActionEnum(const char *action)
 {
+    // strcpy_s(this->actionEnum, sizeof this->actionEnum, action);
     strcpy(this->actionEnum, action);
 };
 
 bool Status::setInstructions(const char *inst)
 {
     this->instructions[0] = '\0';
+    // strcpy_s(this->instructions, sizeof this->instructions, inst);
     strcpy(this->instructions, inst);
 };
 

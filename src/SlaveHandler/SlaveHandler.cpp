@@ -1,3 +1,4 @@
+#include <string.h>
 #include "SlaveHandler.h"
 #include "../WcsHandler/WcsHandler.h"
 #include "../Helper/Helper.h"
@@ -22,8 +23,10 @@ bool SlaveHandler::serialRead()
     {
         String in = this->ss->readStringUntil('\n');
         if (strlen(this->readString) > 0)
+            // strcat_s(this->readString, sizeof this->readString, in.c_str());
             strcat(this->readString, in.c_str());
         else
+            // strcpy_s(this->readString, sizeof this->readString, in.c_str());
             strcpy(this->readString, in.c_str());
         return true;
     }
@@ -107,6 +110,7 @@ void SlaveHandler::getBinPosition(char *inCol, char *binInColPos, char *output)
 
     char posStr[21];
     toCString(posStr, pos);
+    // strcpy_s(output, sizeof output, posStr);
     strcpy(output, posStr);
 };
 

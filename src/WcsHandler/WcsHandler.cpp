@@ -1,3 +1,4 @@
+#include <string.h>
 #include "WcsHandler.h"
 #include "../Logger/Logger.h"
 #include "../Network/TCP/TCP.h"
@@ -28,8 +29,10 @@ int WcsHandler::read()
     if (TcpRead(tempReadBuffer))
     {
         if (strlen(readBuffer) <= 0)
+            // strcpy_s(readBuffer, sizeof readBuffer, tempReadBuffer);
             strcpy(readBuffer, tempReadBuffer);
         else
+            // strcat_s(readBuffer, sizeof readBuffer, tempReadBuffer);
             strcat(readBuffer, tempReadBuffer);
 
         // check buffer for end of instructions
@@ -47,6 +50,7 @@ bool WcsHandler::interpret(char *input)
 
     // copy over input first since manipulation is required
     char copyInput[DEFAULT_CHAR_ARRAY_SIZE];
+    // strcpy_s(copyInput, sizeof copyInput, input);
     strcpy(copyInput, input);
 
     if (strlen(copyInput) < DEFAULT_ID_LENGTH + DEFAULT_ACTION_ENUM_LENGTH)
@@ -59,6 +63,7 @@ bool WcsHandler::interpret(char *input)
     this->wcsIn.action = (ENUM_WCS_ACTIONS)atoi(this->wcsIn.actionEnum);
     // get remaining instructions
     if (strlen(copyInput) > 0)
+        // strcpy_s(this->wcsIn.instructions, sizeof this->wcsIn.instructions, copyInput);
         strcpy(this->wcsIn.instructions, copyInput);
 
     // set information on shuttle status as well
@@ -161,6 +166,10 @@ bool WcsHandler::send(char *str)
     // x+1  - ETX
 
     static char writeString[DEFAULT_CHAR_ARRAY_SIZE * 3];
+    // strcpy_s(writeString, sizeof writeString, STX);
+    // strcat_s(writeString, sizeof writeString, str);
+    // strcat_s(writeString, sizeof writeString, ETX);
+
     strcpy(writeString, STX);
     strcat(writeString, str);
     strcat(writeString, ETX);
@@ -179,9 +188,13 @@ bool WcsHandler::send()
     // compiles wcsOut into a cstring to send
     char wcsOutString[DEFAULT_CHAR_ARRAY_SIZE];
 
+    // strcpy_s(wcsOutString, sizeof wcsOutString, this->wcsOut.id);
+    // strcat_s(wcsOutString, sizeof wcsOutString, this->wcsOut.actionEnum);
+
     strcpy(wcsOutString, this->wcsOut.id);
     strcat(wcsOutString, this->wcsOut.actionEnum);
     if (strlen(this->wcsOut.instructions) > 0)
+        // strcat_s(wcsOutString, sizeof wcsOutString, this->wcsOut.instructions);
         strcat(wcsOutString, this->wcsOut.instructions);
     this->send(wcsOutString);
 };
@@ -189,6 +202,7 @@ bool WcsHandler::send()
 void WcsHandler::pullCurrentStatus()
 {
     // retrieves status information
+    // strcpy_s(this->wcsOut.id, sizeof this->wcsOut.id, status.getId());
     strcpy(this->wcsOut.id, status.getId());
 };
 
@@ -218,6 +232,7 @@ void WcsHandler::init(void)
     // login to server
     char loginEnumString[3];
     GET_TWO_DIGIT_STRING(loginEnumString, LOGIN);
+    // strcpy_s(this->wcsOut.actionEnum, sizeof this->wcsOut.actionEnum, loginEnumString);
     strcpy(this->wcsOut.actionEnum, loginEnumString);
     this->send();
 }
@@ -234,21 +249,28 @@ void WcsHandler::run(void)
 
 bool WcsHandler::sendJobCompletionNotification(const char *actionEnum, const char *inst)
 {
+    // strcpy_s(this->wcsOut.id, sizeof this->wcsOut.id, status.getId());
+    // strcpy_s(this->wcsOut.actionEnum, sizeof this->wcsOut.actionEnum, actionEnum);
+
     strcpy(this->wcsOut.id, status.getId());
     strcpy(this->wcsOut.actionEnum, actionEnum);
     if (strlen(inst) > 0)
+        // strcpy_s(this->wcsOut.instructions, sizeof this->wcsOut.instructions, inst);
         strcpy(this->wcsOut.instructions, inst);
     this->send();
 };
 
 bool WcsHandler::updateStateChange()
 {
+    // strcpy_s(this->wcsOut.id, sizeof this->wcsOut.id, status.getId());
     strcpy(this->wcsOut.id, status.getId());
     char stateActionString[3];
     GET_TWO_DIGIT_STRING(stateActionString, STATE);
+    // strcpy_s(this->wcsOut.actionEnum, sizeof this->wcsOut.actionEnum, stateActionString);
     strcpy(this->wcsOut.actionEnum, stateActionString);
     char currentStateString[3];
     GET_TWO_DIGIT_STRING(currentStateString, status.getState());
+    // strcpy_s(this->wcsOut.instructions, sizeof this->wcsOut.instructions, currentStateString);
     strcpy(this->wcsOut.instructions, currentStateString);
     this->send();
 };
