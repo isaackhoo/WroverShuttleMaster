@@ -1,6 +1,9 @@
 #include <string.h>
+#include <stdio.h>
 #include "Status.h"
 #include "../WcsHandler/WcsHandler.h"
+#include "../Helper/Helper.h"
+#include "../Logger/Logger.h"
 
 // -------------------------
 // Status Public Variables
@@ -63,6 +66,9 @@ bool Status::setState(SHUTTLE_STATE currentState)
     if (this->getState() != currentState)
     {
         this->state = currentState;
+        char statusChange[DEFAULT_CHAR_ARRAY_SIZE];
+        sprintf(statusChange, "Status updated to %s", SHUTTLE_STATE_STRING[this->state]);
+        logSd(statusChange);
         wcsHandler.updateStateChange();
     }
 };
@@ -70,8 +76,8 @@ bool Status::setState(SHUTTLE_STATE currentState)
 bool Status::setActiveState()
 {
     // sets state based on current action enum
-    SHUTTLE_STATE activeState = IDLE;
-    switch ((ENUM_WCS_ACTIONS)atoi(actionEnum))
+    SHUTTLE_STATE activeState = SHUTTLE_ERROR;
+    switch ((ENUM_WCS_ACTIONS)atoi(this->actionEnum))
     {
     case RETRIEVEBIN:
     {

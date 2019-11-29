@@ -1,4 +1,7 @@
 #include <string.h>
+#include <stdio.h>
+#include "../../Logger/Logger.h"
+#include "../../Helper/Helper.h"
 #include "Step.h"
 
 // --------------------------
@@ -108,7 +111,8 @@ bool Step::evaluateStep(char *input)
     // toggle step to completion if target is reached
     if (this->stepAction == DUMMY_STEP)
         return false;
-    if (strcmp(this->stepTarget, input) == 0)
+    int evaluationResult = strcmp(this->stepTarget, input);
+    if (evaluationResult == 0)
     {
         // results match, step is complete
         this->setStatus(STEP_COMPLETED);

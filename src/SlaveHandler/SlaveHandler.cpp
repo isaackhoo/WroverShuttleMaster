@@ -1,4 +1,6 @@
+#include <String.h>
 #include <string.h>
+#include <stdio.h>
 #include "SlaveHandler.h"
 #include "../WcsHandler/WcsHandler.h"
 #include "../Helper/Helper.h"
@@ -22,12 +24,20 @@ bool SlaveHandler::serialRead()
     if (this->ss->available() > 0)
     {
         String in = this->ss->readStringUntil('\n');
+        in.trim();
         if (strlen(this->readString) > 0)
             // strcat_s(this->readString, sizeof this->readString, in.c_str());
             strcat(this->readString, in.c_str());
         else
             // strcpy_s(this->readString, sizeof this->readString, in.c_str());
             strcpy(this->readString, in.c_str());
+
+        // remove newline character
+        if (this->readString[strlen(this->readString) - 2] == '\r')
+            this->readString[strlen(this->readString)] = '\0';
+        if (this->readString[strlen(this->readString) - 1] == '\n')
+            this->readString[strlen(this->readString)] = '\0';
+
         return true;
     }
     return false;
@@ -48,6 +58,9 @@ void SlaveHandler::setTotalSteps(int total)
 void SlaveHandler::incCurrentStepIndex()
 {
     this->currentStepIndex++;
+    char currentStepInfo[DEFAULT_CHAR_ARRAY_SIZE];
+    sprintf(currentStepInfo, "Step Index inc to %i", this->currentStepIndex);
+    info(currentStepInfo);
 };
 
 void SlaveHandler::resetCurrentStepIndex()
@@ -58,6 +71,8 @@ void SlaveHandler::resetCurrentStepIndex()
 void SlaveHandler::setOverallStepsCompleted(bool isComplete)
 {
     this->overallStepsCompleted = isComplete;
+    if (this->overallStepsCompleted)
+        logSd("Completed overall steps");
 };
 
 void SlaveHandler::getBinPosition(char *inCol, char *binInColPos, char *output)
@@ -208,7 +223,7 @@ void SlaveHandler::getPushingFingers(int armExtensionDirection, char *output)
     }
 };
 
-void SlaveHandler::handle(char *serialInput)
+void SlaveHandler::handle()
 {
     // if shuttle is not in active status, it is receiving delayed
     // responses. ignore these.
@@ -216,13 +231,9 @@ void SlaveHandler::handle(char *serialInput)
         return;
 
     // handle slave reply
-    bool res = steps[this->currentStepIndex].evaluateStep(serialInput);
+    bool res = steps[this->currentStepIndex].evaluateStep(this->readString);
 
-    if (!res)
-    {
-        // do nothing
-    }
-    else
+    if (res)
     {
         // step is complete
         steps[this->currentStepIndex].setStatus(STEP_COMPLETED);
@@ -258,6 +269,7 @@ void SlaveHandler::handle(char *serialInput)
         default:
             break;
         }
+        info("Step done");
 
         // check for more steps to do
         if (this->currentStepIndex < this->totalSteps - 1)
@@ -265,9 +277,11 @@ void SlaveHandler::handle(char *serialInput)
         else
             this->setOverallStepsCompleted(true);
     }
+    // do nothing if step is not complete.
+    // instructions will be resent to slave.
 
     // check for more steps to perform
-    if (!this->overallStepsCompleted)
+    if (this->overallStepsCompleted == false)
     {
         // there are more steps to do
         if (steps[this->currentStepIndex].getStepAction() != DUMMY_STEP)
@@ -284,6 +298,9 @@ void SlaveHandler::handle(char *serialInput)
         // reset slave handler
         this->reset();
     }
+
+    // clear serial read string
+    this->readString[0] = '\0';
 };
 
 void SlaveHandler::reset()
@@ -304,8 +321,14 @@ void SlaveHandler::reset()
 void SlaveHandler::init(HardwareSerial *serialPort)
 {
     this->ss = serialPort;
+    this->ss->end();
     this->ss->begin(DEFAULT_SERIAL_BAUD_RATE);
     info("Slave Serial started");
+};
+
+void init(HardwareSerial *serialPort, int tx, int rx)
+{
+
 };
 
 void SlaveHandler::run()
@@ -313,16 +336,19 @@ void SlaveHandler::run()
     // checks slave serial for input
     if (this->serialRead())
     {
-        this->handle(this->readString);
+        this->handle();
     }
 };
 
 void SlaveHandler::beginNextStep()
 {
-    // change step status to active/pending
-    steps[this->currentStepIndex].setStatus(STEP_PENDING);
+    char beginStepInfo[DEFAULT_CHAR_ARRAY_SIZE];
+    sprintf(beginStepInfo, "Starting: %s", steps[this->currentStepIndex].getDetails());
+    info(beginStepInfo);
     // set shuttle status to active
     status.setActiveState();
+    // change step status to active/pending
+    steps[this->currentStepIndex].setStatus(STEP_PENDING);
     // send instructions over slave serial
     this->serialWrite(steps[this->currentStepIndex].getSlaveString());
 };
@@ -436,6 +462,13 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     this->setOverallStepsCompleted(false);
     this->setTotalSteps(14);
 
+    // for (int i = 0; i < this->totalSteps; i++)
+    // {
+    //     char storageStepsInfo[DEFAULT_CHAR_ARRAY_SIZE];
+    //     sprintf(storageStepsInfo, "Step %d: %s", i, steps[i].getDetails());
+    //     info(storageStepsInfo);
+    // }
+
     return true;
 };
 
@@ -547,6 +580,13 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
     this->setOverallStepsCompleted(false);
     this->setTotalSteps(12);
 
+    // for (int i = 0; i < this->totalSteps; i++)
+    // {
+    //     char retrievalStepsInfo[DEFAULT_CHAR_ARRAY_SIZE];
+    //     sprintf(retrievalStepsInfo, "Step %d: %s", i, steps[i].getDetails());
+    //     info(retrievalStepsInfo);
+    // }
+
     return true;
 };
 
@@ -571,6 +611,13 @@ bool SlaveHandler::createMovementSteps(char *movementInst)
     // set overall completion to false
     this->setOverallStepsCompleted(false);
     this->setTotalSteps(1);
+
+    // for (int i = 0; i < this->totalSteps; i++)
+    // {
+    //     char movementStepsInfo[DEFAULT_CHAR_ARRAY_SIZE];
+    //     sprintf(movementStepsInfo, "Step %d: %s", i, steps[i].getDetails());
+    //     info(movementStepsInfo);
+    // }
 
     return true;
 };

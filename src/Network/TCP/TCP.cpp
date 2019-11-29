@@ -1,3 +1,4 @@
+#include <String.h>
 #include <string.h>
 #include "TCP.h"
 #include "../../Helper/Helper.h"

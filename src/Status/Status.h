@@ -28,6 +28,7 @@ typedef enum
   AWAITING,
   Num_Of_Shuttle_States
 } SHUTTLE_STATE;
+static const char SHUTTLE_STATE_STRING[][15] = {"IDLE", "STORING", "RETRIEVING", "MOVING", "ERROR", "AWAITING"};
 
 // -------------------------
 // Status Public Methods

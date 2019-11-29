@@ -4,7 +4,6 @@
 #define SLAVEHANDLER_H
 
 #include <HardwareSerial.h>
-// #include "./SlaveSerial/SlaveSerial.h"
 #include "./Step/Step.h"
 
 // --------------------------------
@@ -36,11 +35,11 @@ const long SHUTTLE_POSITION_MAXIMUM = 999999;
 const long positionToValue[10] = {POSITION_BUFFER, POSITION_IN_SHUTTLE_LIFTER, POSITION_SHUTTLE_BATTERY_CHANGE, POSITION_SHUTTLE_MAINTENANCE};
 typedef enum
 {
-    BUFFER = 0,
-    IN_LIFTER,
-    BATTERY_CHANGE_AREA,
-    MAINTENANCE_AREA,
-    Num_Of_Positions
+  BUFFER = 0,
+  IN_LIFTER,
+  BATTERY_CHANGE_AREA,
+  MAINTENANCE_AREA,
+  Num_Of_Positions
 } POSITIONS;
 
 // racking constants
@@ -67,14 +66,14 @@ const int BIN_PRESENT_IN_SLOT = 1;
 const int BIN_ABSENT_IN_SLOT = 0;
 typedef enum
 {
-    LEFT_COMPLETELY_EMPTY = 0,
-    LEFT_SECOND_DEPTH_OCCUPIED,
-    LEFT_BOTH_OCCUPIED,
-    LEFT_BUFFER_OCCUPIED,
-    RIGHT_COMPLETELY_EMPTY,
-    RIGHT_SECOND_DEPTH_OCCUPIED,
-    RIGHT_BOTH_OCCUPIED,
-    RIGHT_BUFFER_OCCUPIED
+  LEFT_COMPLETELY_EMPTY = 0,
+  LEFT_SECOND_DEPTH_OCCUPIED,
+  LEFT_BOTH_OCCUPIED,
+  LEFT_BUFFER_OCCUPIED,
+  RIGHT_COMPLETELY_EMPTY,
+  RIGHT_SECOND_DEPTH_OCCUPIED,
+  RIGHT_BOTH_OCCUPIED,
+  RIGHT_BUFFER_OCCUPIED
 } BINPOSSTATE;
 static BINPOSSTATE binPosState;
 
@@ -93,44 +92,45 @@ extern SlaveHandler slaveHandler;
 // --------------------------------
 class SlaveHandler
 {
-  private:
-    // SlaveSerial ss;
-    HardwareSerial *ss;
-    char readString[DEFAULT_CHAR_ARRAY_SIZE];
-    bool serialRead();
-    bool serialWrite(char *);
+private:
+  // SlaveSerial ss;
+  HardwareSerial *ss;
+  char readString[DEFAULT_CHAR_ARRAY_SIZE];
+  bool serialRead();
+  bool serialWrite(char *);
 
-    // steps handler
-    Step steps[MAX_STEP_SIZE];
+  // steps handler
+  Step steps[MAX_STEP_SIZE];
 
-    int totalSteps = 0;
-    void setTotalSteps(int);
+  int totalSteps = 0;
+  void setTotalSteps(int);
 
-    int currentStepIndex = 0;
-    void incCurrentStepIndex();
-    void resetCurrentStepIndex();
+  int currentStepIndex = 0;
+  void incCurrentStepIndex();
+  void resetCurrentStepIndex();
 
-    bool overallStepsCompleted = false;
-    void setOverallStepsCompleted(bool);
+  bool overallStepsCompleted = false;
+  void setOverallStepsCompleted(bool);
 
-    // helper functions
-    void getBinPosition(char *, char *, char *);
-    int getArmExtensionDirection(char *);
-    int getArmExtensionDepth(char *);
-    void getPullingFingers(int, char *);
-    void getPushingFingers(int, char *);
+  // helper functions
+  void getBinPosition(char *, char *, char *);
+  int getArmExtensionDirection(char *);
+  int getArmExtensionDepth(char *);
+  void getPullingFingers(int, char *);
+  void getPushingFingers(int, char *);
 
-    // comms
-    void handle(char *);
-    void reset();
+  // comms
+  void handle();
+  void reset();
 
-  public:
-    void init(HardwareSerial *);
-    void run();
-    void beginNextStep();
-    bool createStorageSteps(char *);
-    bool createRetrievalSteps(char *);
-    bool createMovementSteps(char *);
+public:
+  void init(HardwareSerial *);
+  void init(HardwareSerial *, int, int);
+  void run();
+  void beginNextStep();
+  bool createStorageSteps(char *);
+  bool createRetrievalSteps(char *);
+  bool createMovementSteps(char *);
 };
 
 #endif

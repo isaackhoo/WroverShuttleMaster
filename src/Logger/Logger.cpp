@@ -16,7 +16,6 @@ void initSerial()
 void initLcdSd()
 {
     // initialises lcd and sd card reader
-    initSerial();
     LcdInit();
     SdInit();
     timestampInvervalHandler.begin(timestampInterval)

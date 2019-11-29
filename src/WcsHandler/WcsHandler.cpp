@@ -67,7 +67,8 @@ bool WcsHandler::interpret(char *input)
         strcpy(this->wcsIn.instructions, copyInput);
 
     // set information on shuttle status as well
-    status.setWcsInputs(this->wcsIn.actionEnum, this->wcsIn.instructions);
+    if ((ENUM_WCS_ACTIONS)atoi(this->wcsIn.actionEnum) != PING)
+        status.setWcsInputs(this->wcsIn.actionEnum, this->wcsIn.instructions);
 };
 
 void WcsHandler::perform()
