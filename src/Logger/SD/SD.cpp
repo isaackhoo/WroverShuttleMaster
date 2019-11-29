@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 #include "SD.h"
 #include "FS.h"
 #include "SD_MMC.h"

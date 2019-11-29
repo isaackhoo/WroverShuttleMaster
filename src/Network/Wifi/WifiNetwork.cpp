@@ -64,9 +64,9 @@ void getCurrentDate(char *output)
     // strcat_s(output, sizeof output, daybuf);
 
     strcpy(output, yearbuf);
-    strcat(output, "_");
+    // strcat(output, "_");
     strcat(output, monthbuf);
-    strcat(output, "_");
+    // strcat(output, "_");
     strcat(output, daybuf);
 };
 
