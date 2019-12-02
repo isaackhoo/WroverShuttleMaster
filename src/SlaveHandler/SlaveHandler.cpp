@@ -407,6 +407,10 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     char pullingFingersArr[DEFAULT_CHAR_ARRAY_SIZE];
     this->getPullingFingers(STORAGE_BUFFER_DIRECTION, pullingFingersArr);
 
+    // so fingers do not get stuck at bin
+    char armHomeMore[DEFAULT_CHAR_ARRAY_SIZE];
+    itoa(ARM_HOME_RIGHT_MORE, armHomeMore, 10);
+
     // get arm home char
     char armHomeArr[DEFAULT_CHAR_ARRAY_SIZE];
     itoa(ARM_HOME_POSITION, armHomeArr, 10);
@@ -449,18 +453,19 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     steps[2].setStep(CHECK_BUFFER_BIN_SLOT, binInBufferSlotArr);
     steps[3].setStep(EXTEND_ARM, storageBufferDepthArr);
     steps[4].setStep(EXTEND_FINGERS, pullingFingersArr);
-    steps[5].setStep(RETRACT_ARM, armHomeArr);
-    steps[6].setStep(RETRACT_FINGERS, pullingFingersArr);
-    steps[7].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
-    steps[8].setStep(MOVE_TO_BIN, binPosArr);
-    steps[9].setStep(CHECK_RACK_BIN_SLOT, noBinInStorageSlotArr);
-    steps[10].setStep(EXTEND_FINGERS, pushingFingersArr);
-    steps[11].setStep(EXTEND_ARM, extensionResultArr);
-    steps[12].setStep(RETRACT_FINGERS, pushingFingersArr);
+    steps[5].setStep(RETRACT_ARM, armHomeMore);
+    steps[6].setStep(RETRACT_ARM, armHomeArr);
+    steps[7].setStep(RETRACT_FINGERS, pullingFingersArr);
+    steps[8].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
+    steps[9].setStep(MOVE_TO_BIN, binPosArr);
+    steps[10].setStep(CHECK_RACK_BIN_SLOT, noBinInStorageSlotArr);
+    steps[11].setStep(EXTEND_FINGERS, pushingFingersArr);
+    steps[12].setStep(EXTEND_ARM, extensionResultArr);
     steps[13].setStep(RETRACT_ARM, armHomeArr);
+    steps[14].setStep(RETRACT_FINGERS, pushingFingersArr);
 
     this->setOverallStepsCompleted(false);
-    this->setTotalSteps(14);
+    this->setTotalSteps(15);
 
     // for (int i = 0; i < this->totalSteps; i++)
     // {
@@ -530,6 +535,17 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
     char pullingFingersId[DEFAULT_CHAR_ARRAY_SIZE];
     this->getPullingFingers(extensionDirection, pullingFingersId);
 
+    // arm to over compensate so fingers are not stuck
+    char armHomeMore[DEFAULT_CHAR_ARRAY_SIZE];
+    if (extensionDirection == EXTEND_LEFT)
+    {
+        itoa(ARM_HOME_RIGHT_MORE, armHomeMore, 10);
+    }
+    else if (extensionDirection == EXTEND_RIGHT)
+    {
+        itoa(ARM_HOME_LEFT_MORE, armHomeMore, 10);
+    }
+
     // arm home pos to char
     char armHomeArr[DEFAULT_CHAR_ARRAY_SIZE];
     itoa(ARM_HOME_POSITION, armHomeArr, 10);
@@ -565,20 +581,21 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
     steps[0].setStep(MOVE_TO_BIN, binPosArr);
     steps[1].setStep(CHECK_RACK_BIN_SLOT, binInRackSlotArr);
     steps[2].setStep(EXTEND_ARM, extensionResultArr);
-    steps[3].setStep(EXTEND_FINGERS, pullingFingersId);
-    steps[4].setStep(RETRACT_ARM, armHomeArr);
-    steps[5].setStep(RETRACT_FINGERS, pullingFingersId);
+    steps[3].setStep(EXTEND_FINGERS, pullingFingersId); 
+    steps[4].setStep(RETRACT_ARM, armHomeMore);
+    steps[5].setStep(RETRACT_ARM, armHomeArr);
+    steps[6].setStep(RETRACT_FINGERS, pullingFingersId);
     //steps[7].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
-    steps[6].setStep(MOVE_TO_POS, bufferPosArr);
-    steps[7].setStep(CHECK_BUFFER_BIN_SLOT, noBinInRetrievalBufferArr);
-    steps[8].setStep(EXTEND_FINGERS, pushingFingersArr);
-    steps[9].setStep(EXTEND_ARM, retrievalBufferArr);
-    steps[10].setStep(RETRACT_ARM, armHomeArr);
-    steps[11].setStep(RETRACT_FINGERS, pushingFingersArr);
+    steps[7].setStep(MOVE_TO_POS, bufferPosArr);
+    steps[8].setStep(CHECK_BUFFER_BIN_SLOT, noBinInRetrievalBufferArr);
+    steps[9].setStep(EXTEND_FINGERS, pushingFingersArr);
+    steps[10].setStep(EXTEND_ARM, retrievalBufferArr);
+    steps[11].setStep(RETRACT_ARM, armHomeArr);
+    steps[12].setStep(RETRACT_FINGERS, pushingFingersArr);
 
     // set overall completion to false
     this->setOverallStepsCompleted(false);
-    this->setTotalSteps(12);
+    this->setTotalSteps(13);
 
     // for (int i = 0; i < this->totalSteps; i++)
     // {
