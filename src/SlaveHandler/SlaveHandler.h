@@ -27,7 +27,7 @@ const int MOTOTCOUNT_PER_COLUMN =
 
 // position const
 const long POSITION_BUFFER = 0;
-const long POSITION_IN_SHUTTLE_LIFTER = -461;
+const long POSITION_IN_SHUTTLE_LIFTER = -466;
 const long POSITION_SHUTTLE_BATTERY_CHANGE = -851;
 const long POSITION_SHUTTLE_MAINTENANCE = 20000;
 const long SHUTTLE_POSITION_MINIMUM = -999999;
@@ -49,9 +49,9 @@ const int GAP_BETWEEN_BIN_WIDTH = 80;
 const int BIN_WIDTH = 400;
 const int BIN_LENGTH = 600;
 const int GAP_BETWEEN_BIN_LENGTH = 30;
-const int FIRST_DEPTH = 650;
-const int SECOND_DEPTH = 1300;
-const int BUFFER_DEPTH = 700;
+const int FIRST_DEPTH = 600;
+const int SECOND_DEPTH = 1200;
+const int BUFFER_DEPTH = 900;
 
 // others
 const int STORAGE_BUFFER_DIRECTION = -1;
@@ -61,6 +61,8 @@ const int EXTEND_RIGHT = 1;
 const int FINGER_ID_0 = 0;
 const int FINGER_ID_1 = 1;
 const int ARM_HOME_POSITION = 0;
+const int ARM_HOME_LEFT_MORE = -30;
+const int ARM_HOME_RIGHT_MORE = 30;
 const int CLEAR_TO_MOVE = 0;
 const int BIN_PRESENT_IN_SLOT = 1;
 const int BIN_ABSENT_IN_SLOT = 0;
