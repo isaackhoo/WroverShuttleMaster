@@ -326,11 +326,6 @@ void SlaveHandler::init(HardwareSerial *serialPort)
     info("Slave Serial started");
 };
 
-void init(HardwareSerial *serialPort, int tx, int rx)
-{
-
-};
-
 void SlaveHandler::run()
 {
     // checks slave serial for input

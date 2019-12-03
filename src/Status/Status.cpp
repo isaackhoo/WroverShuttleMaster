@@ -122,9 +122,7 @@ void Status::rehydrateStatus(char *hydrator)
 {
     if (strlen(hydrator) <= 0)
         return;
-
-    info(hydrator);
-
+        
     int extrationPos = 0;
     char *token = strtok(hydrator, statusLogDelimiter);
     while (token != NULL)

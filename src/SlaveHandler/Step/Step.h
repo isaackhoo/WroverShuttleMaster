@@ -41,6 +41,7 @@ typedef enum
     STEP_AWAITING_START = 0,
     STEP_PENDING,
     STEP_COMPLETED,
+    STEP_ERROR,
     Num_Of_Step_Status
 } STEPSTATUS;
 const char stepStatusToString[][20] = {"Awaiting start", "Pending", "Completed"};
@@ -58,6 +59,7 @@ private:
     STEPACTION stepAction;
     STEPSTATUS stepStatus;
     char stepTarget[DEFAULT_CHAR_ARRAY_SIZE];
+    char stepErrorDetails[DEFAULT_CHAR_ARRAY_SIZE];
 
     void setAction(STEPACTION);
 

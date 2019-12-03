@@ -33,6 +33,7 @@ typedef struct
   int action;
   char instructions[DEFAULT_CHAR_ARRAY_SIZE];
 } WcsFormat;
+static const long PING_DROPPED_DURATION = 1000 * (30 + 10); // 30s ping duration, +10s buffer to determine ping has dropped
 
 // --------------------------
 // Wcs Public Variables
@@ -49,6 +50,7 @@ private:
   char readBuffer[DEFAULT_CHAR_ARRAY_SIZE * 2];
   WcsFormat wcsIn;
   WcsFormat wcsOut;
+  unsigned long lastPingMillis;
   int hasCompleteInstructions();
   int read();
   bool interpret(char *);
@@ -57,8 +59,11 @@ private:
   bool send(char *, bool);
   bool send(bool);
   void pullCurrentStatus();
+  void updateLastPing();
+  bool isPingAlive();
 
 public:
+  WcsHandler();
   void init(void);
   void run(void);
   bool sendJobCompletionNotification(const char *, const char *);

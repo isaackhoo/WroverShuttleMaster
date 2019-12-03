@@ -97,6 +97,7 @@ void WcsHandler::perform()
         // just reply ping
         this->wcsOut = this->wcsIn;
         this->send(false);
+        this->updateLastPing();
         break;
     }
     case RETRIEVEBIN:
@@ -223,12 +224,29 @@ void WcsHandler::pullCurrentStatus()
     if (!status.isIdDefault())
     {
         strcpy(this->wcsOut.instructions, status.getLevel());
-    } 
+    }
+};
+
+void WcsHandler::updateLastPing()
+{
+    this->lastPingMillis = millis();
+};
+
+bool WcsHandler::isPingAlive()
+{
+    if (millis() - this->lastPingMillis > PING_DROPPED_DURATION)
+        return false;
+    return true;
 };
 
 // --------------------------
 // Wcs Public Methods
 // --------------------------
+WcsHandler::WcsHandler()
+{
+    this->lastPingMillis = millis();
+};
+
 void WcsHandler::init(void)
 {
     // rehydration
@@ -266,6 +284,13 @@ void WcsHandler::init(void)
 
 void WcsHandler::run(void)
 {
+    if (!this->isPingAlive())
+    {
+        // no more pings are received from server. restart chip to attempt reconnection
+        logSd("No pings from server. Restarting chip.");
+        ESP.restart();
+    }
+
     int pos = this->read();
     while (pos > 0)
     {
