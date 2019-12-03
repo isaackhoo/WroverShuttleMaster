@@ -8,7 +8,10 @@ extern const int timestampInterval;
 
 // sd public methods
 extern bool SdInit();
-extern bool logToSd(const char*);
+extern bool logToSd(const char *);
 extern void logTimestampCallback(int, int, int);
+
+extern void logStatus(char *);
+extern char *readStatus();
 
 #endif

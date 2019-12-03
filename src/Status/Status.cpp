@@ -4,6 +4,7 @@
 #include "../WcsHandler/WcsHandler.h"
 #include "../Helper/Helper.h"
 #include "../Logger/Logger.h"
+#include "../Logger/SD/SD.h"
 
 // -------------------------
 // Status Public Variables
@@ -33,6 +34,7 @@ bool Status::setId(const char *id)
         return false;
     // strcpy_s(this->id, sizeof this->id, id);
     strcpy(this->id, id);
+
     return true;
 };
 
@@ -49,9 +51,9 @@ bool Status::setInstructions(const char *inst)
     strcpy(this->instructions, inst);
 };
 
-bool Status::setLevel(const int lvl)
+bool Status::setLevel(const char *lvl)
 {
-    this->currentLevel = lvl;
+    strcpy(this->currentLevel, lvl);
 };
 
 bool Status::setPos(const int pos)
@@ -116,12 +118,61 @@ bool Status::setWcsInputs(const char *actionEnum, const char *inst)
     this->setInstructions(inst);
 };
 
+void Status::rehydrateStatus(char *hydrator)
+{
+    if (strlen(hydrator) <= 0)
+        return;
+
+    info(hydrator);
+
+    int extrationPos = 0;
+    char *token = strtok(hydrator, statusLogDelimiter);
+    while (token != NULL)
+    {
+        switch (extrationPos)
+        {
+        case 0:
+        {
+            // shuttle id
+            this->setId(token);
+            logSd("rehydrated Id");
+            break;
+        }
+        case 1:
+        {
+            // current level
+            this->setLevel(token);
+            logSd("rehydrated level");
+            break;
+        }
+        default:
+            break;
+        }
+        extrationPos++;
+        token = strtok(NULL, statusLogDelimiter);
+    }
+};
+
 // GETTERS
 char *Status::getId() { return this->id; };
 char *Status::getActionEnum() { return this->actionEnum; };
 char *Status::getInstructions() { return this->instructions; };
-int Status::getLevel() { return this->currentLevel; };
+char *Status::getLevel() { return this->currentLevel; };
 int Status::getPos() { return this->currentPos; };
 SHUTTLE_STATE Status::getState() { return this->state; };
 bool Status::getIsCarryingBin() { return this->isCarryingBin; };
 bool Status::getIsFingerExtended() { return this->isFingerExtended; };
+bool Status::isIdDefault() { return strcmp(this->getId(), DEFAULT_ID) == 0 ? true : false; };
+void Status::saveStatus()
+{
+    char statusString[DEFAULT_CHAR_ARRAY_SIZE];
+    strcpy(statusString, this->getId());
+    strcat(statusString, statusLogDelimiter);
+    strcat(statusString, getLevel());
+
+    logStatus(statusString);
+
+    char logStatusChangeInfo[DEFAULT_CHAR_ARRAY_SIZE];
+    sprintf(logStatusChangeInfo, "saved to status: %s", statusString);
+    logSd(logStatusChangeInfo);
+};

@@ -19,6 +19,7 @@ typedef enum
   MOVE,        // 6
   BATTERY,     // 7
   STATE,       // 8
+  LEVEL,       // 9
   ERROR,
   Num_Of_WCS_Action_Enums
 } ENUM_WCS_ACTIONS;
@@ -53,8 +54,8 @@ private:
   bool interpret(char *);
   void perform();
   void handle(int);
-  bool send(char *);
-  bool send();
+  bool send(char *, bool);
+  bool send(bool);
   void pullCurrentStatus();
 
 public:

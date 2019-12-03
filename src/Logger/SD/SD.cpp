@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdio.h>
-#include "SD.h"
+#include <String.h>
+#include "./SD.h"
 #include "FS.h"
 #include "SD_MMC.h"
 #include "../../../src/Network/Wifi/WifiNetwork.h"
@@ -10,7 +11,8 @@
 // SD PRIVATE VARIABLES
 // -----------------------------
 const char *LogsDirectory = "/Logs";
-const char *ShuttleDirectory = "/State";
+const char *StatusDirectory = "/Status";
+const char *StatusFile = "/status.txt";
 
 const int timestampInterval = 1000 * 60 * 5; // every 5 minutes
 unsigned long lastMillis = 0;
@@ -42,7 +44,7 @@ String readFile(fs::FS &fs, const char *path)
     {
         while (file.available())
         {
-            fileOutput += file.read();
+            fileOutput += (char)file.read();
         }
         file.close();
     }
@@ -184,6 +186,28 @@ void logTimestampCallback(int idx, int v, int up)
     // append time stamp to sd
     logToSd(timestamp);
 }
+
+void logStatus(char *statusStr)
+{
+    createDir(SD_MMC, StatusDirectory);
+    char statusFileName[DEFAULT_CHAR_ARRAY_SIZE];
+    strcpy(statusFileName, StatusDirectory);
+    strcat(statusFileName, StatusFile);
+
+    writeFile(SD_MMC, statusFileName, statusStr);
+};
+
+char *readStatus()
+{
+    char statusFileName[DEFAULT_CHAR_ARRAY_SIZE];
+    strcpy(statusFileName, StatusDirectory);
+    strcat(statusFileName, StatusFile);
+
+    String output = readFile(SD_MMC, statusFileName);
+    static char outputCStr[DEFAULT_CHAR_ARRAY_SIZE * 2];
+    strcpy(outputCStr, output.c_str());
+    return outputCStr;
+};
 
 // ------------------------
 // SD USAGE

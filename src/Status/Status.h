@@ -10,8 +10,10 @@
 // -------------------------
 const int DEFAULT_ID_LENGTH = 4;
 static const char *DEFAULT_ID = "-1-1";
-static const int DEFAULT_LEVEL = 2;
+static const char *DEFAULT_LEVEL = "02";
 static const int DEFAUULT_POS = 60000; // TODO: change to actual rear position value
+
+static const char statusLogDelimiter[2] = ",";
 
 // -------------------------
 // Status Public Variables
@@ -39,7 +41,7 @@ private:
   char id[5];
   char actionEnum[3];
   char instructions[DEFAULT_CHAR_ARRAY_SIZE];
-  int currentLevel;
+  char currentLevel[3];
   int currentPos;
   SHUTTLE_STATE state;
 
@@ -53,22 +55,26 @@ public:
   bool setId(const char *);
   bool setActionEnum(const char *);
   bool setInstructions(const char *);
-  bool setLevel(const int);
+  bool setLevel(const char *);
   bool setPos(const int);
   bool setState(SHUTTLE_STATE);
   bool setActiveState();
   bool setIsCarryingBin(bool);
   bool setIsFingerExtended(bool);
   bool setWcsInputs(const char *, const char *);
+  void rehydrateStatus(char *);
 
   char *getId();
   char *getActionEnum();
   char *getInstructions();
-  int getLevel();
+  char *getLevel();
   int getPos();
   SHUTTLE_STATE getState();
   bool getIsCarryingBin();
   bool getIsFingerExtended();
+  bool isIdDefault();
+
+  void saveStatus();
 };
 
 #endif

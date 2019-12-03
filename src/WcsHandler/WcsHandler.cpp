@@ -1,6 +1,8 @@
 #include <string.h>
+#include <stdio.h>
 #include "WcsHandler.h"
 #include "../Logger/Logger.h"
+#include "../Logger/SD/SD.h"
 #include "../Network/TCP/TCP.h"
 #include "../Network/Wifi/WifiNetwork.h"
 #include "../Status/Status.h"
@@ -80,6 +82,7 @@ void WcsHandler::perform()
     {
         info("REC WCS::LOGIN");
         status.setId(this->wcsIn.id);
+        status.saveStatus();
         break;
     }
     case LOGOUT:
@@ -93,7 +96,7 @@ void WcsHandler::perform()
         // no need to edit anything,
         // just reply ping
         this->wcsOut = this->wcsIn;
-        this->send();
+        this->send(false);
         break;
     }
     case RETRIEVEBIN:
@@ -127,6 +130,13 @@ void WcsHandler::perform()
         info("REC WCS::STATE");
         break;
     }
+    case LEVEL:
+    {
+        info("REC WCS::LEVEL");
+        status.setLevel(this->wcsIn.instructions);
+        status.saveStatus();
+        break;
+    }
     case ERROR:
     {
         break;
@@ -158,7 +168,7 @@ void WcsHandler::handle(int pos)
     this->perform();
 }
 
-bool WcsHandler::send(char *str)
+bool WcsHandler::send(char *str, bool shouldLog = true)
 {
     // 1    - STX
     // 2-5  - shuttle ID
@@ -176,14 +186,20 @@ bool WcsHandler::send(char *str)
     strcat(writeString, ETX);
     bool res = TcpWrite(writeString);
 
-    writeString[0] = '\0';
+    static char wcsSendLog[DEFAULT_CHAR_ARRAY_SIZE * 4];
 
     if (!res)
-        return false;
-    return true;
+        sprintf(wcsSendLog, "Failed to send to server: %s", writeString);
+    else
+        sprintf(wcsSendLog, "Sent to server: %s", writeString);
+
+    if (shouldLog)
+        logSd(wcsSendLog);
+    writeString[0] = '\0';
+    return res;
 }
 
-bool WcsHandler::send()
+bool WcsHandler::send(bool shouldLog = true)
 {
     // WcsHandler::send overload.
     // compiles wcsOut into a cstring to send
@@ -197,14 +213,17 @@ bool WcsHandler::send()
     if (strlen(this->wcsOut.instructions) > 0)
         // strcat_s(wcsOutString, sizeof wcsOutString, this->wcsOut.instructions);
         strcat(wcsOutString, this->wcsOut.instructions);
-    this->send(wcsOutString);
+    this->send(wcsOutString, shouldLog);
 };
 
 void WcsHandler::pullCurrentStatus()
 {
     // retrieves status information
-    // strcpy_s(this->wcsOut.id, sizeof this->wcsOut.id, status.getId());
     strcpy(this->wcsOut.id, status.getId());
+    if (!status.isIdDefault())
+    {
+        strcpy(this->wcsOut.instructions, status.getLevel());
+    } 
 };
 
 // --------------------------
@@ -212,6 +231,12 @@ void WcsHandler::pullCurrentStatus()
 // --------------------------
 void WcsHandler::init(void)
 {
+    // rehydration
+    info("rehydrating status");
+    status.rehydrateStatus(readStatus());
+    info("rehydration complete");
+
+    // wifi connection
     info("Connecting to Wifi");
     bool wifiConnectionRes = ConnectWifi();
     if (!wifiConnectionRes)
@@ -220,6 +245,8 @@ void WcsHandler::init(void)
         ESP.restart();
     }
     info("Wifi connected");
+
+    // wcs connection
     info("Connecting to WCS Server");
     bool tcpConnectionRes = ConnectTcpServer();
     if (!tcpConnectionRes)
@@ -228,12 +255,11 @@ void WcsHandler::init(void)
         ESP.restart();
     }
     info("server connected");
-    // retrieve existing shuttle status
+    // retrieve existing shuttle id
     this->pullCurrentStatus();
     // login to server
     char loginEnumString[3];
     GET_TWO_DIGIT_STRING(loginEnumString, LOGIN);
-    // strcpy_s(this->wcsOut.actionEnum, sizeof this->wcsOut.actionEnum, loginEnumString);
     strcpy(this->wcsOut.actionEnum, loginEnumString);
     this->send();
 }
