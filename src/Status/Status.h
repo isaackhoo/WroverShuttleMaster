@@ -52,16 +52,16 @@ private:
 public:
   Status();
   ~Status();
-  bool setId(const char *);
-  bool setActionEnum(const char *);
-  bool setInstructions(const char *);
-  bool setLevel(const char *);
-  bool setPos(const int);
-  bool setState(SHUTTLE_STATE);
-  bool setActiveState();
-  bool setIsCarryingBin(bool);
-  bool setIsFingerExtended(bool);
-  bool setWcsInputs(const char *, const char *);
+  void setId(const char *);
+  void setActionEnum(const char *);
+  void setInstructions(const char *);
+  void setLevel(const char *);
+  void setPos(const int);
+  void setState(SHUTTLE_STATE);
+  void setActiveState();
+  void setIsCarryingBin(bool);
+  void setIsFingerExtended(bool);
+  void setWcsInputs(const char *, const char *);
   void rehydrateStatus(char *);
 
   char *getId();

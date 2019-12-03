@@ -82,7 +82,7 @@ void WcsHandler::perform()
     {
         info("REC WCS::LOGIN");
         status.setId(this->wcsIn.id);
-        status.saveStatus();
+        status.saveStatus(); // forced to perform the save outside here, or wrover will not load up. No idea why
         break;
     }
     case LOGOUT:
@@ -224,6 +224,9 @@ void WcsHandler::pullCurrentStatus()
     if (!status.isIdDefault())
     {
         strcpy(this->wcsOut.instructions, status.getLevel());
+        char stateStr[3];
+        GET_TWO_DIGIT_STRING(stateStr, status.getState());
+        strcat(this->wcsOut.instructions, stateStr);
     }
 };
 
@@ -260,7 +263,7 @@ void WcsHandler::init(void)
     if (!wifiConnectionRes)
     {
         logSd("Failed to connect to wifi.");
-        ESP.restart();
+        resetChip();
     }
     info("Wifi connected");
 
@@ -270,7 +273,7 @@ void WcsHandler::init(void)
     if (!tcpConnectionRes)
     {
         logSd("Failed to connect to server.");
-        ESP.restart();
+        resetChip();
     }
     info("server connected");
     // retrieve existing shuttle id
@@ -288,7 +291,7 @@ void WcsHandler::run(void)
     {
         // no more pings are received from server. restart chip to attempt reconnection
         logSd("No pings from server. Restarting chip.");
-        ESP.restart();
+        resetChip();
     }
 
     int pos = this->read();

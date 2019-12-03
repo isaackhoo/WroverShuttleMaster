@@ -9,7 +9,7 @@
 // --------------------------------
 // SLAVE HANDLER PRIVATE VARIABLES
 // --------------------------------
-const int MAX_STEP_SIZE = 15;
+const int MAX_STEP_SIZE = 20;
 
 const int EXPECTED_POS_INST_LENGTH = 2;
 const int EXPECTED_RETRIEVAL_INST_LENGTH = 6; // rrccbb

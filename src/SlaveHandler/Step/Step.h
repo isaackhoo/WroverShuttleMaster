@@ -8,6 +8,7 @@
 // --------------------------
 // STEP PRIVATE VARIABLES
 // --------------------------
+static const char *NAK = "\x21";
 
 // --------------------------
 // STEP PUBLIC VARIABLES
@@ -55,7 +56,7 @@ const char stepStatusToString[][20] = {"Awaiting start", "Pending", "Completed"}
 // --------------------------
 class Step
 {
-private:
+  private:
     STEPACTION stepAction;
     STEPSTATUS stepStatus;
     char stepTarget[DEFAULT_CHAR_ARRAY_SIZE];
@@ -63,7 +64,7 @@ private:
 
     void setAction(STEPACTION);
 
-public:
+  public:
     Step();
     Step(STEPACTION);
     Step(STEPACTION, char *);
@@ -80,6 +81,7 @@ public:
     STEPACTION getStepAction();
     STEPSTATUS getStepStatus();
     char *getStepTarget();
+    char *getStepErrorDetails();
 
     // methods
     bool evaluateStep(char *);

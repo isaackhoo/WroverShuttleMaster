@@ -104,6 +104,11 @@ char *Step::getStepTarget()
     return this->stepTarget;
 };
 
+char *Step::getStepErrorDetails()
+{
+    return this->stepErrorDetails;
+};
+
 // methods
 bool Step::evaluateStep(char *input)
 {
@@ -111,12 +116,24 @@ bool Step::evaluateStep(char *input)
     // toggle step to completion if target is reached
     if (this->stepAction == DUMMY_STEP)
         return false;
-    int evaluationResult = strcmp(this->stepTarget, input);
-    if (evaluationResult == 0)
+
+    // check input for any errors
+    if (input[0] == NAK[0])
     {
-        // results match, step is complete
-        this->setStatus(STEP_COMPLETED);
+        // error encountered
+        this->setStatus(STEP_ERROR);
+        strcpy(this->stepErrorDetails, input);
         return true;
+    }
+    else
+    {
+        int evaluationResult = strcmp(this->stepTarget, input);
+        if (evaluationResult == 0)
+        {
+            // results match, step is complete
+            this->setStatus(STEP_COMPLETED);
+            return true;
+        }
     }
     return false;
 };

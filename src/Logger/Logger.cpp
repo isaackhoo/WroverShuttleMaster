@@ -32,5 +32,5 @@ void outToLcd(char *str)
 void outToLcdSd(char *str)
 {
     LcdScrollText(str);
-    logToSd(str);
+    addToSdPending(str);
 };

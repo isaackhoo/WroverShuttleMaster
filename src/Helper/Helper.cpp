@@ -1,6 +1,8 @@
 #include "Helper.h"
 #include <string.h>
 #include <stdio.h>
+#include "../Logger/SD/SD.h"
+#include "Esp.h"
 
 // Append char
 void appendChar(char *s, char c)
@@ -108,6 +110,13 @@ bool cutStr(char *source, char *output, int from, int length)
         source[0] = '\0'; // empty string
     }
     return true;
+};
+
+// reset chip
+void resetChip()
+{
+    logToSd();
+    ESP.restart();
 };
 
 // Search c string
