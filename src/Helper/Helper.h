@@ -29,6 +29,9 @@ extern void toCString(char*, float);
 // Cut str
 extern bool cutStr(char *, char *, int, int);
 
+// reset chip
+extern void resetChip();
+
 // Search c string
 extern int findIndex(char*, char);
 extern int reverseFindIndex(char*, char);

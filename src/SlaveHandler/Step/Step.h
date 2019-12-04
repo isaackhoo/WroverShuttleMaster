@@ -8,6 +8,7 @@
 // --------------------------
 // STEP PRIVATE VARIABLES
 // --------------------------
+static const char *NAK = "\x21";
 
 // --------------------------
 // STEP PUBLIC VARIABLES
@@ -41,6 +42,7 @@ typedef enum
     STEP_AWAITING_START = 0,
     STEP_PENDING,
     STEP_COMPLETED,
+    STEP_ERROR,
     Num_Of_Step_Status
 } STEPSTATUS;
 const char stepStatusToString[][20] = {"Awaiting start", "Pending", "Completed"};
@@ -54,14 +56,15 @@ const char stepStatusToString[][20] = {"Awaiting start", "Pending", "Completed"}
 // --------------------------
 class Step
 {
-private:
+  private:
     STEPACTION stepAction;
     STEPSTATUS stepStatus;
     char stepTarget[DEFAULT_CHAR_ARRAY_SIZE];
+    char stepErrorDetails[DEFAULT_CHAR_ARRAY_SIZE];
 
     void setAction(STEPACTION);
 
-public:
+  public:
     Step();
     Step(STEPACTION);
     Step(STEPACTION, char *);
@@ -78,6 +81,7 @@ public:
     STEPACTION getStepAction();
     STEPSTATUS getStepStatus();
     char *getStepTarget();
+    char *getStepErrorDetails();
 
     // methods
     bool evaluateStep(char *);

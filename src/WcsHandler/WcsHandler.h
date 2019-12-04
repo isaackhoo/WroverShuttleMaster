@@ -19,6 +19,7 @@ typedef enum
   MOVE,        // 6
   BATTERY,     // 7
   STATE,       // 8
+  LEVEL,       // 9
   ERROR,
   Num_Of_WCS_Action_Enums
 } ENUM_WCS_ACTIONS;
@@ -32,6 +33,7 @@ typedef struct
   int action;
   char instructions[DEFAULT_CHAR_ARRAY_SIZE];
 } WcsFormat;
+static const long PING_DROPPED_DURATION = 1000 * (30 + 10); // 30s ping duration, +10s buffer to determine ping has dropped
 
 // --------------------------
 // Wcs Public Variables
@@ -48,16 +50,20 @@ private:
   char readBuffer[DEFAULT_CHAR_ARRAY_SIZE * 2];
   WcsFormat wcsIn;
   WcsFormat wcsOut;
+  unsigned long lastPingMillis;
   int hasCompleteInstructions();
   int read();
   bool interpret(char *);
   void perform();
   void handle(int);
-  bool send(char *);
-  bool send();
+  bool send(char *, bool);
+  bool send(bool);
   void pullCurrentStatus();
+  void updateLastPing();
+  bool isPingAlive();
 
 public:
+  WcsHandler();
   void init(void);
   void run(void);
   bool sendJobCompletionNotification(const char *, const char *);

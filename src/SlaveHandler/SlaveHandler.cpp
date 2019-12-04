@@ -235,47 +235,56 @@ void SlaveHandler::handle()
 
     if (res)
     {
-        // step is complete
-        steps[this->currentStepIndex].setStatus(STEP_COMPLETED);
-        // update status of shuttle based on step that is completed
-        switch (steps[this->currentStepIndex].getStepAction())
+        // check if step has encountered any errors
+        if (steps[this->currentStepIndex].getStepStatus() == STEP_ERROR)
         {
-        case MOVE_TO_BIN:
-        case MOVE_TO_POS:
-        {
-            status.setPos(atol(steps[this->currentStepIndex].getStepTarget()));
-            break;
-        }
-        case EXTEND_ARM:
-        {
-            status.setIsCarryingBin(false);
-            break;
-        }
-        case RETRACT_ARM:
-        {
-            status.setIsCarryingBin(true);
-            break;
-        }
-        case EXTEND_FINGERS:
-        {
-            status.setIsFingerExtended(true);
-            break;
-        }
-        case RETRACT_FINGERS:
-        {
-            status.setIsFingerExtended(false);
-            break;
-        }
-        default:
-            break;
-        }
-        info("Step done");
-
-        // check for more steps to do
-        if (this->currentStepIndex < this->totalSteps - 1)
-            this->incCurrentStepIndex();
-        else
+            // terminate other steps, jump to notifying wcs
             this->setOverallStepsCompleted(true);
+        }
+        else
+        {
+            // step is complete
+            steps[this->currentStepIndex].setStatus(STEP_COMPLETED);
+            // update status of shuttle based on step that is completed
+            switch (steps[this->currentStepIndex].getStepAction())
+            {
+            case MOVE_TO_BIN:
+            case MOVE_TO_POS:
+            {
+                status.setPos(atol(steps[this->currentStepIndex].getStepTarget()));
+                break;
+            }
+            case EXTEND_ARM:
+            {
+                status.setIsCarryingBin(false);
+                break;
+            }
+            case RETRACT_ARM:
+            {
+                status.setIsCarryingBin(true);
+                break;
+            }
+            case EXTEND_FINGERS:
+            {
+                status.setIsFingerExtended(true);
+                break;
+            }
+            case RETRACT_FINGERS:
+            {
+                status.setIsFingerExtended(false);
+                break;
+            }
+            default:
+                break;
+            }
+            info("Step done");
+
+            // check for more steps to do
+            if (this->currentStepIndex < this->totalSteps - 1)
+                this->incCurrentStepIndex();
+            else
+                this->setOverallStepsCompleted(true);
+        }
     }
     // do nothing if step is not complete.
     // instructions will be resent to slave.
@@ -291,10 +300,20 @@ void SlaveHandler::handle()
     }
     else
     {
-        // job completed
-        // update wcs on job completion
-        wcsHandler.sendJobCompletionNotification(status.getActionEnum(), "01");
-        status.setState(IDLE);
+        if (steps[this->currentStepIndex].getStepStatus() == STEP_ERROR)
+        {
+            // notify wcs of error in step
+            wcsHandler.sendJobCompletionNotification(status.getActionEnum(), steps[this->currentStepIndex].getStepErrorDetails());
+            status.setState(SHUTTLE_ERROR);
+        }
+        else
+        {
+            // job completed
+            // update wcs on job completion
+            wcsHandler.sendJobCompletionNotification(status.getActionEnum(), "01");
+            status.setState(IDLE);
+        }
+
         // reset slave handler
         this->reset();
     }
@@ -324,11 +343,6 @@ void SlaveHandler::init(HardwareSerial *serialPort)
     this->ss->end();
     this->ss->begin(DEFAULT_SERIAL_BAUD_RATE);
     info("Slave Serial started");
-};
-
-void init(HardwareSerial *serialPort, int tx, int rx)
-{
-
 };
 
 void SlaveHandler::run()
@@ -581,7 +595,11 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
     steps[0].setStep(MOVE_TO_BIN, binPosArr);
     steps[1].setStep(CHECK_RACK_BIN_SLOT, binInRackSlotArr);
     steps[2].setStep(EXTEND_ARM, extensionResultArr);
+<<<<<<< HEAD
     steps[3].setStep(EXTEND_FINGERS, pullingFingersId); 
+=======
+    steps[3].setStep(EXTEND_FINGERS, pullingFingersId);
+>>>>>>> origin/master
     steps[4].setStep(RETRACT_ARM, armHomeMore);
     steps[5].setStep(RETRACT_ARM, armHomeArr);
     steps[6].setStep(RETRACT_FINGERS, pullingFingersId);

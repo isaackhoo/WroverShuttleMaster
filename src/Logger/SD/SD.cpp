@@ -1,16 +1,17 @@
 #include <string.h>
 #include <stdio.h>
-#include "SD.h"
+#include <String.h>
+#include "./SD.h"
 #include "FS.h"
 #include "SD_MMC.h"
 #include "../../../src/Network/Wifi/WifiNetwork.h"
-#include "../../Helper/Helper.h"
 
 // -----------------------------
 // SD PRIVATE VARIABLES
 // -----------------------------
 const char *LogsDirectory = "/Logs";
-const char *ShuttleDirectory = "/State";
+const char *StatusDirectory = "/Status";
+const char *StatusFile = "/status.txt";
 
 const int timestampInterval = 1000 * 60 * 5; // every 5 minutes
 unsigned long lastMillis = 0;
@@ -42,7 +43,7 @@ String readFile(fs::FS &fs, const char *path)
     {
         while (file.available())
         {
-            fileOutput += file.read();
+            fileOutput += (char)file.read();
         }
         file.close();
     }
@@ -146,25 +147,55 @@ bool SdInit()
     createDir(SD_MMC, LogsDirectory);
     // create a log text file if it does not exist
     logTimestampCallback(0, 0, 0);
-    logToSd(initMsg);
-
-    // TODO
-    // pull from status folder and update status
+    addToSdPending(initMsg);
 
     return true;
 }
 
-bool logToSd(const char *str)
+bool logToSd()
 {
-    char endChar = str[strlen(str) - 1];
+    // char endChar = str[strlen(str) - 1];
 
-    if (!appendFile(SD_MMC, getLatestLogPath(), str))
+    // if (!appendFile(SD_MMC, getLatestLogPath(), str))
+    //     return false;
+    // if (endChar != '\n')
+    //     if (!appendFile(SD_MMC, getLatestLogPath(), "\n"))
+    //         return false;
+    // return true;
+
+    static char temp[MAX_PENDING_LOGS_SIZE * (DEFAULT_CHAR_ARRAY_SIZE + 1)];
+    for (int i = 0; i <= pendingLogsCurPointer; i++)
+    {
+        if (i == 0)
+            strcpy(temp, pendingLogs[i]);
+        else
+            strcat(temp, pendingLogs[i]);
+
+        pendingLogs[i][0] = '\0'; // clear log
+    }
+
+    pendingLogsCurPointer = 0;
+
+    if (!appendFile(SD_MMC, getLatestLogPath(), temp))
         return false;
-    if (endChar != '\n')
-        if (!appendFile(SD_MMC, getLatestLogPath(), "\n"))
-            return false;
     return true;
 }
+
+void addToSdPending(const char *log)
+{
+    if (strlen(log) > DEFAULT_CHAR_ARRAY_SIZE)
+        return;
+
+    char endChar = log[strlen(log) - 1];
+    strcpy(pendingLogs[pendingLogsCurPointer], log);
+    if (endChar != '\n')
+        strcat(pendingLogs[pendingLogsCurPointer], "\n");
+
+    if (pendingLogsCurPointer < MAX_PENDING_LOGS_SIZE)
+        pendingLogsCurPointer++;
+    else
+        logToSd();
+};
 
 void logTimestampCallback(int idx, int v, int up)
 {
@@ -173,17 +204,35 @@ void logTimestampCallback(int idx, int v, int up)
     static char timestamp[15];
 
     // create time stamp
-    // strcpy_s(timestamp, sizeof timestamp, "[");
-    // strcat_s(timestamp, sizeof timestamp, timeString);
-    // strcat_s(timestamp, sizeof timestamp, "]");
-
     strcpy(timestamp, "[");
     strcat(timestamp, timeString);
     strcat(timestamp, "]");
 
     // append time stamp to sd
-    logToSd(timestamp);
+    addToSdPending(timestamp);
 }
+
+void logStatus(char *statusStr)
+{
+    createDir(SD_MMC, StatusDirectory);
+    char statusFileName[DEFAULT_CHAR_ARRAY_SIZE];
+    strcpy(statusFileName, StatusDirectory);
+    strcat(statusFileName, StatusFile);
+
+    writeFile(SD_MMC, statusFileName, statusStr);
+};
+
+char *readStatus()
+{
+    char statusFileName[DEFAULT_CHAR_ARRAY_SIZE];
+    strcpy(statusFileName, StatusDirectory);
+    strcat(statusFileName, StatusFile);
+
+    String output = readFile(SD_MMC, statusFileName);
+    static char outputCStr[DEFAULT_CHAR_ARRAY_SIZE * 2];
+    strcpy(outputCStr, output.c_str());
+    return outputCStr;
+};
 
 // ------------------------
 // SD USAGE

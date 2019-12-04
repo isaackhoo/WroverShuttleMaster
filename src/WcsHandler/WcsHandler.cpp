@@ -1,6 +1,8 @@
 #include <string.h>
+#include <stdio.h>
 #include "WcsHandler.h"
 #include "../Logger/Logger.h"
+#include "../Logger/SD/SD.h"
 #include "../Network/TCP/TCP.h"
 #include "../Network/Wifi/WifiNetwork.h"
 #include "../Status/Status.h"
@@ -80,6 +82,7 @@ void WcsHandler::perform()
     {
         info("REC WCS::LOGIN");
         status.setId(this->wcsIn.id);
+        status.saveStatus(); // forced to perform the save outside here, or wrover will not load up. No idea why
         break;
     }
     case LOGOUT:
@@ -93,7 +96,8 @@ void WcsHandler::perform()
         // no need to edit anything,
         // just reply ping
         this->wcsOut = this->wcsIn;
-        this->send();
+        this->send(false);
+        this->updateLastPing();
         break;
     }
     case RETRIEVEBIN:
@@ -127,6 +131,13 @@ void WcsHandler::perform()
         info("REC WCS::STATE");
         break;
     }
+    case LEVEL:
+    {
+        info("REC WCS::LEVEL");
+        status.setLevel(this->wcsIn.instructions);
+        status.saveStatus();
+        break;
+    }
     case ERROR:
     {
         break;
@@ -158,7 +169,7 @@ void WcsHandler::handle(int pos)
     this->perform();
 }
 
-bool WcsHandler::send(char *str)
+bool WcsHandler::send(char *str, bool shouldLog = true)
 {
     // 1    - STX
     // 2-5  - shuttle ID
@@ -176,14 +187,20 @@ bool WcsHandler::send(char *str)
     strcat(writeString, ETX);
     bool res = TcpWrite(writeString);
 
-    writeString[0] = '\0';
+    static char wcsSendLog[DEFAULT_CHAR_ARRAY_SIZE * 4];
 
     if (!res)
-        return false;
-    return true;
+        sprintf(wcsSendLog, "Failed to send to server: %s", writeString);
+    else
+        sprintf(wcsSendLog, "Sent to server: %s", writeString);
+
+    if (shouldLog)
+        logSd(wcsSendLog);
+    writeString[0] = '\0';
+    return res;
 }
 
-bool WcsHandler::send()
+bool WcsHandler::send(bool shouldLog = true)
 {
     // WcsHandler::send overload.
     // compiles wcsOut into a cstring to send
@@ -197,49 +214,86 @@ bool WcsHandler::send()
     if (strlen(this->wcsOut.instructions) > 0)
         // strcat_s(wcsOutString, sizeof wcsOutString, this->wcsOut.instructions);
         strcat(wcsOutString, this->wcsOut.instructions);
-    this->send(wcsOutString);
+    this->send(wcsOutString, shouldLog);
 };
 
 void WcsHandler::pullCurrentStatus()
 {
     // retrieves status information
-    // strcpy_s(this->wcsOut.id, sizeof this->wcsOut.id, status.getId());
     strcpy(this->wcsOut.id, status.getId());
+    if (!status.isIdDefault())
+    {
+        strcpy(this->wcsOut.instructions, status.getLevel());
+        char stateStr[3];
+        GET_TWO_DIGIT_STRING(stateStr, status.getState());
+        strcat(this->wcsOut.instructions, stateStr);
+    }
+};
+
+void WcsHandler::updateLastPing()
+{
+    this->lastPingMillis = millis();
+};
+
+bool WcsHandler::isPingAlive()
+{
+    if (millis() - this->lastPingMillis > PING_DROPPED_DURATION)
+        return false;
+    return true;
 };
 
 // --------------------------
 // Wcs Public Methods
 // --------------------------
+WcsHandler::WcsHandler()
+{
+    this->lastPingMillis = millis();
+};
+
 void WcsHandler::init(void)
 {
+    // rehydration
+    info("rehydrating status");
+    status.rehydrateStatus(readStatus());
+    info("rehydration complete");
+
+    // wifi connection
     info("Connecting to Wifi");
     bool wifiConnectionRes = ConnectWifi();
     if (!wifiConnectionRes)
     {
         logSd("Failed to connect to wifi.");
-        ESP.restart();
+        resetChip();
     }
     info("Wifi connected");
+
+    // wcs connection
     info("Connecting to WCS Server");
     bool tcpConnectionRes = ConnectTcpServer();
     if (!tcpConnectionRes)
     {
         logSd("Failed to connect to server.");
-        ESP.restart();
+        resetChip();
     }
     info("server connected");
-    // retrieve existing shuttle status
+    // retrieve existing shuttle id
     this->pullCurrentStatus();
     // login to server
     char loginEnumString[3];
     GET_TWO_DIGIT_STRING(loginEnumString, LOGIN);
-    // strcpy_s(this->wcsOut.actionEnum, sizeof this->wcsOut.actionEnum, loginEnumString);
     strcpy(this->wcsOut.actionEnum, loginEnumString);
     this->send();
 }
 
 void WcsHandler::run(void)
 {
+    if (!this->isPingAlive())
+    {
+        // no more pings are received from server. restart chip to attempt reconnection
+        logSd("No pings from server. Restarting chip.");
+        resetChip();
+    }
+
     int pos = this->read();
     while (pos > 0)
     {
