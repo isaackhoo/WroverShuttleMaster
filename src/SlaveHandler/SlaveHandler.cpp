@@ -425,6 +425,14 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     char armHomeMore[DEFAULT_CHAR_ARRAY_SIZE];
     itoa(ARM_HOME_RIGHT_MORE, armHomeMore, 10);
 
+    // check bin has indeed been ret from buffer
+    char checkBinTakenFromBufferSlotArr[DEFAULT_CHAR_ARRAY_SIZE];
+    if (storageBufferDepth < 0) // LEFT
+        binPosState = LEFT_COMPLETELY_EMPTY;
+    else if (storageBufferDepth > 0) // RIGHT
+        binPosState = RIGHT_COMPLETELY_EMPTY;
+    GET_TWO_DIGIT_STRING(checkBinTakenFromBufferSlotArr, binPosState);
+
     // get arm home char
     char armHomeArr[DEFAULT_CHAR_ARRAY_SIZE];
     itoa(ARM_HOME_POSITION, armHomeArr, 10);
@@ -452,7 +460,7 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     else if (extensionDirection == EXTEND_RIGHT)
     {
         if (depth == FIRST_DEPTH)
-            binPosState = RIGHT_BOTH_OCCUPIED;
+            binPosState = RIGHT_SECOND_DEPTH_OCCUPIED;
         else if (depth == SECOND_DEPTH)
             binPosState = RIGHT_COMPLETELY_EMPTY;
     }
@@ -462,6 +470,24 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     char pushingFingersArr[DEFAULT_CHAR_ARRAY_SIZE];
     this->getPushingFingers(extensionDirection, pushingFingersArr);
 
+    // get check bin stored in correct position
+    char checkBinStoredInStorageSlotArr[DEFAULT_CHAR_ARRAY_SIZE];
+    if (extensionDirection == EXTEND_LEFT)
+    {
+        if (depth == FIRST_DEPTH)
+            binPosState = LEFT_BOTH_OCCUPIED; // store to left 1st depth, both occupied
+        else if (depth == SECOND_DEPTH)
+            binPosState = LEFT_SECOND_DEPTH_OCCUPIED; // store to left 2nd depth, 2nd depth occupied
+    }
+    else if (extensionDirection == EXTEND_RIGHT)
+    {
+        if (depth == FIRST_DEPTH)
+            binPosState = RIGHT_BOTH_OCCUPIED; // store to right 1st depth, both occupied
+        else if (depth == SECOND_DEPTH)
+            binPosState = RIGHT_SECOND_DEPTH_OCCUPIED; // store to right 2nd depth, 2nd depth occupied
+    }
+    GET_TWO_DIGIT_STRING(checkBinStoredInStorageSlotArr, binPosState);
+
     steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
     steps[1].setStep(MOVE_TO_POS, bufferPosArr);
     steps[2].setStep(CHECK_BUFFER_BIN_SLOT, binInBufferSlotArr);
@@ -470,16 +496,18 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     steps[5].setStep(RETRACT_ARM, armHomeMore);
     steps[6].setStep(RETRACT_ARM, armHomeArr);
     steps[7].setStep(RETRACT_FINGERS, pullingFingersArr);
-    steps[8].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
-    steps[9].setStep(MOVE_TO_BIN, binPosArr);
-    steps[10].setStep(CHECK_RACK_BIN_SLOT, noBinInStorageSlotArr);
-    steps[11].setStep(EXTEND_FINGERS, pushingFingersArr);
-    steps[12].setStep(EXTEND_ARM, extensionResultArr);
-    steps[13].setStep(RETRACT_ARM, armHomeArr);
-    steps[14].setStep(RETRACT_FINGERS, pushingFingersArr);
+    steps[8].setStep(CHECK_BUFFER_BIN_SLOT, checkBinTakenFromBufferSlotArr); //
+    steps[9].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
+    steps[10].setStep(MOVE_TO_BIN, binPosArr);
+    steps[11].setStep(CHECK_RACK_BIN_SLOT, noBinInStorageSlotArr);
+    steps[12].setStep(EXTEND_FINGERS, pushingFingersArr);
+    steps[13].setStep(EXTEND_ARM, extensionResultArr);
+    steps[14].setStep(RETRACT_ARM, armHomeArr);
+    steps[15].setStep(RETRACT_FINGERS, pushingFingersArr);
+    steps[16].setStep(CHECK_RACK_BIN_SLOT, checkBinStoredInStorageSlotArr); //
 
     this->setOverallStepsCompleted(false);
-    this->setTotalSteps(15);
+    this->setTotalSteps(17);
 
     // for (int i = 0; i < this->totalSteps; i++)
     // {
@@ -595,11 +623,7 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
     steps[0].setStep(MOVE_TO_BIN, binPosArr);
     steps[1].setStep(CHECK_RACK_BIN_SLOT, binInRackSlotArr);
     steps[2].setStep(EXTEND_ARM, extensionResultArr);
-<<<<<<< HEAD
     steps[3].setStep(EXTEND_FINGERS, pullingFingersId); 
-=======
-    steps[3].setStep(EXTEND_FINGERS, pullingFingersId);
->>>>>>> origin/master
     steps[4].setStep(RETRACT_ARM, armHomeMore);
     steps[5].setStep(RETRACT_ARM, armHomeArr);
     steps[6].setStep(RETRACT_FINGERS, pullingFingersId);
