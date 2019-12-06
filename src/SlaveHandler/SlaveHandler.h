@@ -49,8 +49,8 @@ const int GAP_BETWEEN_BIN_WIDTH = 80;
 const int BIN_WIDTH = 400;
 const int BIN_LENGTH = 600;
 const int GAP_BETWEEN_BIN_LENGTH = 30;
-const int FIRST_DEPTH = 600;
-const int SECOND_DEPTH = 1200;
+const int FIRST_DEPTH = 670;
+const int SECOND_DEPTH = 1250;
 const int BUFFER_DEPTH = 900;
 
 // others
