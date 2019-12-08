@@ -27,7 +27,8 @@ extern void toCString(char*, double);
 extern void toCString(char*, float);
 
 // Cut str
-extern bool cutStr(char *, char *, int, int);
+extern bool strcut(char *, char *, int, int, bool);
+extern bool strcut(char *, char *, int, int);
 
 // reset chip
 extern void resetChip();

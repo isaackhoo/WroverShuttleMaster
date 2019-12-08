@@ -51,11 +51,9 @@ private:
   WcsFormat wcsIn;
   WcsFormat wcsOut;
   unsigned long lastPingMillis;
-  int hasCompleteInstructions();
-  int read();
   bool interpret(char *);
   void perform();
-  void handle(int);
+  void handle();
   bool send(char *, bool);
   bool send(bool);
   void pullCurrentStatus();

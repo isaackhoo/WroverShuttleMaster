@@ -387,9 +387,9 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     char inCol[DEFAULT_CHAR_ARRAY_SIZE];
     char binInColPos[DEFAULT_CHAR_ARRAY_SIZE];
 
-    successfullyProcessed = cutStr(storageInst, inRack, 0, RACK_ID_LENGTH);
-    successfullyProcessed = cutStr(storageInst, inCol, 0, COLUMN_ID_LENGTH);
-    successfullyProcessed = cutStr(storageInst, binInColPos, 0, BIN_POS_ID_LENGTH);
+    successfullyProcessed = strcut(inRack, storageInst, 0, RACK_ID_LENGTH);
+    successfullyProcessed = strcut(inCol, storageInst, 0, COLUMN_ID_LENGTH);
+    successfullyProcessed = strcut(binInColPos, storageInst, 0, BIN_POS_ID_LENGTH);
 
     if (!successfullyProcessed)
         return false;
@@ -510,9 +510,9 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
     char inCol[DEFAULT_CHAR_ARRAY_SIZE];
     char binInColPos[DEFAULT_CHAR_ARRAY_SIZE];
 
-    successfullyProcessed = cutStr(retrievalInst, inRack, 0, RACK_ID_LENGTH);
-    successfullyProcessed = cutStr(retrievalInst, inCol, 0, COLUMN_ID_LENGTH);
-    successfullyProcessed = cutStr(retrievalInst, binInColPos, 0, BIN_POS_ID_LENGTH);
+    successfullyProcessed = strcut(retrievalInst, inRack, 0, RACK_ID_LENGTH);
+    successfullyProcessed = strcut(retrievalInst, inCol, 0, COLUMN_ID_LENGTH);
+    successfullyProcessed = strcut(retrievalInst, binInColPos, 0, BIN_POS_ID_LENGTH);
 
     if (!successfullyProcessed)
         return false;
