@@ -1,0 +1,228 @@
+===============================================================================
+EXTENSION NAME : linecount
+EXTENSION VERSION : 0.1.7
+-------------------------------------------------------------------------------
+count time : 2019-12-05 11:20:40
+count workspace : e:\LSH Codes\PROTOTYPE_WCS\WroverShuttleMaster\WroverShuttleMaster
+total files : 216
+total code lines : 14075
+total comment lines : 994
+total blank lines : 697
+
+.gitignore, code is 3, comment is 0, blank is 0.
+build\build.options.json, code is 11, comment is 0, blank is 0.
+build\core\base64.cpp.d, code is 133, comment is 0, blank is 0.
+build\core\base64.cpp.o, it is a binary file.
+build\core\cbuf.cpp.d, code is 20, comment is 0, blank is 0.
+build\core\cbuf.cpp.o, it is a binary file.
+build\core\core.a, it is a binary file.
+build\core\Esp.cpp.d, code is 142, comment is 0, blank is 0.
+build\core\Esp.cpp.o, it is a binary file.
+build\core\esp32-hal-adc.c.d, code is 108, comment is 0, blank is 0.
+build\core\esp32-hal-adc.c.o, it is a binary file.
+build\core\esp32-hal-bt.c.d, code is 108, comment is 0, blank is 0.
+build\core\esp32-hal-bt.c.o, it is a binary file.
+build\core\esp32-hal-cpu.c.d, code is 117, comment is 0, blank is 0.
+build\core\esp32-hal-cpu.c.o, it is a binary file.
+build\core\esp32-hal-dac.c.d, code is 108, comment is 0, blank is 0.
+build\core\esp32-hal-dac.c.o, it is a binary file.
+build\core\esp32-hal-gpio.c.d, code is 110, comment is 0, blank is 0.
+build\core\esp32-hal-gpio.c.o, it is a binary file.
+build\core\esp32-hal-i2c.c.d, code is 116, comment is 0, blank is 0.
+build\core\esp32-hal-i2c.c.o, it is a binary file.
+build\core\esp32-hal-ledc.c.d, code is 114, comment is 0, blank is 0.
+build\core\esp32-hal-ledc.c.o, it is a binary file.
+build\core\esp32-hal-matrix.c.d, code is 105, comment is 0, blank is 0.
+build\core\esp32-hal-matrix.c.o, it is a binary file.
+build\core\esp32-hal-misc.c.d, code is 121, comment is 0, blank is 0.
+build\core\esp32-hal-misc.c.o, it is a binary file.
+build\core\esp32-hal-psram.c.d, code is 107, comment is 0, blank is 0.
+build\core\esp32-hal-psram.c.o, it is a binary file.
+build\core\esp32-hal-rmt.c.d, code is 115, comment is 0, blank is 0.
+build\core\esp32-hal-rmt.c.o, it is a binary file.
+build\core\esp32-hal-sigmadelta.c.d, code is 110, comment is 0, blank is 0.
+build\core\esp32-hal-sigmadelta.c.o, it is a binary file.
+build\core\esp32-hal-spi.c.d, code is 115, comment is 0, blank is 0.
+build\core\esp32-hal-spi.c.o, it is a binary file.
+build\core\esp32-hal-time.c.d, code is 138, comment is 0, blank is 0.
+build\core\esp32-hal-time.c.o, it is a binary file.
+build\core\esp32-hal-timer.c.d, code is 111, comment is 0, blank is 0.
+build\core\esp32-hal-timer.c.o, it is a binary file.
+build\core\esp32-hal-touch.c.d, code is 108, comment is 0, blank is 0.
+build\core\esp32-hal-touch.c.o, it is a binary file.
+build\core\esp32-hal-uart.c.d, code is 118, comment is 0, blank is 0.
+build\core\esp32-hal-uart.c.o, it is a binary file.
+build\core\FunctionalInterrupt.cpp.d, code is 113, comment is 0, blank is 0.
+build\core\FunctionalInterrupt.cpp.o, it is a binary file.
+build\core\HardwareSerial.cpp.d, code is 113, comment is 0, blank is 0.
+build\core\HardwareSerial.cpp.o, it is a binary file.
+build\core\IPAddress.cpp.d, code is 130, comment is 0, blank is 0.
+build\core\IPAddress.cpp.o, it is a binary file.
+build\core\IPv6Address.cpp.d, code is 131, comment is 0, blank is 0.
+build\core\IPv6Address.cpp.o, it is a binary file.
+build\core\libb64\cdecode.c.d, code is 7, comment is 0, blank is 0.
+build\core\libb64\cdecode.c.o, it is a binary file.
+build\core\libb64\cencode.c.d, code is 3, comment is 0, blank is 0.
+build\core\libb64\cencode.c.o, it is a binary file.
+build\core\main.cpp.d, code is 131, comment is 0, blank is 0.
+build\core\main.cpp.o, it is a binary file.
+build\core\MD5Builder.cpp.d, code is 131, comment is 0, blank is 0.
+build\core\MD5Builder.cpp.o, it is a binary file.
+build\core\Print.cpp.d, code is 130, comment is 0, blank is 0.
+build\core\Print.cpp.o, it is a binary file.
+build\core\stdlib_noniso.c.d, code is 24, comment is 0, blank is 0.
+build\core\stdlib_noniso.c.o, it is a binary file.
+build\core\Stream.cpp.d, code is 130, comment is 0, blank is 0.
+build\core\Stream.cpp.o, it is a binary file.
+build\core\StreamString.cpp.d, code is 130, comment is 0, blank is 0.
+build\core\StreamString.cpp.o, it is a binary file.
+build\core\wiring_pulse.c.d, code is 114, comment is 0, blank is 0.
+build\core\wiring_pulse.c.o, it is a binary file.
+build\core\wiring_shift.c.d, code is 114, comment is 0, blank is 0.
+build\core\wiring_shift.c.o, it is a binary file.
+build\core\WMath.cpp.d, code is 58, comment is 0, blank is 0.
+build\core\WMath.cpp.o, it is a binary file.
+build\core\WString.cpp.d, code is 131, comment is 0, blank is 0.
+build\core\WString.cpp.o, it is a binary file.
+build\includes.cache, code is 277, comment is 0, blank is 0.
+build\libraries\Adafruit_GFX_Library\Adafruit_GFX.cpp.d, code is 133, comment is 0, blank is 0.
+build\libraries\Adafruit_GFX_Library\Adafruit_GFX.cpp.o, it is a binary file.
+build\libraries\Adafruit_GFX_Library\Adafruit_SPITFT.cpp.d, code is 135, comment is 0, blank is 0.
+build\libraries\Adafruit_GFX_Library\Adafruit_SPITFT.cpp.o, it is a binary file.
+build\libraries\Adafruit_GFX_Library\glcdfont.c.d, code is 2, comment is 0, blank is 0.
+build\libraries\Adafruit_GFX_Library\glcdfont.c.o, it is a binary file.
+build\libraries\Automaton-master\Atm_analog.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\Atm_analog.cpp.o, it is a binary file.
+build\libraries\Automaton-master\Atm_bit.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\Atm_bit.cpp.o, it is a binary file.
+build\libraries\Automaton-master\Atm_button.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\Atm_button.cpp.o, it is a binary file.
+build\libraries\Automaton-master\Atm_command.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\Atm_command.cpp.o, it is a binary file.
+build\libraries\Automaton-master\Atm_comparator.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\Atm_comparator.cpp.o, it is a binary file.
+build\libraries\Automaton-master\atm_connector.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\atm_connector.cpp.o, it is a binary file.
+build\libraries\Automaton-master\Atm_controller.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\Atm_controller.cpp.o, it is a binary file.
+build\libraries\Automaton-master\atm_counter.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\atm_counter.cpp.o, it is a binary file.
+build\libraries\Automaton-master\Atm_digital.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\Atm_digital.cpp.o, it is a binary file.
+build\libraries\Automaton-master\Atm_encoder.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\Atm_encoder.cpp.o, it is a binary file.
+build\libraries\Automaton-master\Atm_fan.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\Atm_fan.cpp.o, it is a binary file.
+build\libraries\Automaton-master\Atm_step.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\Atm_step.cpp.o, it is a binary file.
+build\libraries\Automaton-master\Atm_timer.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\Atm_timer.cpp.o, it is a binary file.
+build\libraries\Automaton-master\atm_timer_millis.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\atm_timer_millis.cpp.o, it is a binary file.
+build\libraries\Automaton-master\Automaton.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\Automaton.cpp.o, it is a binary file.
+build\libraries\Automaton-master\Machine.cpp.d, code is 146, comment is 0, blank is 0.
+build\libraries\Automaton-master\Machine.cpp.o, it is a binary file.
+build\libraries\FS\FS.cpp.d, code is 113, comment is 0, blank is 0.
+build\libraries\FS\FS.cpp.o, it is a binary file.
+build\libraries\FS\vfs_api.cpp.d, code is 117, comment is 0, blank is 0.
+build\libraries\FS\vfs_api.cpp.o, it is a binary file.
+build\libraries\SD_MMC\SD_MMC.cpp.d, code is 147, comment is 0, blank is 0.
+build\libraries\SD_MMC\SD_MMC.cpp.o, it is a binary file.
+build\libraries\SPI\SPI.cpp.d, code is 23, comment is 0, blank is 0.
+build\libraries\SPI\SPI.cpp.o, it is a binary file.
+build\libraries\WiFi\ETH.cpp.d, code is 191, comment is 0, blank is 0.
+build\libraries\WiFi\ETH.cpp.o, it is a binary file.
+build\libraries\WiFi\WiFi.cpp.d, code is 188, comment is 0, blank is 0.
+build\libraries\WiFi\WiFi.cpp.o, it is a binary file.
+build\libraries\WiFi\WiFiAP.cpp.d, code is 189, comment is 0, blank is 0.
+build\libraries\WiFi\WiFiAP.cpp.o, it is a binary file.
+build\libraries\WiFi\WiFiClient.cpp.d, code is 184, comment is 0, blank is 0.
+build\libraries\WiFi\WiFiClient.cpp.o, it is a binary file.
+build\libraries\WiFi\WiFiGeneric.cpp.d, code is 192, comment is 0, blank is 0.
+build\libraries\WiFi\WiFiGeneric.cpp.o, it is a binary file.
+build\libraries\WiFi\WiFiMulti.cpp.d, code is 186, comment is 0, blank is 0.
+build\libraries\WiFi\WiFiMulti.cpp.o, it is a binary file.
+build\libraries\WiFi\WiFiScan.cpp.d, code is 190, comment is 0, blank is 0.
+build\libraries\WiFi\WiFiScan.cpp.o, it is a binary file.
+build\libraries\WiFi\WiFiServer.cpp.d, code is 162, comment is 0, blank is 0.
+build\libraries\WiFi\WiFiServer.cpp.o, it is a binary file.
+build\libraries\WiFi\WiFiSTA.cpp.d, code is 192, comment is 0, blank is 0.
+build\libraries\WiFi\WiFiSTA.cpp.o, it is a binary file.
+build\libraries\WiFi\WiFiUdp.cpp.d, code is 161, comment is 0, blank is 0.
+build\libraries\WiFi\WiFiUdp.cpp.o, it is a binary file.
+build\libraries\WROVER_KIT_LCD-master\WROVER_KIT_LCD.cpp.d, code is 137, comment is 0, blank is 0.
+build\libraries\WROVER_KIT_LCD-master\WROVER_KIT_LCD.cpp.o, it is a binary file.
+build\preproc\ctags_target_for_gcc_minus_e.cpp, code is 20, comment is 3, blank is 4.
+build\sketch\src\Helper\Helper.cpp, code is 107, comment is 16, blank is 17.
+build\sketch\src\Helper\Helper.cpp.d, code is 133, comment is 0, blank is 0.
+build\sketch\src\Helper\Helper.cpp.o, it is a binary file.
+build\sketch\src\Helper\Helper.h, code is 19, comment is 10, blank is 13.
+build\sketch\src\Logger\LCD\LCD.cpp, code is 60, comment is 18, blank is 9.
+build\sketch\src\Logger\LCD\LCD.cpp.d, code is 137, comment is 0, blank is 0.
+build\sketch\src\Logger\LCD\LCD.cpp.o, it is a binary file.
+build\sketch\src\Logger\LCD\LCD.h, code is 7, comment is 3, blank is 4.
+build\sketch\src\Logger\Logger.cpp, code is 29, comment is 3, blank is 5.
+build\sketch\src\Logger\Logger.cpp.d, code is 152, comment is 0, blank is 0.
+build\sketch\src\Logger\Logger.cpp.o, it is a binary file.
+build\sketch\src\Logger\Logger.h, code is 20, comment is 12, blank is 6.
+build\sketch\src\Logger\SD\SD.cpp, code is 162, comment is 47, blank is 37.
+build\sketch\src\Logger\SD\SD.cpp.d, code is 138, comment is 0, blank is 0.
+build\sketch\src\Logger\SD\SD.cpp.o, it is a binary file.
+build\sketch\src\Logger\SD\SD.h, code is 15, comment is 3, blank is 7.
+build\sketch\src\Network\NetworkKeys.cpp, code is 6, comment is 0, blank is 2.
+build\sketch\src\Network\NetworkKeys.cpp.d, code is 133, comment is 0, blank is 0.
+build\sketch\src\Network\NetworkKeys.cpp.o, it is a binary file.
+build\sketch\src\Network\TCP\TCP.cpp, code is 33, comment is 8, blank is 4.
+build\sketch\src\Network\TCP\TCP.cpp.d, code is 135, comment is 0, blank is 0.
+build\sketch\src\Network\TCP\TCP.cpp.o, it is a binary file.
+build\sketch\src\Network\TCP\TCP.h, code is 11, comment is 6, blank is 6.
+build\sketch\src\Network\Wifi\WifiNetwork.cpp, code is 74, comment is 21, blank is 13.
+build\sketch\src\Network\Wifi\WifiNetwork.cpp.d, code is 186, comment is 0, blank is 0.
+build\sketch\src\Network\Wifi\WifiNetwork.cpp.o, it is a binary file.
+build\sketch\src\Network\Wifi\WifiNetwork.h, code is 10, comment is 6, blank is 3.
+build\sketch\src\SlaveHandler\SlaveHandler.cpp, code is 401, comment is 172, blank is 92.
+build\sketch\src\SlaveHandler\SlaveHandler.cpp.d, code is 120, comment is 0, blank is 0.
+build\sketch\src\SlaveHandler\SlaveHandler.cpp.o, it is a binary file.
+build\sketch\src\SlaveHandler\SlaveHandler.h, code is 99, comment is 22, blank is 19.
+build\sketch\src\SlaveHandler\Step\Step.cpp, code is 98, comment is 21, blank is 20.
+build\sketch\src\SlaveHandler\Step\Step.cpp.d, code is 33, comment is 0, blank is 0.
+build\sketch\src\SlaveHandler\Step\Step.cpp.o, it is a binary file.
+build\sketch\src\SlaveHandler\Step\Step.h, code is 63, comment is 15, blank is 12.
+build\sketch\src\Status\Status.cpp, code is 148, comment is 17, blank is 20.
+build\sketch\src\Status\Status.cpp.d, code is 35, comment is 0, blank is 0.
+build\sketch\src\Status\Status.cpp.o, it is a binary file.
+build\sketch\src\Status\Status.h, code is 59, comment is 11, blank is 11.
+build\sketch\src\WcsHandler\WcsHandler.cpp, code is 236, comment is 62, blank is 34.
+build\sketch\src\WcsHandler\WcsHandler.cpp.d, code is 142, comment is 0, blank is 0.
+build\sketch\src\WcsHandler\WcsHandler.cpp.o, it is a binary file.
+build\sketch\src\WcsHandler\WcsHandler.h, code is 57, comment is 19, blank is 7.
+build\sketch\WroverShuttleMaster.ino.cpp, code is 26, comment is 3, blank is 4.
+build\sketch\WroverShuttleMaster.ino.cpp.d, code is 152, comment is 0, blank is 0.
+build\sketch\WroverShuttleMaster.ino.cpp.o, it is a binary file.
+build\WroverShuttleMaster.ino.bin, it is a binary file.
+build\WroverShuttleMaster.ino.elf, it is a binary file.
+build\WroverShuttleMaster.ino.partitions.bin, it is a binary file.
+src\Helper\Helper.cpp, code is 107, comment is 16, blank is 17.
+src\Helper\Helper.h, code is 19, comment is 10, blank is 13.
+src\Logger\LCD\LCD.cpp, code is 60, comment is 18, blank is 9.
+src\Logger\LCD\LCD.h, code is 7, comment is 3, blank is 4.
+src\Logger\Logger.cpp, code is 29, comment is 3, blank is 5.
+src\Logger\Logger.h, code is 20, comment is 12, blank is 6.
+src\Logger\SD\SD.cpp, code is 165, comment is 48, blank is 40.
+src\Logger\SD\SD.h, code is 15, comment is 3, blank is 7.
+src\Network\NetworkKeys.cpp, code is 6, comment is 0, blank is 2.
+src\Network\TCP\TCP.cpp, code is 33, comment is 8, blank is 4.
+src\Network\TCP\TCP.h, code is 11, comment is 6, blank is 6.
+src\Network\Wifi\WifiNetwork.cpp, code is 74, comment is 21, blank is 13.
+src\Network\Wifi\WifiNetwork.h, code is 10, comment is 6, blank is 3.
+src\SlaveHandler\SlaveHandler.cpp, code is 401, comment is 172, blank is 92.
+src\SlaveHandler\SlaveHandler.h, code is 99, comment is 22, blank is 19.
+src\SlaveHandler\Step\Step.cpp, code is 98, comment is 21, blank is 20.
+src\SlaveHandler\Step\Step.h, code is 63, comment is 15, blank is 12.
+src\Status\Status.cpp, code is 148, comment is 17, blank is 20.
+src\Status\Status.h, code is 59, comment is 11, blank is 11.
+src\WcsHandler\WcsHandler.cpp, code is 236, comment is 62, blank is 34.
+src\WcsHandler\WcsHandler.h, code is 57, comment is 19, blank is 7.
+WroverShuttleMaster.ino, code is 19, comment is 3, blank is 4.
+===============================================================================

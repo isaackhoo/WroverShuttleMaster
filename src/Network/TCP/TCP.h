@@ -10,14 +10,14 @@
 // --------------------------
 extern WiFiClient client;
 
-extern const char* serverIp;
+extern const char *serverIp;
 extern const int serverPort;
 
 // --------------------------
 // TCP Client Public Methods
 // --------------------------
-extern bool ConnectTcpServer();
-extern bool TcpRead(char*);
-extern bool TcpWrite(char*);
+bool ConnectTcpServer();
+bool TcpRead(char *);
+bool TcpWrite(const char *);
 
 #endif

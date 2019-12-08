@@ -1,11 +1,8 @@
-#include <String.h>
-#include <string.h>
+#include <cstring>
 #include "TCP.h"
-#include "../../Helper/Helper.h"
-#include "../../Logger/Logger.h"
 
 // ----------------------------
-// TCP Client Variables
+// TCP Client Public Variables
 // ----------------------------
 WiFiClient client;
 
@@ -14,7 +11,6 @@ WiFiClient client;
 // --------------------------
 bool ConnectTcpServer()
 {
-    client.setNoDelay(true);
     if (!client.connect(serverIp, serverPort))
         return false;
     return true;
@@ -27,14 +23,19 @@ bool TcpRead(char *received)
         // does not cause heap fragmentation. tested
         String input = client.readString();
         input.trim();
-        // strcpy_s(received, sizeof received, input.c_str());
-        strcpy(received, input.c_str());
+        Serial.print("received ");
+        Serial.println(input);
+
+        if (strlen(received) == 0)
+            strcpy(received, input.c_str());
+        else
+            strcat(received, input.c_str());
         return true;
     }
     return false;
 };
 
-bool TcpWrite(char *toWrite)
+bool TcpWrite(const char *toWrite)
 {
     if (strlen(toWrite) <= 0)
         return false;

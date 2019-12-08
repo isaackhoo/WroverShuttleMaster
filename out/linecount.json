@@ -1,0 +1,1399 @@
+{
+    "extension": "linecount",
+    "version": "0.1.7",
+    "workspace": "e:\\LSH Codes\\PROTOTYPE_WCS\\WroverShuttleMaster\\WroverShuttleMaster",
+    "linecount": [
+        {
+            "version": "0.1.7",
+            "counttime": "2019-12-05 11:20:40",
+            "filesum": 216,
+            "codesum": 14075,
+            "commentsum": 994,
+            "blanksum": 697,
+            "filelist": [
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": ".gitignore"
+                },
+                {
+                    "blank": 0,
+                    "code": 11,
+                    "comment": 0,
+                    "filename": "build\\build.options.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 133,
+                    "comment": 0,
+                    "filename": "build\\core\\base64.cpp.d"
+                },
+                {
+                    "filename": "build\\core\\base64.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "build\\core\\cbuf.cpp.d"
+                },
+                {
+                    "filename": "build\\core\\cbuf.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\core\\core.a",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 142,
+                    "comment": 0,
+                    "filename": "build\\core\\Esp.cpp.d"
+                },
+                {
+                    "filename": "build\\core\\Esp.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 108,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-adc.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-adc.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 108,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-bt.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-bt.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 117,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-cpu.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-cpu.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 108,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-dac.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-dac.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 110,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-gpio.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-gpio.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 116,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-i2c.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-i2c.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 114,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-ledc.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-ledc.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 105,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-matrix.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-matrix.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 121,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-misc.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-misc.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 107,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-psram.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-psram.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 115,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-rmt.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-rmt.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 110,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-sigmadelta.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-sigmadelta.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 115,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-spi.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-spi.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 138,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-time.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-time.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 111,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-timer.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-timer.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 108,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-touch.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-touch.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 118,
+                    "comment": 0,
+                    "filename": "build\\core\\esp32-hal-uart.c.d"
+                },
+                {
+                    "filename": "build\\core\\esp32-hal-uart.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 113,
+                    "comment": 0,
+                    "filename": "build\\core\\FunctionalInterrupt.cpp.d"
+                },
+                {
+                    "filename": "build\\core\\FunctionalInterrupt.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 113,
+                    "comment": 0,
+                    "filename": "build\\core\\HardwareSerial.cpp.d"
+                },
+                {
+                    "filename": "build\\core\\HardwareSerial.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 130,
+                    "comment": 0,
+                    "filename": "build\\core\\IPAddress.cpp.d"
+                },
+                {
+                    "filename": "build\\core\\IPAddress.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 131,
+                    "comment": 0,
+                    "filename": "build\\core\\IPv6Address.cpp.d"
+                },
+                {
+                    "filename": "build\\core\\IPv6Address.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "build\\core\\libb64\\cdecode.c.d"
+                },
+                {
+                    "filename": "build\\core\\libb64\\cdecode.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "build\\core\\libb64\\cencode.c.d"
+                },
+                {
+                    "filename": "build\\core\\libb64\\cencode.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 131,
+                    "comment": 0,
+                    "filename": "build\\core\\main.cpp.d"
+                },
+                {
+                    "filename": "build\\core\\main.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 131,
+                    "comment": 0,
+                    "filename": "build\\core\\MD5Builder.cpp.d"
+                },
+                {
+                    "filename": "build\\core\\MD5Builder.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 130,
+                    "comment": 0,
+                    "filename": "build\\core\\Print.cpp.d"
+                },
+                {
+                    "filename": "build\\core\\Print.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "build\\core\\stdlib_noniso.c.d"
+                },
+                {
+                    "filename": "build\\core\\stdlib_noniso.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 130,
+                    "comment": 0,
+                    "filename": "build\\core\\Stream.cpp.d"
+                },
+                {
+                    "filename": "build\\core\\Stream.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 130,
+                    "comment": 0,
+                    "filename": "build\\core\\StreamString.cpp.d"
+                },
+                {
+                    "filename": "build\\core\\StreamString.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 114,
+                    "comment": 0,
+                    "filename": "build\\core\\wiring_pulse.c.d"
+                },
+                {
+                    "filename": "build\\core\\wiring_pulse.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 114,
+                    "comment": 0,
+                    "filename": "build\\core\\wiring_shift.c.d"
+                },
+                {
+                    "filename": "build\\core\\wiring_shift.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 58,
+                    "comment": 0,
+                    "filename": "build\\core\\WMath.cpp.d"
+                },
+                {
+                    "filename": "build\\core\\WMath.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 131,
+                    "comment": 0,
+                    "filename": "build\\core\\WString.cpp.d"
+                },
+                {
+                    "filename": "build\\core\\WString.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 277,
+                    "comment": 0,
+                    "filename": "build\\includes.cache"
+                },
+                {
+                    "blank": 0,
+                    "code": 133,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Adafruit_GFX_Library\\Adafruit_GFX.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Adafruit_GFX_Library\\Adafruit_GFX.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 135,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Adafruit_GFX_Library\\Adafruit_SPITFT.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Adafruit_GFX_Library\\Adafruit_SPITFT.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Adafruit_GFX_Library\\glcdfont.c.d"
+                },
+                {
+                    "filename": "build\\libraries\\Adafruit_GFX_Library\\glcdfont.c.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\Atm_analog.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\Atm_analog.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\Atm_bit.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\Atm_bit.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\Atm_button.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\Atm_button.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\Atm_command.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\Atm_command.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\Atm_comparator.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\Atm_comparator.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\atm_connector.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\atm_connector.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\Atm_controller.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\Atm_controller.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\atm_counter.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\atm_counter.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\Atm_digital.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\Atm_digital.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\Atm_encoder.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\Atm_encoder.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\Atm_fan.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\Atm_fan.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\Atm_step.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\Atm_step.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\Atm_timer.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\Atm_timer.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\atm_timer_millis.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\atm_timer_millis.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\Automaton.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\Automaton.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 0,
+                    "filename": "build\\libraries\\Automaton-master\\Machine.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\Automaton-master\\Machine.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 113,
+                    "comment": 0,
+                    "filename": "build\\libraries\\FS\\FS.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\FS\\FS.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 117,
+                    "comment": 0,
+                    "filename": "build\\libraries\\FS\\vfs_api.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\FS\\vfs_api.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 147,
+                    "comment": 0,
+                    "filename": "build\\libraries\\SD_MMC\\SD_MMC.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\SD_MMC\\SD_MMC.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "build\\libraries\\SPI\\SPI.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\SPI\\SPI.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 191,
+                    "comment": 0,
+                    "filename": "build\\libraries\\WiFi\\ETH.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\WiFi\\ETH.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 188,
+                    "comment": 0,
+                    "filename": "build\\libraries\\WiFi\\WiFi.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\WiFi\\WiFi.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 189,
+                    "comment": 0,
+                    "filename": "build\\libraries\\WiFi\\WiFiAP.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\WiFi\\WiFiAP.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 184,
+                    "comment": 0,
+                    "filename": "build\\libraries\\WiFi\\WiFiClient.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\WiFi\\WiFiClient.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 192,
+                    "comment": 0,
+                    "filename": "build\\libraries\\WiFi\\WiFiGeneric.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\WiFi\\WiFiGeneric.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 186,
+                    "comment": 0,
+                    "filename": "build\\libraries\\WiFi\\WiFiMulti.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\WiFi\\WiFiMulti.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 190,
+                    "comment": 0,
+                    "filename": "build\\libraries\\WiFi\\WiFiScan.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\WiFi\\WiFiScan.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 162,
+                    "comment": 0,
+                    "filename": "build\\libraries\\WiFi\\WiFiServer.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\WiFi\\WiFiServer.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 192,
+                    "comment": 0,
+                    "filename": "build\\libraries\\WiFi\\WiFiSTA.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\WiFi\\WiFiSTA.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 161,
+                    "comment": 0,
+                    "filename": "build\\libraries\\WiFi\\WiFiUdp.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\WiFi\\WiFiUdp.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 137,
+                    "comment": 0,
+                    "filename": "build\\libraries\\WROVER_KIT_LCD-master\\WROVER_KIT_LCD.cpp.d"
+                },
+                {
+                    "filename": "build\\libraries\\WROVER_KIT_LCD-master\\WROVER_KIT_LCD.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 4,
+                    "code": 20,
+                    "comment": 3,
+                    "filename": "build\\preproc\\ctags_target_for_gcc_minus_e.cpp"
+                },
+                {
+                    "blank": 17,
+                    "code": 107,
+                    "comment": 16,
+                    "filename": "build\\sketch\\src\\Helper\\Helper.cpp"
+                },
+                {
+                    "blank": 0,
+                    "code": 133,
+                    "comment": 0,
+                    "filename": "build\\sketch\\src\\Helper\\Helper.cpp.d"
+                },
+                {
+                    "filename": "build\\sketch\\src\\Helper\\Helper.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 13,
+                    "code": 19,
+                    "comment": 10,
+                    "filename": "build\\sketch\\src\\Helper\\Helper.h"
+                },
+                {
+                    "blank": 9,
+                    "code": 60,
+                    "comment": 18,
+                    "filename": "build\\sketch\\src\\Logger\\LCD\\LCD.cpp"
+                },
+                {
+                    "blank": 0,
+                    "code": 137,
+                    "comment": 0,
+                    "filename": "build\\sketch\\src\\Logger\\LCD\\LCD.cpp.d"
+                },
+                {
+                    "filename": "build\\sketch\\src\\Logger\\LCD\\LCD.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 4,
+                    "code": 7,
+                    "comment": 3,
+                    "filename": "build\\sketch\\src\\Logger\\LCD\\LCD.h"
+                },
+                {
+                    "blank": 5,
+                    "code": 29,
+                    "comment": 3,
+                    "filename": "build\\sketch\\src\\Logger\\Logger.cpp"
+                },
+                {
+                    "blank": 0,
+                    "code": 152,
+                    "comment": 0,
+                    "filename": "build\\sketch\\src\\Logger\\Logger.cpp.d"
+                },
+                {
+                    "filename": "build\\sketch\\src\\Logger\\Logger.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 6,
+                    "code": 20,
+                    "comment": 12,
+                    "filename": "build\\sketch\\src\\Logger\\Logger.h"
+                },
+                {
+                    "blank": 37,
+                    "code": 162,
+                    "comment": 47,
+                    "filename": "build\\sketch\\src\\Logger\\SD\\SD.cpp"
+                },
+                {
+                    "blank": 0,
+                    "code": 138,
+                    "comment": 0,
+                    "filename": "build\\sketch\\src\\Logger\\SD\\SD.cpp.d"
+                },
+                {
+                    "filename": "build\\sketch\\src\\Logger\\SD\\SD.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 7,
+                    "code": 15,
+                    "comment": 3,
+                    "filename": "build\\sketch\\src\\Logger\\SD\\SD.h"
+                },
+                {
+                    "blank": 2,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "build\\sketch\\src\\Network\\NetworkKeys.cpp"
+                },
+                {
+                    "blank": 0,
+                    "code": 133,
+                    "comment": 0,
+                    "filename": "build\\sketch\\src\\Network\\NetworkKeys.cpp.d"
+                },
+                {
+                    "filename": "build\\sketch\\src\\Network\\NetworkKeys.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 4,
+                    "code": 33,
+                    "comment": 8,
+                    "filename": "build\\sketch\\src\\Network\\TCP\\TCP.cpp"
+                },
+                {
+                    "blank": 0,
+                    "code": 135,
+                    "comment": 0,
+                    "filename": "build\\sketch\\src\\Network\\TCP\\TCP.cpp.d"
+                },
+                {
+                    "filename": "build\\sketch\\src\\Network\\TCP\\TCP.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 6,
+                    "code": 11,
+                    "comment": 6,
+                    "filename": "build\\sketch\\src\\Network\\TCP\\TCP.h"
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 21,
+                    "filename": "build\\sketch\\src\\Network\\Wifi\\WifiNetwork.cpp"
+                },
+                {
+                    "blank": 0,
+                    "code": 186,
+                    "comment": 0,
+                    "filename": "build\\sketch\\src\\Network\\Wifi\\WifiNetwork.cpp.d"
+                },
+                {
+                    "filename": "build\\sketch\\src\\Network\\Wifi\\WifiNetwork.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 3,
+                    "code": 10,
+                    "comment": 6,
+                    "filename": "build\\sketch\\src\\Network\\Wifi\\WifiNetwork.h"
+                },
+                {
+                    "blank": 92,
+                    "code": 401,
+                    "comment": 172,
+                    "filename": "build\\sketch\\src\\SlaveHandler\\SlaveHandler.cpp"
+                },
+                {
+                    "blank": 0,
+                    "code": 120,
+                    "comment": 0,
+                    "filename": "build\\sketch\\src\\SlaveHandler\\SlaveHandler.cpp.d"
+                },
+                {
+                    "filename": "build\\sketch\\src\\SlaveHandler\\SlaveHandler.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 19,
+                    "code": 99,
+                    "comment": 22,
+                    "filename": "build\\sketch\\src\\SlaveHandler\\SlaveHandler.h"
+                },
+                {
+                    "blank": 20,
+                    "code": 98,
+                    "comment": 21,
+                    "filename": "build\\sketch\\src\\SlaveHandler\\Step\\Step.cpp"
+                },
+                {
+                    "blank": 0,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "build\\sketch\\src\\SlaveHandler\\Step\\Step.cpp.d"
+                },
+                {
+                    "filename": "build\\sketch\\src\\SlaveHandler\\Step\\Step.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 12,
+                    "code": 63,
+                    "comment": 15,
+                    "filename": "build\\sketch\\src\\SlaveHandler\\Step\\Step.h"
+                },
+                {
+                    "blank": 20,
+                    "code": 148,
+                    "comment": 17,
+                    "filename": "build\\sketch\\src\\Status\\Status.cpp"
+                },
+                {
+                    "blank": 0,
+                    "code": 35,
+                    "comment": 0,
+                    "filename": "build\\sketch\\src\\Status\\Status.cpp.d"
+                },
+                {
+                    "filename": "build\\sketch\\src\\Status\\Status.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 11,
+                    "code": 59,
+                    "comment": 11,
+                    "filename": "build\\sketch\\src\\Status\\Status.h"
+                },
+                {
+                    "blank": 34,
+                    "code": 236,
+                    "comment": 62,
+                    "filename": "build\\sketch\\src\\WcsHandler\\WcsHandler.cpp"
+                },
+                {
+                    "blank": 0,
+                    "code": 142,
+                    "comment": 0,
+                    "filename": "build\\sketch\\src\\WcsHandler\\WcsHandler.cpp.d"
+                },
+                {
+                    "filename": "build\\sketch\\src\\WcsHandler\\WcsHandler.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 7,
+                    "code": 57,
+                    "comment": 19,
+                    "filename": "build\\sketch\\src\\WcsHandler\\WcsHandler.h"
+                },
+                {
+                    "blank": 4,
+                    "code": 26,
+                    "comment": 3,
+                    "filename": "build\\sketch\\WroverShuttleMaster.ino.cpp"
+                },
+                {
+                    "blank": 0,
+                    "code": 152,
+                    "comment": 0,
+                    "filename": "build\\sketch\\WroverShuttleMaster.ino.cpp.d"
+                },
+                {
+                    "filename": "build\\sketch\\WroverShuttleMaster.ino.cpp.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\WroverShuttleMaster.ino.bin",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\WroverShuttleMaster.ino.elf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\WroverShuttleMaster.ino.partitions.bin",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 17,
+                    "code": 107,
+                    "comment": 16,
+                    "filename": "src\\Helper\\Helper.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 19,
+                    "comment": 10,
+                    "filename": "src\\Helper\\Helper.h"
+                },
+                {
+                    "blank": 9,
+                    "code": 60,
+                    "comment": 18,
+                    "filename": "src\\Logger\\LCD\\LCD.cpp"
+                },
+                {
+                    "blank": 4,
+                    "code": 7,
+                    "comment": 3,
+                    "filename": "src\\Logger\\LCD\\LCD.h"
+                },
+                {
+                    "blank": 5,
+                    "code": 29,
+                    "comment": 3,
+                    "filename": "src\\Logger\\Logger.cpp"
+                },
+                {
+                    "blank": 6,
+                    "code": 20,
+                    "comment": 12,
+                    "filename": "src\\Logger\\Logger.h"
+                },
+                {
+                    "blank": 40,
+                    "code": 165,
+                    "comment": 48,
+                    "filename": "src\\Logger\\SD\\SD.cpp"
+                },
+                {
+                    "blank": 7,
+                    "code": 15,
+                    "comment": 3,
+                    "filename": "src\\Logger\\SD\\SD.h"
+                },
+                {
+                    "blank": 2,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "src\\Network\\NetworkKeys.cpp"
+                },
+                {
+                    "blank": 4,
+                    "code": 33,
+                    "comment": 8,
+                    "filename": "src\\Network\\TCP\\TCP.cpp"
+                },
+                {
+                    "blank": 6,
+                    "code": 11,
+                    "comment": 6,
+                    "filename": "src\\Network\\TCP\\TCP.h"
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 21,
+                    "filename": "src\\Network\\Wifi\\WifiNetwork.cpp"
+                },
+                {
+                    "blank": 3,
+                    "code": 10,
+                    "comment": 6,
+                    "filename": "src\\Network\\Wifi\\WifiNetwork.h"
+                },
+                {
+                    "blank": 92,
+                    "code": 401,
+                    "comment": 172,
+                    "filename": "src\\SlaveHandler\\SlaveHandler.cpp"
+                },
+                {
+                    "blank": 19,
+                    "code": 99,
+                    "comment": 22,
+                    "filename": "src\\SlaveHandler\\SlaveHandler.h"
+                },
+                {
+                    "blank": 20,
+                    "code": 98,
+                    "comment": 21,
+                    "filename": "src\\SlaveHandler\\Step\\Step.cpp"
+                },
+                {
+                    "blank": 12,
+                    "code": 63,
+                    "comment": 15,
+                    "filename": "src\\SlaveHandler\\Step\\Step.h"
+                },
+                {
+                    "blank": 20,
+                    "code": 148,
+                    "comment": 17,
+                    "filename": "src\\Status\\Status.cpp"
+                },
+                {
+                    "blank": 11,
+                    "code": 59,
+                    "comment": 11,
+                    "filename": "src\\Status\\Status.h"
+                },
+                {
+                    "blank": 34,
+                    "code": 236,
+                    "comment": 62,
+                    "filename": "src\\WcsHandler\\WcsHandler.cpp"
+                },
+                {
+                    "blank": 7,
+                    "code": 57,
+                    "comment": 19,
+                    "filename": "src\\WcsHandler\\WcsHandler.h"
+                },
+                {
+                    "blank": 4,
+                    "code": 19,
+                    "comment": 3,
+                    "filename": "WroverShuttleMaster.ino"
+                }
+            ]
+        }
+    ]
+}
