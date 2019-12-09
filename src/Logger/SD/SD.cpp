@@ -1,10 +1,11 @@
 #include <string.h>
 #include <stdio.h>
 #include <String.h>
+#include <SD_MMC.h>
 #include "./SD.h"
 #include "FS.h"
-#include "SD_MMC.h"
 #include "../../../src/Network/Wifi/WifiNetwork.h"
+#include "../Logger.h"
 
 // -----------------------------
 // SD PRIVATE VARIABLES
@@ -14,6 +15,7 @@ const char *StatusDirectory = "/Status";
 const char *StatusFile = "/status.txt";
 
 const int timestampInterval = 1000 * 60 * 5; // every 5 minutes
+const int batchLogInterval = 1000 * 60;      // every minute
 unsigned long lastMillis = 0;
 
 // -----------------------------
@@ -21,6 +23,8 @@ unsigned long lastMillis = 0;
 // -----------------------------
 bool createDir(fs::FS &fs, const char *path)
 {
+    if (!isInit)
+        return false;
     if (fs.mkdir(path))
         return true;
     else
@@ -29,6 +33,8 @@ bool createDir(fs::FS &fs, const char *path)
 
 bool removeDir(fs::FS &fs, const char *path)
 {
+    if (!isInit)
+        return false;
     if (fs.rmdir(path))
         return true;
     else
@@ -37,6 +43,8 @@ bool removeDir(fs::FS &fs, const char *path)
 
 String readFile(fs::FS &fs, const char *path)
 {
+    if (!isInit)
+        return "";
     String fileOutput = "";
     File file = fs.open(path);
     if (file)
@@ -45,45 +53,48 @@ String readFile(fs::FS &fs, const char *path)
         {
             fileOutput += (char)file.read();
         }
-        file.close();
     }
+    file.close();
 
     return fileOutput;
 }
 
 bool writeFile(fs::FS &fs, const char *path, const char *message)
 {
+    if (!isInit)
+        return false;
     File file = fs.open(path, FILE_WRITE);
     if (!file)
         return false;
 
     bool res = false;
     if (file.print(message))
-    {
-        file.close();
         res = true;
-    }
 
+    file.close();
     return res;
 }
 
 bool appendFile(fs::FS &fs, const char *path, const char *message)
 {
+    if (!isInit)
+        return false;
     File file = fs.open(path, FILE_APPEND);
     if (!file)
         return false;
 
     bool res = false;
     if (file.print(message))
-    {
-        file.close();
         res = true;
-    }
+
+    file.close();
     return res;
 }
 
 bool renameFile(fs::FS &fs, const char *path1, const char *path2)
 {
+    if (!isInit)
+        return false;
     if (fs.rename(path1, path2))
         return true;
     else
@@ -92,6 +103,8 @@ bool renameFile(fs::FS &fs, const char *path1, const char *path2)
 
 bool deleteFile(fs::FS &fs, const char *path)
 {
+    if (!isInit)
+        return false;
     if (fs.remove(path))
         return true;
     else
@@ -120,10 +133,6 @@ char *getLatestLogPath()
     char *latestLogFilename = getLatestLogFilename();
     static char pathname[21]; // /Logs/yyyy_mm_dd.txt;
 
-    // strcpy_s(pathname, sizeof pathname, LogsDirectory);
-    // strcat_s(pathname, sizeof pathname, "/");
-    // strcat_s(pathname, sizeof pathname, latestLogFilename);
-
     strcpy(pathname, LogsDirectory);
     strcat(pathname, "/");
     strcat(pathname, latestLogFilename);
@@ -138,58 +147,64 @@ bool SdInit()
 {
     if (!SD_MMC.begin())
         return false;
+    else
+    {
+        // sd initialized
+        // initialization message
+        char *initMsg = "SD Initialized";
+        // create logs directory if it does not exist
+        createDir(SD_MMC, LogsDirectory);
+        // create a log text file if it does not exist
+        logTimestampCallback(0, 0, 0);
+        addToSdPending(initMsg);
+        //logToSd(initMsg);
+        // toggle sd init boolean
+        isInit = true;
 
-    // sd initialized
-    // initialization message
-    char *initMsg = "SD Initialized";
-
-    // create logs directory if it does not exist
-    createDir(SD_MMC, LogsDirectory);
-    // create a log text file if it does not exist
-    logTimestampCallback(0, 0, 0);
-    addToSdPending(initMsg);
-
-    return true;
+        return true;
+    }
 }
+
+bool logToSd(char *toSd)
+{
+    if (strlen(toSd) <= 0)
+        return false;
+
+    char endChar = toSd[strlen(toSd) - 1];
+
+    if (!appendFile(SD_MMC, getLatestLogPath(), toSd))
+        return false;
+    if (endChar != '\n')
+        if (!appendFile(SD_MMC, getLatestLogPath(), "\r\n"))
+            return false;
+    return true;
+};
 
 bool logToSd()
 {
-    // char endChar = str[strlen(str) - 1];
-
-    // if (!appendFile(SD_MMC, getLatestLogPath(), str))
-    //     return false;
-    // if (endChar != '\n')
-    //     if (!appendFile(SD_MMC, getLatestLogPath(), "\n"))
-    //         return false;
-    // return true;
-
-    static char temp[MAX_PENDING_LOGS_SIZE * (DEFAULT_CHAR_ARRAY_SIZE + 1)];
-    for (int i = 0; i <= pendingLogsCurPointer; i++)
-    {
-        if (i == 0)
-            strcpy(temp, pendingLogs[i]);
-        else
-            strcat(temp, pendingLogs[i]);
-
-        pendingLogs[i][0] = '\0'; // clear log
-    }
-
+    bool res = logToSd(pendingLogs);
     pendingLogsCurPointer = 0;
-
-    if (!appendFile(SD_MMC, getLatestLogPath(), temp))
-        return false;
-    return true;
+    pendingLogs[0] = '\0';
+    return res;
 }
 
-void addToSdPending(const char *log)
+void addToSdPending(const char *str)
 {
-    if (strlen(log) > DEFAULT_CHAR_ARRAY_SIZE)
+    if (strlen(str) > DEFAULT_CHAR_ARRAY_SIZE)
         return;
 
-    char endChar = log[strlen(log) - 1];
-    strcpy(pendingLogs[pendingLogsCurPointer], log);
+    char endChar = str[strlen(str) - 1];
     if (endChar != '\n')
-        strcat(pendingLogs[pendingLogsCurPointer], "\n");
+        if (strlen(str) > DEFAULT_CHAR_ARRAY_SIZE - 2)
+            return;
+
+    if (strlen(pendingLogs) <= 0)
+        strcpy(pendingLogs, str);
+    else
+        strcat(pendingLogs, str);
+    
+    if (endChar != '\n')
+        strcat(pendingLogs, "\r\n");
 
     if (pendingLogsCurPointer < MAX_PENDING_LOGS_SIZE)
         pendingLogsCurPointer++;
@@ -210,7 +225,13 @@ void logTimestampCallback(int idx, int v, int up)
 
     // append time stamp to sd
     addToSdPending(timestamp);
+    // logToSd(timestamp);
 }
+
+void batchLogCallback(int idx, int v, int up)
+{
+    logToSd();
+};
 
 void logStatus(char *statusStr)
 {

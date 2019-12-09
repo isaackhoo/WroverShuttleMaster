@@ -8,6 +8,7 @@ void setup()
 {
   // initializes logger. Serial if dev_env, or lcd and sd if prod
   initLogger();
+  info("logger initialized");
 
   // initialize slave handler
   info("initialising slaveHandler");

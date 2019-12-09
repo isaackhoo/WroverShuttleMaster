@@ -14,7 +14,6 @@ WiFiClient client;
 // --------------------------
 bool ConnectTcpServer()
 {
-    client.setNoDelay(true);
     if (!client.connect(serverIp, serverPort))
         return false;
     return true;

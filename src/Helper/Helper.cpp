@@ -125,7 +125,7 @@ bool strcut(char *output, char *source, int from, int length)
 // reset chip
 void resetChip()
 {
-    logToSd();
+    // logToSd();
     ESP.restart();
 };
 

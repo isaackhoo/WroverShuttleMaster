@@ -6,6 +6,7 @@
 #include "./SD/SD.h"
 
 Atm_timer timestampInvervalHandler;
+Atm_timer batchLogIntervalHandler;
 
 // Serial / LCD toggle
 void initSerial()
@@ -17,11 +18,22 @@ void initLcdSd()
 {
     // initialises lcd and sd card reader
     LcdInit();
-    SdInit();
-    timestampInvervalHandler.begin(timestampInterval)
-        .repeat(ATM_COUNTER_OFF) // repeat infefinitely
-        .onTimer(logTimestampCallback)
-        .start();
+    bool sdRes = SdInit();
+    if (sdRes)
+    {
+        timestampInvervalHandler.begin(timestampInterval)
+            .repeat(ATM_COUNTER_OFF) // repeat infefinitely
+            .onTimer(logTimestampCallback)
+            .start();
+        batchLogIntervalHandler.begin(batchLogInterval)
+            .repeat(ATM_COUNTER_OFF)
+            .onTimer(batchLogCallback)
+            .start();
+    }
+    else
+    {
+        info("Sd failed to initialize");
+    }
 };
 
 void outToLcd(char *str)
@@ -33,4 +45,5 @@ void outToLcdSd(char *str)
 {
     LcdScrollText(str);
     addToSdPending(str);
+    // logToSd(str);
 };

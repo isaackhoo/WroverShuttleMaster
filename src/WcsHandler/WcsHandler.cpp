@@ -76,15 +76,52 @@ void WcsHandler::perform()
     case RETRIEVEBIN:
     {
         info("REC WCS::RETRIEVAL");
+#ifdef TCP_STRESS_TEST
+        char stateAction[3];
+        GET_TWO_DIGIT_STRING(stateAction, STATE);
+        strcpy(this->wcsOut.actionEnum, stateAction);
+
+        char workingState[3];
+        GET_TWO_DIGIT_STRING(workingState, RETRIEVING);
+        strcpy(this->wcsOut.instructions, workingState);
+
+        this->send();
+
+        GET_TWO_DIGIT_STRING(workingState, IDLE);
+        strcpy(this->wcsOut.instructions, workingState);
+
+        this->send();
+#else
+
         slaveHandler.createRetrievalSteps(this->wcsIn.instructions);
         slaveHandler.beginNextStep();
+#endif
+
         break;
     }
     case STOREBIN:
     {
         info("REC WCS::STORAGE");
+#ifdef TCP_STRESS_TEST
+        char stateAction[3];
+        GET_TWO_DIGIT_STRING(stateAction, STATE);
+        strcpy(this->wcsOut.actionEnum, stateAction);
+
+        char workingState[3];
+        GET_TWO_DIGIT_STRING(workingState, STORING);
+        strcpy(this->wcsOut.instructions, workingState);
+
+        this->send();
+
+        GET_TWO_DIGIT_STRING(workingState, IDLE);
+        strcpy(this->wcsOut.instructions, workingState);
+
+        this->send();
+#else
         slaveHandler.createStorageSteps(this->wcsIn.instructions);
         slaveHandler.beginNextStep();
+#endif
+
         break;
     }
     case MOVE:
@@ -199,7 +236,7 @@ bool WcsHandler::send(char *str, bool shouldLog = true)
     return res;
 }
 
-bool WcsHandler::send(bool shouldLog = true)
+bool WcsHandler::send(bool shouldLog)
 {
     // WcsHandler::send overload.
     // compiles wcsOut into a cstring to send
@@ -213,8 +250,13 @@ bool WcsHandler::send(bool shouldLog = true)
     if (strlen(this->wcsOut.instructions) > 0)
         // strcat_s(wcsOutString, sizeof wcsOutString, this->wcsOut.instructions);
         strcat(wcsOutString, this->wcsOut.instructions);
-    this->send(wcsOutString, shouldLog);
+    return this->send(wcsOutString, shouldLog);
 };
+
+bool WcsHandler::send()
+{
+    return this->send(true);
+}
 
 void WcsHandler::pullCurrentStatus()
 {
@@ -261,7 +303,7 @@ void WcsHandler::init(void)
     bool wifiConnectionRes = ConnectWifi();
     if (!wifiConnectionRes)
     {
-        logSd("Failed to connect to wifi.");
+        info("Failed to connect to wifi.");
         resetChip();
     }
     info("Wifi connected");
