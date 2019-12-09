@@ -57,12 +57,6 @@ void getCurrentDate(char *output)
     char daybuf[3];
     GET_TWO_DIGIT_STRING(daybuf, tmstruct.tm_mday);
 
-    // strcpy_s(output, sizeof output, yearbuf);
-    // strcat_s(output, sizeof output, "_");
-    // strcat_s(output, sizeof output, monthbuf);
-    // strcat_s(output, sizeof output, "_");
-    // strcat_s(output, sizeof output, daybuf);
-
     strcpy(output, yearbuf);
     // strcat(output, "_");
     strcat(output, monthbuf);
@@ -88,12 +82,6 @@ void getCurrentTime(char *output)
     GET_TWO_DIGIT_STRING(minutebuf, tmstruct.tm_min);
     char secondsbuf[3];
     GET_TWO_DIGIT_STRING(secondsbuf, tmstruct.tm_sec);
-
-    // strcpy_s(output, sizeof output, hourbuf);
-    // strcat_s(output, sizeof output, ":");
-    // strcat_s(output, sizeof output, minutebuf);
-    // strcat_s(output, sizeof output, ":");
-    // strcat_s(output, sizeof output, secondsbuf);
 
     strcpy(output, hourbuf);
     strcat(output, ":");

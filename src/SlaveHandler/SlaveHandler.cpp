@@ -26,17 +26,20 @@ bool SlaveHandler::serialRead()
         String in = this->ss->readStringUntil('\n');
         in.trim();
         if (strlen(this->readString) > 0)
-            // strcat_s(this->readString, sizeof this->readString, in.c_str());
             strcat(this->readString, in.c_str());
         else
-            // strcpy_s(this->readString, sizeof this->readString, in.c_str());
             strcpy(this->readString, in.c_str());
 
         // remove newline character
         if (this->readString[strlen(this->readString) - 2] == '\r')
-            this->readString[strlen(this->readString)] = '\0';
+            this->readString[strlen(this->readString) - 2] = '\0';
+        if (this->readString[strlen(this->readString) - 2] == '\n')
+            this->readString[strlen(this->readString) - 2] = '\0';
         if (this->readString[strlen(this->readString) - 1] == '\n')
-            this->readString[strlen(this->readString)] = '\0';
+            this->readString[strlen(this->readString) - 1] = '\0';
+
+        info("read from slave serial");
+        info(this->readString);
 
         return true;
     }
@@ -47,6 +50,7 @@ bool SlaveHandler::serialWrite(char *slaveInst)
 {
     if (strlen(slaveInst) <= 0)
         return false;
+    logSd(slaveInst);
     return this->ss->println(slaveInst);
 };
 
@@ -358,12 +362,14 @@ void SlaveHandler::beginNextStep()
 {
     char beginStepInfo[DEFAULT_CHAR_ARRAY_SIZE];
     sprintf(beginStepInfo, "Starting: %s", steps[this->currentStepIndex].getDetails());
-    info(beginStepInfo);
+    logSd(beginStepInfo);
     // set shuttle status to active
     status.setActiveState();
     // change step status to active/pending
     steps[this->currentStepIndex].setStatus(STEP_PENDING);
+    logSd("Step status set to pending");
     // send instructions over slave serial
+    logSd("Writing to slave serial");
     this->serialWrite(steps[this->currentStepIndex].getSlaveString());
 };
 
@@ -387,9 +393,9 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     char inCol[DEFAULT_CHAR_ARRAY_SIZE];
     char binInColPos[DEFAULT_CHAR_ARRAY_SIZE];
 
-    successfullyProcessed = cutStr(storageInst, inRack, 0, RACK_ID_LENGTH);
-    successfullyProcessed = cutStr(storageInst, inCol, 0, COLUMN_ID_LENGTH);
-    successfullyProcessed = cutStr(storageInst, binInColPos, 0, BIN_POS_ID_LENGTH);
+    successfullyProcessed = strcut(inRack, storageInst, 0, RACK_ID_LENGTH);
+    successfullyProcessed = strcut(inCol, storageInst, 0, COLUMN_ID_LENGTH);
+    successfullyProcessed = strcut(binInColPos, storageInst, 0, BIN_POS_ID_LENGTH);
 
     if (!successfullyProcessed)
         return false;
@@ -538,9 +544,9 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
     char inCol[DEFAULT_CHAR_ARRAY_SIZE];
     char binInColPos[DEFAULT_CHAR_ARRAY_SIZE];
 
-    successfullyProcessed = cutStr(retrievalInst, inRack, 0, RACK_ID_LENGTH);
-    successfullyProcessed = cutStr(retrievalInst, inCol, 0, COLUMN_ID_LENGTH);
-    successfullyProcessed = cutStr(retrievalInst, binInColPos, 0, BIN_POS_ID_LENGTH);
+    successfullyProcessed = strcut(retrievalInst, inRack, 0, RACK_ID_LENGTH);
+    successfullyProcessed = strcut(retrievalInst, inCol, 0, COLUMN_ID_LENGTH);
+    successfullyProcessed = strcut(retrievalInst, binInColPos, 0, BIN_POS_ID_LENGTH);
 
     if (!successfullyProcessed)
         return false;

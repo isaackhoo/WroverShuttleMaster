@@ -57,6 +57,7 @@ public:
   void setInstructions(const char *);
   void setLevel(const char *);
   void setPos(const int);
+  void setState(SHUTTLE_STATE, bool);
   void setState(SHUTTLE_STATE);
   void setActiveState();
   void setIsCarryingBin(bool);

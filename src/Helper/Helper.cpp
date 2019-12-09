@@ -75,7 +75,7 @@ bool charArrSubString(char *source, char *output, int from, int length)
 }
 
 // Cut string
-bool cutStr(char *source, char *output, int from, int length)
+bool strcut(char *output, char *source, int from, int length, bool dropFront = true)
 {
     // takes a source string and replaces it with the remainders after the cut.
     // cut out portion is return via output.
@@ -97,9 +97,15 @@ bool cutStr(char *source, char *output, int from, int length)
 
     // replace source with remainder of string
     // removes everything else before 'from' as well
+    int replaceStartIndex;
+    if (dropFront)
+        replaceStartIndex = 0;
+    else
+        replaceStartIndex = from;
+
     if (from + length < sourceLength)
     {
-        for (i = 0, j = from + length; j < sourceLength; j++, i++)
+        for (i = replaceStartIndex, j = from + length; j < sourceLength; j++, i++)
         {
             source[i] = source[j];
         }
@@ -111,11 +117,15 @@ bool cutStr(char *source, char *output, int from, int length)
     }
     return true;
 };
+bool strcut(char *output, char *source, int from, int length)
+{
+    strcut(output, source, from, length, true);
+};
 
 // reset chip
 void resetChip()
 {
-    logToSd();
+    // logToSd();
     ESP.restart();
 };
 

@@ -59,7 +59,7 @@ void Status::setPos(const int pos)
     this->currentPos = pos;
 };
 
-void Status::setState(SHUTTLE_STATE currentState)
+void Status::setState(SHUTTLE_STATE currentState, bool logAndSend)
 {
     if (currentState < 0 || currentState > Num_Of_Shuttle_States)
         return;
@@ -68,10 +68,18 @@ void Status::setState(SHUTTLE_STATE currentState)
         this->state = currentState;
         char statusChange[DEFAULT_CHAR_ARRAY_SIZE];
         sprintf(statusChange, "Status updated to %s", SHUTTLE_STATE_STRING[this->state]);
-        logSd(statusChange);
-        this->saveStatus();
-        wcsHandler.updateStateChange();
+        if (logAndSend)
+        {
+            logSd(statusChange);
+            this->saveStatus();
+            wcsHandler.updateStateChange();
+        }
     }
+};
+
+void Status::setState(SHUTTLE_STATE currentState)
+{
+    this->setState(currentState, true);
 };
 
 void Status::setActiveState()
@@ -132,20 +140,21 @@ void Status::rehydrateStatus(char *hydrator)
         {
             // shuttle id
             this->setId(token);
-            logSd("rehydrated Id");
+            info("rehydrated Id");
             break;
         }
         case 1:
         {
             // current level
             this->setLevel(token);
-            logSd("rehydrated level");
+            info("rehydrated level");
             break;
         }
-        case 2: {
+        case 2:
+        {
             // state
-            this->setState((SHUTTLE_STATE)atoi(token));
-            logSd("rehydrated state");
+            this->setState((SHUTTLE_STATE)atoi(token), false);
+            info("rehydrated state");
             break;
         }
         default:

@@ -5,6 +5,8 @@
 
 #include "../Helper/Helper.h"
 
+// #define TCP_STRESS_TEST
+
 // --------------------------
 // Wcs Private Variables
 // --------------------------
@@ -51,13 +53,12 @@ private:
   WcsFormat wcsIn;
   WcsFormat wcsOut;
   unsigned long lastPingMillis;
-  int hasCompleteInstructions();
-  int read();
   bool interpret(char *);
   void perform();
-  void handle(int);
+  void handle();
   bool send(char *, bool);
   bool send(bool);
+  bool send();
   void pullCurrentStatus();
   void updateLastPing();
   bool isPingAlive();

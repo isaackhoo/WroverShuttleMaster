@@ -16,33 +16,6 @@ WcsHandler wcsHandler;
 // --------------------------
 // Wcs Private Methods
 // --------------------------
-int WcsHandler::hasCompleteInstructions()
-{
-    // checks readBuffer for completed instructions
-    if (strlen(readBuffer) <= 0)
-        return -1;
-    return findIndex(readBuffer, ETX[0]);
-};
-
-int WcsHandler::read()
-{
-    // checks tcp socket for data to read
-    char tempReadBuffer[DEFAULT_CHAR_ARRAY_SIZE];
-    if (TcpRead(tempReadBuffer))
-    {
-        if (strlen(readBuffer) <= 0)
-            // strcpy_s(readBuffer, sizeof readBuffer, tempReadBuffer);
-            strcpy(readBuffer, tempReadBuffer);
-        else
-            // strcat_s(readBuffer, sizeof readBuffer, tempReadBuffer);
-            strcat(readBuffer, tempReadBuffer);
-
-        // check buffer for end of instructions
-        return this->hasCompleteInstructions();
-    }
-    return -1;
-}
-
 bool WcsHandler::interpret(char *input)
 {
     // expected format: iiiiaax*
@@ -52,20 +25,20 @@ bool WcsHandler::interpret(char *input)
 
     // copy over input first since manipulation is required
     char copyInput[DEFAULT_CHAR_ARRAY_SIZE];
-    // strcpy_s(copyInput, sizeof copyInput, input);
     strcpy(copyInput, input);
 
     if (strlen(copyInput) < DEFAULT_ID_LENGTH + DEFAULT_ACTION_ENUM_LENGTH)
         return false;
     // get id
-    cutStr(copyInput, this->wcsIn.id, 0, DEFAULT_ID_LENGTH);
+    strcut(this->wcsIn.id, copyInput, 0, DEFAULT_ID_LENGTH);
     // get action in string
-    cutStr(copyInput, this->wcsIn.actionEnum, 0, DEFAULT_ACTION_ENUM_LENGTH);
+    strcut(this->wcsIn.actionEnum, copyInput, 0, DEFAULT_ACTION_ENUM_LENGTH);
     // interpret action
     this->wcsIn.action = (ENUM_WCS_ACTIONS)atoi(this->wcsIn.actionEnum);
+    // clear instructions
+    this->wcsIn.instructions[0] = '\0';
     // get remaining instructions
     if (strlen(copyInput) > 0)
-        // strcpy_s(this->wcsIn.instructions, sizeof this->wcsIn.instructions, copyInput);
         strcpy(this->wcsIn.instructions, copyInput);
 
     // set information on shuttle status as well
@@ -103,15 +76,52 @@ void WcsHandler::perform()
     case RETRIEVEBIN:
     {
         info("REC WCS::RETRIEVAL");
+#ifdef TCP_STRESS_TEST
+        char stateAction[3];
+        GET_TWO_DIGIT_STRING(stateAction, STATE);
+        strcpy(this->wcsOut.actionEnum, stateAction);
+
+        char workingState[3];
+        GET_TWO_DIGIT_STRING(workingState, RETRIEVING);
+        strcpy(this->wcsOut.instructions, workingState);
+
+        this->send();
+
+        GET_TWO_DIGIT_STRING(workingState, IDLE);
+        strcpy(this->wcsOut.instructions, workingState);
+
+        this->send();
+#else
+
         slaveHandler.createRetrievalSteps(this->wcsIn.instructions);
         slaveHandler.beginNextStep();
+#endif
+
         break;
     }
     case STOREBIN:
     {
         info("REC WCS::STORAGE");
+#ifdef TCP_STRESS_TEST
+        char stateAction[3];
+        GET_TWO_DIGIT_STRING(stateAction, STATE);
+        strcpy(this->wcsOut.actionEnum, stateAction);
+
+        char workingState[3];
+        GET_TWO_DIGIT_STRING(workingState, STORING);
+        strcpy(this->wcsOut.instructions, workingState);
+
+        this->send();
+
+        GET_TWO_DIGIT_STRING(workingState, IDLE);
+        strcpy(this->wcsOut.instructions, workingState);
+
+        this->send();
+#else
         slaveHandler.createStorageSteps(this->wcsIn.instructions);
         slaveHandler.beginNextStep();
+#endif
+
         break;
     }
     case MOVE:
@@ -149,24 +159,53 @@ void WcsHandler::perform()
     }
 };
 
-void WcsHandler::handle(int pos)
+void WcsHandler::handle()
 {
-    // extracts the completed instructions from buffer
-    // processes it and performs the instructions
-    char handleBuffer[DEFAULT_CHAR_ARRAY_SIZE];
-    cutStr(readBuffer, handleBuffer, 0, pos + 1);
+    // check for header and footer index
+    int headerIndex = findIndex(this->readBuffer, STX[0]);
+    int footerIndex = findIndex(this->readBuffer, ETX[0]);
 
-    // remove stx and etx
-    char pureInput[DEFAULT_CHAR_ARRAY_SIZE];
-    cutStr(handleBuffer, pureInput, 1, strlen(handleBuffer) - 2);
+    if (footerIndex < 0)
+    {
+        // add timeout code
+        // TODO
+    }
+    else
+    {
+        // clear timeout
+        // TODO
 
-    // interpret inputs
-    bool interpretRes = this->interpret(pureInput);
-    if (!interpretRes)
-        return;
+        while (headerIndex >= 0 && footerIndex > headerIndex)
+        {
+            // extract input
+            char temp[DEFAULT_CHAR_ARRAY_SIZE];
+            strcut(temp, this->readBuffer, headerIndex, footerIndex - headerIndex + 1);
 
-    // perform action
-    this->perform();
+            // clean out STX and ETX chars
+            char cleanInput[DEFAULT_CHAR_ARRAY_SIZE];
+            strcut(cleanInput, temp, 1, strlen(temp) - 2);
+
+            // interpret input
+            bool interpretRes = this->interpret(cleanInput);
+            if (!interpretRes)
+                return;
+
+            // perform
+            this->perform();
+
+            // check for more inputs
+            if (strlen(this->readBuffer) > 0)
+            {
+                headerIndex = findIndex(this->readBuffer, STX[0]);
+                footerIndex = findIndex(this->readBuffer, ETX[0]);
+            }
+            else
+            {
+                headerIndex = -1;
+                footerIndex = -1;
+            }
+        }
+    }
 }
 
 bool WcsHandler::send(char *str, bool shouldLog = true)
@@ -178,9 +217,6 @@ bool WcsHandler::send(char *str, bool shouldLog = true)
     // x+1  - ETX
 
     static char writeString[DEFAULT_CHAR_ARRAY_SIZE * 3];
-    // strcpy_s(writeString, sizeof writeString, STX);
-    // strcat_s(writeString, sizeof writeString, str);
-    // strcat_s(writeString, sizeof writeString, ETX);
 
     strcpy(writeString, STX);
     strcat(writeString, str);
@@ -200,7 +236,7 @@ bool WcsHandler::send(char *str, bool shouldLog = true)
     return res;
 }
 
-bool WcsHandler::send(bool shouldLog = true)
+bool WcsHandler::send(bool shouldLog)
 {
     // WcsHandler::send overload.
     // compiles wcsOut into a cstring to send
@@ -214,8 +250,13 @@ bool WcsHandler::send(bool shouldLog = true)
     if (strlen(this->wcsOut.instructions) > 0)
         // strcat_s(wcsOutString, sizeof wcsOutString, this->wcsOut.instructions);
         strcat(wcsOutString, this->wcsOut.instructions);
-    this->send(wcsOutString, shouldLog);
+    return this->send(wcsOutString, shouldLog);
 };
+
+bool WcsHandler::send()
+{
+    return this->send(true);
+}
 
 void WcsHandler::pullCurrentStatus()
 {
@@ -262,7 +303,7 @@ void WcsHandler::init(void)
     bool wifiConnectionRes = ConnectWifi();
     if (!wifiConnectionRes)
     {
-        logSd("Failed to connect to wifi.");
+        info("Failed to connect to wifi.");
         resetChip();
     }
     info("Wifi connected");
@@ -294,11 +335,9 @@ void WcsHandler::run(void)
         resetChip();
     }
 
-    int pos = this->read();
-    while (pos > 0)
+    if (TcpRead(this->readBuffer))
     {
-        this->handle(pos);
-        pos = hasCompleteInstructions();
+        this->handle();
     }
 }
 

@@ -2,9 +2,13 @@
     "board": "esp32:esp32:esp32wrover",
     "configuration": "PartitionScheme=huge_app,FlashMode=qio,FlashFreq=80,UploadSpeed=921600,DebugLevel=none",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "port": "COM47",
 =======
     "port": "COM4",
+>>>>>>> origin/master
+=======
+    "port": "COM6",
 >>>>>>> origin/master
     "sketch": "WroverShuttleMaster.ino",
     "output": "./build",

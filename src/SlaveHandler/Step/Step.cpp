@@ -55,18 +55,11 @@ char *Step::getDetails()
 {
     static char stepDetails[DEFAULT_CHAR_ARRAY_SIZE];
 
-    // strcpy_s(stepDetails, sizeof stepDetails, stepActionToString[this->stepAction]);
-    // strcat_s(stepDetails, sizeof stepDetails, ", ");
-    // strcat_s(stepDetails, sizeof stepDetails, stepStatusToString[this->stepStatus]);
-
     strcpy(stepDetails, stepActionToString[this->stepAction]);
     strcat(stepDetails, ", ");
     strcat(stepDetails, stepStatusToString[this->stepStatus]);
     if (strlen(this->stepTarget) > 0)
     {
-        // strcat_s(stepDetails, sizeof stepDetails, ", ");
-        // strcat_s(stepDetails, sizeof stepDetails, this->stepTarget);
-
         strcat(stepDetails, ", ");
         strcat(stepDetails, this->stepTarget);
     }
@@ -78,12 +71,9 @@ char *Step::getSlaveString()
     static char slaveStr[DEFAULT_CHAR_ARRAY_SIZE];
     char stepActionEnumString[3];
     GET_TWO_DIGIT_STRING(stepActionEnumString, this->stepAction);
-    // strcpy_s(slaveStr, sizeof slaveStr, stepActionEnumString);
     strcpy(slaveStr, stepActionEnumString);
     if (strlen(this->stepTarget) > 0)
     {
-        // strcat_s(slaveStr, sizeof slaveStr, this->stepTarget);
-
         strcat(slaveStr, this->stepTarget);
     }
     return slaveStr;
