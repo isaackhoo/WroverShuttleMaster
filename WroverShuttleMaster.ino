@@ -11,25 +11,18 @@ void setup()
   info("Logger initialized");
 
   // initialize slave handler
-  info("initializing SlaveHandler");
+  info("Start Initializing SlaveHandler");
   slaveHandler.init(&Serial);
+  info("Slave Handler initialized");
 
   // initialize wcs handler, connects to the internet and the server
-  info("wqehwqe");
+  info("Start Initializing WcsHandler");
   wcsHandler.init();
+  info("wcsHandler");
 }
 
 void loop()
 {
-  automaton.run();
-  wcsHandler.run();
-  slaveHandler.run();
-  automaton.run();
-  wcsHandler.run();
-  slaveHandler.run();
-  automaton.run();
-  wcsHandler.run();
-  slaveHandler.run();
   automaton.run();
   wcsHandler.run();
   slaveHandler.run();
