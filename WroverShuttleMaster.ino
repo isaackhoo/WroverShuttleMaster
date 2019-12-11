@@ -8,19 +8,28 @@ void setup()
 {
   // initializes logger. Serial if dev_env, or lcd and sd if prod
   initLogger();
-  info("logger initialized");
+  info("Logger initialized");
 
   // initialize slave handler
-  info("initialising slaveHandler");
+  info("initializing SlaveHandler");
   slaveHandler.init(&Serial);
 
   // initialize wcs handler, connects to the internet and the server
-  info("initialising wcsHandler");
+  info("initializing WcsHandler");
   wcsHandler.init();
 }
 
 void loop()
 {
+  automaton.run();
+  wcsHandler.run();
+  slaveHandler.run();
+  automaton.run();
+  wcsHandler.run();
+  slaveHandler.run();
+  automaton.run();
+  wcsHandler.run();
+  slaveHandler.run();
   automaton.run();
   wcsHandler.run();
   slaveHandler.run();
