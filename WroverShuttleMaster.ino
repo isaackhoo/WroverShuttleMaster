@@ -15,7 +15,7 @@ void setup()
   slaveHandler.init(&Serial);
 
   // initialize wcs handler, connects to the internet and the server
-  info("initializing WcsHandler");
+  info("wqehwqe");
   wcsHandler.init();
 }
 
