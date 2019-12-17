@@ -87,7 +87,7 @@ void SlaveHandler::getBinPosition(char *inCol, char *binInColPos, char *output)
     // gap between column and bin is different from gap between bin and bin
 
     long pos = 0;
-
+                                
     int col = atoi(inCol);       // convert col char to long
     int bin = atoi(binInColPos); // convert bin char to long
 
@@ -108,17 +108,17 @@ void SlaveHandler::getBinPosition(char *inCol, char *binInColPos, char *output)
     // get just the bin column
     // since bins are position and numbered as such
     //
-    //  01   03   05   07   09  11
+    //  01   03   05   07   09   11
     //
-    //  00   02   04   06   08  10
+    //  00   02   04   06   08   10
 
     int binCol = bin / 2; //  0 / 2 = 0; 3 / 2 = 1; etc..
 
-    pos += MOTORCOUNT_BUFFER_HOLE_TO_CENTER_OF_PILLAR;                                                              // for buffer
-    pos += ((col - 1) * MOTOTCOUNT_PER_COLUMN);                                                                     // for full columns
+    pos += MOTORCOUNT_BUFFER_HOLE_TO_CENTER_OF_PILLAR;                 // for buffer
+    pos += ((col - 1) * MOTORCOUNT_PER_COLUMN);      // for full columns
     pos += (MOTORCOUNT_CENTER_OF_PILLAR_TO_ADAJ_SLOTHOLE_CENTER + ((bin / 2) * MOTORCOUNT_BTWN_SLOTS_WITHIN_RAIL)); // for in between bin slots
-
-    /*pos += A;                              // for const buffer area to first pillar
+    
+    /*pos += A;                            // for const buffer area to first pillar
     pos += (col - 1) * D;                  // for whole columns
     pos += B + ((((bin + 1) / 2) - 1) * C) // for bin in col
 
@@ -401,8 +401,9 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
         return false;
 
     // clear to move arr
-    char clearToMoveArr[DEFAULT_CHAR_ARRAY_SIZE];
-    itoa(CLEAR_TO_MOVE, clearToMoveArr, 10);
+    char clearToMoveStorArr[DEFAULT_CHAR_ARRAY_SIZE];
+    shuttleClearToMove = SHUTTLE_CLEAR_TO_MOVE;
+    itoa(shuttleClearToMove, clearToMoveStorArr, 10);
 
     // get char of buffer position
     char bufferPosArr[DEFAULT_CHAR_ARRAY_SIZE];
@@ -494,7 +495,7 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     }
     GET_TWO_DIGIT_STRING(checkBinStoredInStorageSlotArr, binPosState);
 
-    steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
+    steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveStorArr);
     steps[1].setStep(MOVE_TO_POS, bufferPosArr);
     steps[2].setStep(CHECK_BUFFER_BIN_SLOT, binInBufferSlotArr);
     steps[3].setStep(EXTEND_ARM, storageBufferDepthArr);
@@ -503,7 +504,7 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     steps[6].setStep(RETRACT_ARM, armHomeArr);
     steps[7].setStep(RETRACT_FINGERS, pullingFingersArr);
     steps[8].setStep(CHECK_BUFFER_BIN_SLOT, checkBinTakenFromBufferSlotArr); //
-    steps[9].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
+    steps[9].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveStorArr);
     steps[10].setStep(MOVE_TO_BIN, binPosArr);
     steps[11].setStep(CHECK_RACK_BIN_SLOT, noBinInStorageSlotArr);
     steps[12].setStep(EXTEND_FINGERS, pushingFingersArr);
@@ -544,13 +545,18 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
     char inCol[DEFAULT_CHAR_ARRAY_SIZE];
     char binInColPos[DEFAULT_CHAR_ARRAY_SIZE];
 
-    successfullyProcessed = strcut(retrievalInst, inRack, 0, RACK_ID_LENGTH);
-    successfullyProcessed = strcut(retrievalInst, inCol, 0, COLUMN_ID_LENGTH);
-    successfullyProcessed = strcut(retrievalInst, binInColPos, 0, BIN_POS_ID_LENGTH);
+    successfullyProcessed = strcut(inRack, retrievalInst, 0, RACK_ID_LENGTH);
+    successfullyProcessed = strcut(inCol, retrievalInst, 0, COLUMN_ID_LENGTH);
+    successfullyProcessed = strcut(binInColPos, retrievalInst, 0, BIN_POS_ID_LENGTH);
 
     if (!successfullyProcessed)
         return false;
 
+    // clear to move arr
+    char clearToMoveArr[DEFAULT_CHAR_ARRAY_SIZE];
+    shuttleClearToMove = SHUTTLE_CLEAR_TO_MOVE;
+    itoa(shuttleClearToMove, clearToMoveArr, 10);
+    
     // get position that shuttle should move to
     char binPosArr[DEFAULT_CHAR_ARRAY_SIZE];
     this->getBinPosition(inCol, binInColPos, binPosArr); // bin pos
@@ -639,10 +645,6 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
         binPosState = RIGHT_COMPLETELY_EMPTY;
     GET_TWO_DIGIT_STRING(noBinInRetrievalBufferArr, binPosState);
 
-    // clear to move char
-    char clearToMoveArr[DEFAULT_CHAR_ARRAY_SIZE];
-    itoa(CLEAR_TO_MOVE, clearToMoveArr, 10);
-
     // check bin indeed has been pushed to buffer slot
     char checkBinPushedToBufferSlotArr[DEFAULT_CHAR_ARRAY_SIZE];
     if (retrievalBufferDepth < 0) // LEFT
@@ -651,26 +653,27 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
         binPosState = RIGHT_BUFFER_OCCUPIED;
     GET_TWO_DIGIT_STRING(checkBinPushedToBufferSlotArr, binPosState);
 
-    //steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
-    steps[0].setStep(MOVE_TO_BIN, binPosArr);
-    steps[1].setStep(CHECK_RACK_BIN_SLOT, binInRackSlotArr);
-    steps[2].setStep(EXTEND_ARM, extensionResultArr);
-    steps[3].setStep(EXTEND_FINGERS, pullingFingersId); 
-    steps[4].setStep(RETRACT_ARM, armHomeMore);
-    steps[5].setStep(RETRACT_ARM, armHomeArr);
-    steps[6].setStep(RETRACT_FINGERS, pullingFingersId);
-    steps[7].setStep(CHECK_RACK_BIN_SLOT, checkBinInRackRetrievedArr);
-    steps[8].setStep(MOVE_TO_POS, bufferPosArr);
-    steps[9].setStep(CHECK_BUFFER_BIN_SLOT, noBinInRetrievalBufferArr);
-    steps[10].setStep(EXTEND_FINGERS, pushingFingersArr);
-    steps[11].setStep(EXTEND_ARM, retrievalBufferArr);
-    steps[12].setStep(RETRACT_ARM, armHomeArr);
-    steps[13].setStep(RETRACT_FINGERS, pushingFingersArr);
-    steps[14].setStep(CHECK_BUFFER_BIN_SLOT, checkBinPushedToBufferSlotArr);
+    steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
+    steps[1].setStep(MOVE_TO_BIN, binPosArr);
+    steps[2].setStep(CHECK_RACK_BIN_SLOT, binInRackSlotArr);
+    steps[3].setStep(EXTEND_ARM, extensionResultArr);
+    steps[4].setStep(EXTEND_FINGERS, pullingFingersId); 
+    steps[5].setStep(RETRACT_ARM, armHomeMore);
+    steps[6].setStep(RETRACT_ARM, armHomeArr);
+    steps[7].setStep(RETRACT_FINGERS, pullingFingersId);
+    steps[8].setStep(CHECK_RACK_BIN_SLOT, checkBinInRackRetrievedArr);
+    steps[9].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
+    steps[10].setStep(MOVE_TO_POS, bufferPosArr);
+    steps[11].setStep(CHECK_BUFFER_BIN_SLOT, noBinInRetrievalBufferArr);
+    steps[12].setStep(EXTEND_FINGERS, pushingFingersArr);
+    steps[13].setStep(EXTEND_ARM, retrievalBufferArr);
+    steps[14].setStep(RETRACT_ARM, armHomeArr);
+    steps[15].setStep(RETRACT_FINGERS, pushingFingersArr);
+    steps[16].setStep(CHECK_BUFFER_BIN_SLOT, checkBinPushedToBufferSlotArr);
 
     // set overall completion to false
     this->setOverallStepsCompleted(false);
-    this->setTotalSteps(15);
+    this->setTotalSteps(17);
 
     // for (int i = 0; i < this->totalSteps; i++)
     // {
