@@ -18,7 +18,11 @@ void setup()
   // initialize wcs handler, connects to the internet and the server
   info("Start Initializing WcsHandler");
   wcsHandler.init();
+<<<<<<< HEAD
+  info("wcsHandler");
+=======
   info("wcsHandler initialized test again");
+>>>>>>> origin/master
 }
 
 void loop()
