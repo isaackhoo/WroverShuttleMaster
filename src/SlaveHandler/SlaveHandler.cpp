@@ -313,9 +313,10 @@ void SlaveHandler::handle()
         else
         {
             // job completed
+            // set status to idle
+            status.setState(IDLE);
             // update wcs on job completion
             wcsHandler.sendJobCompletionNotification(status.getActionEnum(), "01");
-            status.setState(IDLE);
         }
 
         // reset slave handler
