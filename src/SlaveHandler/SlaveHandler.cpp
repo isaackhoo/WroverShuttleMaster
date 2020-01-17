@@ -112,7 +112,13 @@ void SlaveHandler::getBinPosition(char *inCol, char *binInColPos, char *output)
     //
     //  00   02   04   06   08   10
 
-    int binCol = bin / 2; //  0 / 2 = 0; 3 / 2 = 1; etc..
+    // since bins are position and numbered as such
+    //
+    //  02   04   06   08   10   12
+    //
+    //  01   03   05   07   09   11
+
+    int binCol = ((bin + 1) / 2); //  0 / 2 = 0; 3 / 2 = 1; etc.. NO IDEA WHAT THIS IS FOR?
 
     pos += MOTORCOUNT_BUFFER_HOLE_TO_CENTER_OF_PILLAR;                 // for buffer
     pos += ((col - 1) * MOTORCOUNT_PER_COLUMN);      // for full columns
@@ -148,11 +154,24 @@ int SlaveHandler::getArmExtensionDirection(char *inRack)
     //  03  02|     |02  03 03  02|     |02  03
     //  01  00|     |00  01 01  00|     |00  01
 
+    // get direction to extend arms to
+    //    Rack|     |Rack     Rack|     |Rack
+    //  06  05|     |05  06 06  05|     |05  06
+    //  04  03|     |03  04 04  03|     |03  04
+    //  02  01|     |01  02 02  01|     |01  02
+    //  --01--|     |--02-- --01--|     |--02--
+    //  12  11|     |11  12 12  11|     |11  12
+    //  10  09|     |09  10 10  09|     |09  10
+    //  08  07|     |07  08 08  07|     |07  08
+    //  06  05|     |05  06 06  05|     |05  06
+    //  04  03|     |03  04 04  03|     |03  04
+    //  02  01|     |01  02 02  01|     |01  02
+
     // get extension direction
     int rackInt = atoi(inRack);
     int direction = rackInt % 2;
     int extensionDirection = 0;
-    if (direction == 0)
+    if (direction == 1)
     {
         // extend left
         extensionDirection = EXTEND_LEFT;
@@ -172,7 +191,7 @@ int SlaveHandler::getArmExtensionDepth(char *binInColPos)
     int binInt = atoi(binInColPos);
     int binDepth = binInt % 2;
     int depth = 0;
-    if (binDepth == 0)
+    if (binDepth == 1)
     {
         // first depth
         depth = FIRST_DEPTH;
