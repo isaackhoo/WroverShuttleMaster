@@ -108,17 +108,11 @@ void SlaveHandler::getBinPosition(char *inCol, char *binInColPos, char *output)
     // get just the bin column
     // since bins are position and numbered as such
     //
-    //  01   03   05   07   09   11
-    //
-    //  00   02   04   06   08   10
-
-    // since bins are position and numbered as such
-    //
     //  02   04   06   08   10   12
     //
     //  01   03   05   07   09   11
 
-    int binCol = ((bin + 1) / 2); //  0 / 2 = 0; 3 / 2 = 1; etc.. NO IDEA WHAT THIS IS FOR?
+    int binCol = ((bin + 1) / 2); //  (1) + 1 / 2 = 1; (2) + 1 / 2 = 1; (3) + 1 / 2 = 2 etc.. Not using this atm...
 
     pos += MOTORCOUNT_BUFFER_HOLE_TO_CENTER_OF_PILLAR;                 // for buffer
     pos += ((col - 1) * MOTORCOUNT_PER_COLUMN);      // for full columns
@@ -141,19 +135,6 @@ void SlaveHandler::getBinPosition(char *inCol, char *binInColPos, char *output)
 
 int SlaveHandler::getArmExtensionDirection(char *inRack)
 {
-    // get direction to extend arms to
-    //    Rack|     |Rack     Rack|     |Rack
-    //  05  04|     |04  05 05  04|     |04  05
-    //  03  02|     |02  03 03  02|     |02  03
-    //  01  00|     |00  01 01  00|     |00  01
-    //  --00--|     |--01-- --02--|     |--03--
-    //  11  10|     |10  11 11  10|     |10  11
-    //  09  08|     |08  09 09  08|     |08  09
-    //  07  06|     |06  07 07  06|     |06  07
-    //  05  04|     |04  05 05  04|     |04  05
-    //  03  02|     |02  03 03  02|     |02  03
-    //  01  00|     |00  01 01  00|     |00  01
-
     // get direction to extend arms to
     //    Rack|     |Rack     Rack|     |Rack
     //  06  05|     |05  06 06  05|     |05  06
