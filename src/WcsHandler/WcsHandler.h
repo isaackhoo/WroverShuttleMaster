@@ -22,10 +22,20 @@ typedef enum
   BATTERY,     // 7
   STATE,       // 8
   LEVEL,       // 9
-  ERROR,
+  SET,         // 10
+  ERROR,       // 11
   Num_Of_WCS_Action_Enums
 } ENUM_WCS_ACTIONS;
 const int DEFAULT_ACTION_ENUM_LENGTH = 2;
+typedef enum
+{
+  SET_DEFAULT = 0,
+  SET_ID,       // 01
+  SET_LEVEL,    // 02
+  SET_STATE,   // 03
+  Num_Of_Manual_Set_Types_Enums
+} ENUM_MANUAL_SET_TYPES;
+const int DEFAULT_SET_TYPE_ENUM_LENGTH = 2;
 static const char *STX = "\x02";
 static const char *ETX = "\x03";
 typedef struct
