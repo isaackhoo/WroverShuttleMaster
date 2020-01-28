@@ -108,6 +108,7 @@ void SlaveHandler::getBinPosition(char *inCol, char *binInColPos, char *output)
     // get just the bin column
     // since bins are position and numbered as such
     //
+
     //  02   04   06   08   10   12
     //
     //  01   03   05   07   09   11
@@ -117,6 +118,7 @@ void SlaveHandler::getBinPosition(char *inCol, char *binInColPos, char *output)
     pos += MOTORCOUNT_BUFFER_HOLE_TO_CENTER_OF_PILLAR;                 // for buffer
     pos += ((col - 1) * MOTORCOUNT_PER_COLUMN);      // for full columns
     pos += (MOTORCOUNT_CENTER_OF_PILLAR_TO_ADAJ_SLOTHOLE_CENTER + (binCol) * MOTORCOUNT_BTWN_SLOTS_WITHIN_RAIL); // for in between bin slots
+
     
     /*pos += A;                            // for const buffer area to first pillar
     pos += (col - 1) * D;                  // for whole columns
@@ -313,9 +315,10 @@ void SlaveHandler::handle()
         else
         {
             // job completed
+            // set status to idle
+            status.setState(IDLE);
             // update wcs on job completion
             wcsHandler.sendJobCompletionNotification(status.getActionEnum(), "01");
-            status.setState(IDLE);
         }
 
         // reset slave handler
