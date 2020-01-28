@@ -116,11 +116,11 @@ void SlaveHandler::getBinPosition(char *inCol, char *binInColPos, char *output)
 
     pos += MOTORCOUNT_BUFFER_HOLE_TO_CENTER_OF_PILLAR;                 // for buffer
     pos += ((col - 1) * MOTORCOUNT_PER_COLUMN);      // for full columns
-    pos += (MOTORCOUNT_CENTER_OF_PILLAR_TO_ADAJ_SLOTHOLE_CENTER + ((bin / 2) * MOTORCOUNT_BTWN_SLOTS_WITHIN_RAIL)); // for in between bin slots
+    pos += (MOTORCOUNT_CENTER_OF_PILLAR_TO_ADAJ_SLOTHOLE_CENTER + (binCol) * MOTORCOUNT_BTWN_SLOTS_WITHIN_RAIL); // for in between bin slots
     
     /*pos += A;                            // for const buffer area to first pillar
     pos += (col - 1) * D;                  // for whole columns
-    pos += B + ((((bin + 1) / 2) - 1) * C) // for bin in col
+    pos += B + (((bin + 1) / 2) - 1) * C) // for bin in col
 
     // pos += GAP_BETWEEN_COLUMN_AND_BIN; // for first bin
     // pos += binCol * (GAP_BETWEEN_BIN_WIDTH + BIN_WIDTH);
