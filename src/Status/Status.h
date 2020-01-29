@@ -23,11 +23,11 @@ extern Status status;
 typedef enum
 {
   IDLE = 0,
-  STORING,
-  RETRIEVING,
-  MOVING,
-  SHUTTLE_ERROR,
-  AWAITING,
+  STORING,      // 01
+  RETRIEVING,   // 02
+  MOVING,       // 03
+  SHUTTLE_ERROR,// 04
+  AWAITING,     // 05
   Num_Of_Shuttle_States
 } SHUTTLE_STATE;
 static const char SHUTTLE_STATE_STRING[][15] = {"IDLE", "STORING", "RETRIEVING", "MOVING", "ERROR", "AWAITING"};
@@ -62,6 +62,7 @@ public:
   void setActiveState();
   void setIsCarryingBin(bool);
   void setIsFingerExtended(bool);
+  void setDefault();
   void setWcsInputs(const char *, const char *);
   void rehydrateStatus(char *);
 

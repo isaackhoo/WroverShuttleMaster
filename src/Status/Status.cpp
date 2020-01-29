@@ -119,6 +119,12 @@ void Status::setIsFingerExtended(bool isFingerExtended)
     this->isFingerExtended = isFingerExtended;
 };
 
+void Status::setDefault() {
+    this->setId(DEFAULT_ID);
+    this->setLevel(DEFAULT_LEVEL);
+    this->setState(SHUTTLE_STATE::IDLE);
+};
+
 void Status::setWcsInputs(const char *actionEnum, const char *inst)
 {
     this->setActionEnum(actionEnum);
@@ -165,16 +171,6 @@ void Status::rehydrateStatus(char *hydrator)
     }
 };
 
-// GETTERS
-char *Status::getId() { return this->id; };
-char *Status::getActionEnum() { return this->actionEnum; };
-char *Status::getInstructions() { return this->instructions; };
-char *Status::getLevel() { return this->currentLevel; };
-int Status::getPos() { return this->currentPos; };
-SHUTTLE_STATE Status::getState() { return this->state; };
-bool Status::getIsCarryingBin() { return this->isCarryingBin; };
-bool Status::getIsFingerExtended() { return this->isFingerExtended; };
-bool Status::isIdDefault() { return strcmp(this->getId(), DEFAULT_ID) == 0 ? true : false; };
 void Status::saveStatus()
 {
     static char statusString[DEFAULT_CHAR_ARRAY_SIZE];
@@ -192,3 +188,14 @@ void Status::saveStatus()
     sprintf(logStatusChangeInfo, "saved to status: %s", statusString);
     logSd(logStatusChangeInfo);
 };
+
+// GETTERS
+char *Status::getId() { return this->id; };
+char *Status::getActionEnum() { return this->actionEnum; };
+char *Status::getInstructions() { return this->instructions; };
+char *Status::getLevel() { return this->currentLevel; };
+int Status::getPos() { return this->currentPos; };
+SHUTTLE_STATE Status::getState() { return this->state; };
+bool Status::getIsCarryingBin() { return this->isCarryingBin; };
+bool Status::getIsFingerExtended() { return this->isFingerExtended; };
+bool Status::isIdDefault() { return strcmp(this->getId(), DEFAULT_ID) == 0 ? true : false; };

@@ -148,6 +148,60 @@ void WcsHandler::perform()
         status.saveStatus();
         break;
     }
+    case SET:
+    {
+        info("REC WCS::SET");
+        // determine what to set, remaining instructions are set instructions
+        char setType[DEFAULT_SET_TYPE_ENUM_LENGTH + 1];
+        strcut(setType, this->wcsIn.instructions, 0, DEFAULT_SET_TYPE_ENUM_LENGTH);
+        ENUM_MANUAL_SET_TYPES setTypeInt = (ENUM_MANUAL_SET_TYPES)atoi(setType);
+        switch (setTypeInt)
+        {
+        case SET_DEFAULT:
+        {
+            // sets id, level and status to default values
+            status.setDefault();
+            break;
+        }
+        case SET_ID:
+        {
+            if (strlen(this->wcsIn.instructions) > 0)
+                status.setId(this->wcsIn.instructions);
+            else
+                status.setId(DEFAULT_ID);
+            info("Id updated");
+            break;
+        }
+        case SET_LEVEL:
+        {
+            if (strlen(this->wcsIn.instructions) > 0)
+            {
+                status.setLevel(this->wcsIn.instructions);
+            }
+            else
+                status.setLevel(DEFAULT_LEVEL);
+            info("Level updated");
+            break;
+        }
+        case SET_STATE:
+        {
+            if (strlen(this->wcsIn.instructions) > 0)
+            {
+                SHUTTLE_STATE manualState = (SHUTTLE_STATE)atoi(this->wcsIn.instructions);
+                status.setState(manualState);
+            }
+            else
+                status.setState(SHUTTLE_STATE::IDLE);
+            info("State updated");
+            break;
+        }
+        default:
+            break;
+        }
+        // save changes to sd
+        status.saveStatus();
+        break;
+    }
     case ERROR:
     {
         break;
@@ -242,13 +296,9 @@ bool WcsHandler::send(bool shouldLog)
     // compiles wcsOut into a cstring to send
     char wcsOutString[DEFAULT_CHAR_ARRAY_SIZE];
 
-    // strcpy_s(wcsOutString, sizeof wcsOutString, this->wcsOut.id);
-    // strcat_s(wcsOutString, sizeof wcsOutString, this->wcsOut.actionEnum);
-
     strcpy(wcsOutString, this->wcsOut.id);
     strcat(wcsOutString, this->wcsOut.actionEnum);
     if (strlen(this->wcsOut.instructions) > 0)
-        // strcat_s(wcsOutString, sizeof wcsOutString, this->wcsOut.instructions);
         strcat(wcsOutString, this->wcsOut.instructions);
     return this->send(wcsOutString, shouldLog);
 };
@@ -343,28 +393,21 @@ void WcsHandler::run(void)
 
 bool WcsHandler::sendJobCompletionNotification(const char *actionEnum, const char *inst)
 {
-    // strcpy_s(this->wcsOut.id, sizeof this->wcsOut.id, status.getId());
-    // strcpy_s(this->wcsOut.actionEnum, sizeof this->wcsOut.actionEnum, actionEnum);
-
     strcpy(this->wcsOut.id, status.getId());
     strcpy(this->wcsOut.actionEnum, actionEnum);
     if (strlen(inst) > 0)
-        // strcpy_s(this->wcsOut.instructions, sizeof this->wcsOut.instructions, inst);
         strcpy(this->wcsOut.instructions, inst);
     this->send();
 };
 
 bool WcsHandler::updateStateChange()
 {
-    // strcpy_s(this->wcsOut.id, sizeof this->wcsOut.id, status.getId());
     strcpy(this->wcsOut.id, status.getId());
     char stateActionString[3];
     GET_TWO_DIGIT_STRING(stateActionString, STATE);
-    // strcpy_s(this->wcsOut.actionEnum, sizeof this->wcsOut.actionEnum, stateActionString);
     strcpy(this->wcsOut.actionEnum, stateActionString);
     char currentStateString[3];
     GET_TWO_DIGIT_STRING(currentStateString, status.getState());
-    // strcpy_s(this->wcsOut.instructions, sizeof this->wcsOut.instructions, currentStateString);
     strcpy(this->wcsOut.instructions, currentStateString);
     this->send();
 };
