@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "../Logger/SD/SD.h"
 #include "Esp.h"
+#include "../Network/TCP/TCP.h"
 
 // Append char
 void appendChar(char *s, char c)
@@ -125,6 +126,8 @@ bool strcut(char *output, char *source, int from, int length)
 // reset chip
 void resetChip()
 {
+    // terminate tcp
+    TcpClose();
     // logToSd();
     ESP.restart();
 };
