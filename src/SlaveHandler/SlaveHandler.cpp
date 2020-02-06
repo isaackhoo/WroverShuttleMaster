@@ -498,26 +498,26 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     }
     GET_TWO_DIGIT_STRING(checkBinStoredInStorageSlotArr, binPosState);
 
-    steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveStorArr);
-    steps[1].setStep(MOVE_TO_POS, bufferPosArr);
-    steps[2].setStep(CHECK_BUFFER_BIN_SLOT, binInBufferSlotArr);
-    steps[3].setStep(EXTEND_ARM, storageBufferDepthArr);
-    steps[4].setStep(EXTEND_FINGERS, pullingFingersArr);
-    steps[5].setStep(RETRACT_ARM, armHomeMore);
-    steps[6].setStep(RETRACT_ARM, armHomeArr);
-    steps[7].setStep(RETRACT_FINGERS, pullingFingersArr);
-    steps[8].setStep(CHECK_BUFFER_BIN_SLOT, checkBinTakenFromBufferSlotArr); //
-    steps[9].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveStorArr);
-    steps[10].setStep(MOVE_TO_BIN, binPosArr);
-    steps[11].setStep(CHECK_RACK_BIN_SLOT, noBinInStorageSlotArr);
-    steps[12].setStep(EXTEND_FINGERS, pushingFingersArr);
-    steps[13].setStep(EXTEND_ARM, extensionResultArr);
-    steps[14].setStep(RETRACT_ARM, armHomeArr);
-    steps[15].setStep(RETRACT_FINGERS, pushingFingersArr);
-    steps[16].setStep(CHECK_RACK_BIN_SLOT, checkBinStoredInStorageSlotArr); //
+    //steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveStorArr);
+    steps[0].setStep(MOVE_TO_POS, bufferPosArr);
+    steps[1].setStep(CHECK_BUFFER_BIN_SLOT, binInBufferSlotArr);
+    steps[2].setStep(EXTEND_ARM, storageBufferDepthArr);
+    steps[3].setStep(EXTEND_FINGERS, pullingFingersArr);
+    steps[4].setStep(RETRACT_ARM, armHomeMore);
+    steps[5].setStep(RETRACT_ARM, armHomeArr);
+    steps[6].setStep(RETRACT_FINGERS, pullingFingersArr);
+    steps[7].setStep(CHECK_BUFFER_BIN_SLOT, checkBinTakenFromBufferSlotArr); //
+    steps[8].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveStorArr);
+    steps[9].setStep(MOVE_TO_BIN, binPosArr);
+    steps[10].setStep(CHECK_RACK_BIN_SLOT, noBinInStorageSlotArr);
+    steps[11].setStep(EXTEND_FINGERS, pushingFingersArr);
+    steps[12].setStep(EXTEND_ARM, extensionResultArr);
+    steps[13].setStep(RETRACT_ARM, armHomeArr);
+    steps[14].setStep(RETRACT_FINGERS, pushingFingersArr);
+    steps[15].setStep(CHECK_RACK_BIN_SLOT, checkBinStoredInStorageSlotArr); //
 
     this->setOverallStepsCompleted(false);
-    this->setTotalSteps(17);
+    this->setTotalSteps(16);
 
     // for (int i = 0; i < this->totalSteps; i++)
     // {
@@ -656,27 +656,27 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
         binPosState = RIGHT_BUFFER_OCCUPIED;
     GET_TWO_DIGIT_STRING(checkBinPushedToBufferSlotArr, binPosState);
 
-    steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
-    steps[1].setStep(MOVE_TO_BIN, binPosArr);
-    steps[2].setStep(CHECK_RACK_BIN_SLOT, binInRackSlotArr);
-    steps[3].setStep(EXTEND_ARM, extensionResultArr);
-    steps[4].setStep(EXTEND_FINGERS, pullingFingersId); 
-    steps[5].setStep(RETRACT_ARM, armHomeMore);
-    steps[6].setStep(RETRACT_ARM, armHomeArr);
-    steps[7].setStep(RETRACT_FINGERS, pullingFingersId);
-    steps[8].setStep(CHECK_RACK_BIN_SLOT, checkBinInRackRetrievedArr);
-    steps[9].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
-    steps[10].setStep(MOVE_TO_POS, bufferPosArr);
-    steps[11].setStep(CHECK_BUFFER_BIN_SLOT, noBinInRetrievalBufferArr);
-    steps[12].setStep(EXTEND_FINGERS, pushingFingersArr);
-    steps[13].setStep(EXTEND_ARM, retrievalBufferArr);
-    steps[14].setStep(RETRACT_ARM, armHomeArr);
-    steps[15].setStep(RETRACT_FINGERS, pushingFingersArr);
-    steps[16].setStep(CHECK_BUFFER_BIN_SLOT, checkBinPushedToBufferSlotArr);
+    //steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
+    steps[0].setStep(MOVE_TO_BIN, binPosArr);
+    steps[1].setStep(CHECK_RACK_BIN_SLOT, binInRackSlotArr);
+    steps[2].setStep(EXTEND_ARM, extensionResultArr);
+    steps[3].setStep(EXTEND_FINGERS, pullingFingersId); 
+    steps[4].setStep(RETRACT_ARM, armHomeMore);
+    steps[5].setStep(RETRACT_ARM, armHomeArr);
+    steps[6].setStep(RETRACT_FINGERS, pullingFingersId);
+    steps[7].setStep(CHECK_RACK_BIN_SLOT, checkBinInRackRetrievedArr);
+    steps[8].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
+    steps[9].setStep(MOVE_TO_POS, bufferPosArr);
+    steps[10].setStep(CHECK_BUFFER_BIN_SLOT, noBinInRetrievalBufferArr);
+    steps[11].setStep(EXTEND_FINGERS, pushingFingersArr);
+    steps[12].setStep(EXTEND_ARM, retrievalBufferArr);
+    steps[13].setStep(RETRACT_ARM, armHomeArr);
+    steps[14].setStep(RETRACT_FINGERS, pushingFingersArr);
+    steps[15].setStep(CHECK_BUFFER_BIN_SLOT, checkBinPushedToBufferSlotArr);
 
     // set overall completion to false
     this->setOverallStepsCompleted(false);
-    this->setTotalSteps(17);
+    this->setTotalSteps(16);
 
     // for (int i = 0; i < this->totalSteps; i++)
     // {
