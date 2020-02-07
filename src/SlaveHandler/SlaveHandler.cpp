@@ -117,7 +117,7 @@ void SlaveHandler::getBinPosition(char *inCol, char *binInColPos, char *output)
 
     pos += MOTORCOUNT_BUFFER_HOLE_TO_CENTER_OF_PILLAR;                 // for buffer
     pos += ((col - 1) * MOTORCOUNT_PER_COLUMN);      // for full columns
-    pos += (MOTORCOUNT_CENTER_OF_PILLAR_TO_ADAJ_SLOTHOLE_CENTER + (binCol) * MOTORCOUNT_BTWN_SLOTS_WITHIN_RAIL); // for in between bin slots
+    pos += (MOTORCOUNT_CENTER_OF_PILLAR_TO_ADAJ_SLOTHOLE_CENTER + ((binCol - 1) * MOTORCOUNT_BTWN_SLOTS_WITHIN_RAIL)); // for in between bin slots
 
     
     /*pos += A;                            // for const buffer area to first pillar
@@ -280,6 +280,11 @@ void SlaveHandler::handle()
                 status.setIsFingerExtended(false);
                 break;
             }
+            case BATT_VOLTS_READ:
+            {
+                // status.set??? what is this for, all the sets.. doesnt seem to do anything yet?
+                break;
+            }
             default:
                 break;
             }
@@ -408,6 +413,10 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     shuttleClearToMove = SHUTTLE_CLEAR_TO_MOVE;
     itoa(shuttleClearToMove, clearToMoveStorArr, 10);
 
+    // get batt volts limit
+    char battVoltsLowerLimit[DEFAULT_CHAR_ARRAY_SIZE];
+    itoa(BATT_VOLTS_LOWER_LIMIT, battVoltsLowerLimit, 10);
+
     // get char of buffer position
     char bufferPosArr[DEFAULT_CHAR_ARRAY_SIZE];
     toCString(bufferPosArr, positionToValue[BUFFER]);
@@ -498,7 +507,8 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     }
     GET_TWO_DIGIT_STRING(checkBinStoredInStorageSlotArr, binPosState);
 
-    steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveStorArr);
+    //steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveStorArr);
+    steps[0].setStep(BATT_VOLTS_READ, battVoltsLowerLimit);
     steps[1].setStep(MOVE_TO_POS, bufferPosArr);
     steps[2].setStep(CHECK_BUFFER_BIN_SLOT, binInBufferSlotArr);
     steps[3].setStep(EXTEND_ARM, storageBufferDepthArr);
@@ -559,6 +569,10 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
     char clearToMoveArr[DEFAULT_CHAR_ARRAY_SIZE];
     shuttleClearToMove = SHUTTLE_CLEAR_TO_MOVE;
     itoa(shuttleClearToMove, clearToMoveArr, 10);
+
+    // get batt volts limit
+    char battVoltsLowerLimit[DEFAULT_CHAR_ARRAY_SIZE];
+    itoa(BATT_VOLTS_LOWER_LIMIT, battVoltsLowerLimit, 10);
     
     // get position that shuttle should move to
     char binPosArr[DEFAULT_CHAR_ARRAY_SIZE];
@@ -656,7 +670,8 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
         binPosState = RIGHT_BUFFER_OCCUPIED;
     GET_TWO_DIGIT_STRING(checkBinPushedToBufferSlotArr, binPosState);
 
-    steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
+    //steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
+    steps[0].setStep(BATT_VOLTS_READ, battVoltsLowerLimit);
     steps[1].setStep(MOVE_TO_BIN, binPosArr);
     steps[2].setStep(CHECK_RACK_BIN_SLOT, binInRackSlotArr);
     steps[3].setStep(EXTEND_ARM, extensionResultArr);
