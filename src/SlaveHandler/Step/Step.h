@@ -27,8 +27,7 @@ typedef enum
     EXTEND_FINGERS,
     RETRACT_FINGERS,
     ADJUST_POS,
-    CHECK_FIRST_DEPTH_BIN_SLOT,
-    CHECK_SECOND_DEPTH_BIN_SLOT,
+    BATT_VOLTS_READ,
     Num_Of_Step_Actions
 } STEPACTION;
 const char stepActionToString[][28] = {"Dummy", "Check clear", "Move to Bin",

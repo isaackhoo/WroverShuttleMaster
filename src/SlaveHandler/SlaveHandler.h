@@ -52,6 +52,9 @@ const int FIRST_DEPTH = 642;
 const int SECOND_DEPTH = 1185;
 const int BUFFER_DEPTH = 900;
 
+// battery constants
+const int BATT_VOLTS_LOWER_LIMIT = 235;
+
 // others
 const int STORAGE_BUFFER_DIRECTION = -1;
 const int RETRIEVAL_BUFFER_DIRECTION = 1;
