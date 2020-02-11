@@ -7,6 +7,7 @@
 #include "../Network/Wifi/WifiNetwork.h"
 #include "../Status/Status.h"
 #include "../SlaveHandler/SlaveHandler.h"
+#include "../Logger/EEPROM/ELog.h"
 
 // --------------------------
 // Wcs Public Variables
@@ -202,6 +203,16 @@ void WcsHandler::perform()
         status.saveStatus();
         break;
     }
+    // Handle echos received from wcs
+    case ECHO:
+    {
+        char *awaitingEcho = readEEPROM();
+        if (strcmp(awaitingEcho, this->wcsIn.instructions))
+        {
+            clearEEPROM();
+        }
+        break;
+    }
     case ERROR:
     {
         break;
@@ -219,50 +230,43 @@ void WcsHandler::handle()
     int headerIndex = findIndex(this->readBuffer, STX[0]);
     int footerIndex = findIndex(this->readBuffer, ETX[0]);
 
-    if (footerIndex < 0)
+    while (headerIndex >= 0 && footerIndex > headerIndex)
     {
-        // add timeout code
-        // TODO
-    }
-    else
-    {
-        // clear timeout
-        // TODO
+        // extract input
+        char temp[DEFAULT_CHAR_ARRAY_SIZE];
+        strcut(temp, this->readBuffer, headerIndex, footerIndex - headerIndex + 1);
 
-        while (headerIndex >= 0 && footerIndex > headerIndex)
+        // clean out STX and ETX chars
+        char cleanInput[DEFAULT_CHAR_ARRAY_SIZE];
+        strcut(cleanInput, temp, 1, strlen(temp) - 2);
+
+        // interpret input
+        bool interpretRes = this->interpret(cleanInput);
+        if (!interpretRes)
+            return;
+
+        if (this->wcsIn.action != ECHO)
+            // echo back what was received
+            this->sendEcho(cleanInput);
+
+        // perform
+        this->perform();
+
+        // check for more inputs
+        if (strlen(this->readBuffer) > 0)
         {
-            // extract input
-            char temp[DEFAULT_CHAR_ARRAY_SIZE];
-            strcut(temp, this->readBuffer, headerIndex, footerIndex - headerIndex + 1);
-
-            // clean out STX and ETX chars
-            char cleanInput[DEFAULT_CHAR_ARRAY_SIZE];
-            strcut(cleanInput, temp, 1, strlen(temp) - 2);
-
-            // interpret input
-            bool interpretRes = this->interpret(cleanInput);
-            if (!interpretRes)
-                return;
-
-            // perform
-            this->perform();
-
-            // check for more inputs
-            if (strlen(this->readBuffer) > 0)
-            {
-                headerIndex = findIndex(this->readBuffer, STX[0]);
-                footerIndex = findIndex(this->readBuffer, ETX[0]);
-            }
-            else
-            {
-                headerIndex = -1;
-                footerIndex = -1;
-            }
+            headerIndex = findIndex(this->readBuffer, STX[0]);
+            footerIndex = findIndex(this->readBuffer, ETX[0]);
+        }
+        else
+        {
+            headerIndex = -1;
+            footerIndex = -1;
         }
     }
 }
 
-bool WcsHandler::send(char *str, bool shouldLog = true)
+bool WcsHandler::send(char *str, bool shouldLog = true, bool awaitEcho = true)
 {
     // 1    - STX
     // 2-5  - shuttle ID
@@ -287,10 +291,16 @@ bool WcsHandler::send(char *str, bool shouldLog = true)
     if (shouldLog)
         logSd(wcsSendLog);
     writeString[0] = '\0';
+
+    if (awaitEcho)
+    {
+        // save echo to eeprom
+        writeEEPROM(str);
+    }
     return res;
 }
 
-bool WcsHandler::send(bool shouldLog)
+bool WcsHandler::send(bool shouldLog, bool awaitEcho = true)
 {
     // WcsHandler::send overload.
     // compiles wcsOut into a cstring to send
@@ -303,9 +313,25 @@ bool WcsHandler::send(bool shouldLog)
     return this->send(wcsOutString, shouldLog);
 };
 
+bool WcsHandler::send(bool shouldLog)
+{
+    return this->send(shouldLog, true);
+}
+
 bool WcsHandler::send()
 {
-    return this->send(true);
+    return this->send(true, true);
+}
+
+bool WcsHandler::sendEcho(char *echo)
+{
+    char wcsOutString[DEFAULT_CHAR_ARRAY_SIZE];
+    strcpy(wcsOutString, this->wcsOut.id);
+    char echoActionString[3];
+    GET_TWO_DIGIT_STRING(echoActionString, ECHO);
+    strcat(wcsOutString, echoActionString);
+    strcat(wcsOutString, echo);
+    return this->send(wcsOutString, false, false);
 }
 
 void WcsHandler::pullCurrentStatus()
@@ -384,8 +410,7 @@ void WcsHandler::run(void)
         logSd("No pings from server. Restarting chip.");
         resetChip();
     }
-
-    if (TcpRead(this->readBuffer))
+    else if (TcpRead(this->readBuffer))
     {
         this->handle();
     }

@@ -4,6 +4,8 @@
 #include "./src/WcsHandler/WcsHandler.h"
 #include "./src/SlaveHandler/SlaveHandler.h"
 
+#include "./src/Logger/EEPROM/ELog.h"
+
 void setup()
 {
   // initializes logger. Serial if dev_env, or lcd and sd if prod
@@ -19,6 +21,10 @@ void setup()
   info("Start Initializing WcsHandler");
   wcsHandler.init();
   info("wcsHandler");
+
+  // initialize EEPROM to handle microchip echos
+  info("Start Initializing EEPROM");
+  beginEEPROM();
 }
 
 void loop()

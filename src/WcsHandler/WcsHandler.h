@@ -23,7 +23,8 @@ typedef enum
   STATE,       // 8
   LEVEL,       // 9
   SET,         // 10
-  ERROR,       // 11
+  ECHO,        // 11
+  ERROR,       // 12
   Num_Of_WCS_Action_Enums
 } ENUM_WCS_ACTIONS;
 const int DEFAULT_ACTION_ENUM_LENGTH = 2;
@@ -66,9 +67,11 @@ private:
   bool interpret(char *);
   void perform();
   void handle();
-  bool send(char *, bool);
+  bool send(char *, bool, bool);
   bool send(bool);
+  bool send(bool, bool);
   bool send();
+  bool sendEcho(char *);
   void pullCurrentStatus();
   void updateLastPing();
   bool isPingAlive();

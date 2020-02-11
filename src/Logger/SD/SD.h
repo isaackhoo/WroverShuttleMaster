@@ -26,4 +26,7 @@ extern void batchLogCallback(int, int, int);
 extern void logStatus(char *);
 extern char *readStatus();
 
+extern void logEcho(char *);
+extern char *readEcho();
+
 #endif
