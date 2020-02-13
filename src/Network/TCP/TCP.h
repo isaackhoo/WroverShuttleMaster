@@ -19,5 +19,6 @@ extern const int serverPort;
 extern bool ConnectTcpServer();
 extern bool TcpRead(char*);
 extern bool TcpWrite(char*);
+extern bool TcpClose();
 
 #endif

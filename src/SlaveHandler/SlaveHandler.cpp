@@ -280,6 +280,11 @@ void SlaveHandler::handle()
                 status.setIsFingerExtended(false);
                 break;
             }
+            case BATT_VOLTS_READ:
+            {
+                // status.set??? what is this for, all the sets.. doesnt seem to do anything yet?
+                break;
+            }
             default:
                 break;
             }
@@ -408,6 +413,10 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     shuttleClearToMove = SHUTTLE_CLEAR_TO_MOVE;
     itoa(shuttleClearToMove, clearToMoveStorArr, 10);
 
+    // get batt volts limit
+    char battVoltsLowerLimit[DEFAULT_CHAR_ARRAY_SIZE];
+    itoa(BATT_VOLTS_LOWER_LIMIT, battVoltsLowerLimit, 10);
+
     // get char of buffer position
     char bufferPosArr[DEFAULT_CHAR_ARRAY_SIZE];
     toCString(bufferPosArr, positionToValue[BUFFER]);
@@ -499,6 +508,7 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     GET_TWO_DIGIT_STRING(checkBinStoredInStorageSlotArr, binPosState);
 
     //steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveStorArr);
+<<<<<<< HEAD
     steps[0].setStep(MOVE_TO_POS, bufferPosArr);
     steps[1].setStep(CHECK_BUFFER_BIN_SLOT, binInBufferSlotArr);
     steps[2].setStep(EXTEND_ARM, storageBufferDepthArr);
@@ -515,6 +525,25 @@ bool SlaveHandler::createStorageSteps(char *storageInst)
     steps[13].setStep(RETRACT_ARM, armHomeArr);
     steps[14].setStep(RETRACT_FINGERS, pushingFingersArr);
     steps[15].setStep(CHECK_RACK_BIN_SLOT, checkBinStoredInStorageSlotArr); //
+=======
+    steps[0].setStep(BATT_VOLTS_READ, battVoltsLowerLimit);
+    steps[1].setStep(MOVE_TO_POS, bufferPosArr);
+    steps[2].setStep(CHECK_BUFFER_BIN_SLOT, binInBufferSlotArr);
+    steps[3].setStep(EXTEND_ARM, storageBufferDepthArr);
+    steps[4].setStep(EXTEND_FINGERS, pullingFingersArr);
+    steps[5].setStep(RETRACT_ARM, armHomeMore);
+    steps[6].setStep(RETRACT_ARM, armHomeArr);
+    steps[7].setStep(RETRACT_FINGERS, pullingFingersArr);
+    steps[8].setStep(CHECK_BUFFER_BIN_SLOT, checkBinTakenFromBufferSlotArr); //
+    steps[9].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveStorArr);
+    steps[10].setStep(MOVE_TO_BIN, binPosArr);
+    steps[11].setStep(CHECK_RACK_BIN_SLOT, noBinInStorageSlotArr);
+    steps[12].setStep(EXTEND_FINGERS, pushingFingersArr);
+    steps[13].setStep(EXTEND_ARM, extensionResultArr);
+    steps[14].setStep(RETRACT_ARM, armHomeArr);
+    steps[15].setStep(RETRACT_FINGERS, pushingFingersArr);
+    steps[16].setStep(CHECK_RACK_BIN_SLOT, checkBinStoredInStorageSlotArr); //
+>>>>>>> 9fd0bbf5cc442dba93bc859b6ffeb8534b9912d4
 
     this->setOverallStepsCompleted(false);
     this->setTotalSteps(16);
@@ -559,6 +588,10 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
     char clearToMoveArr[DEFAULT_CHAR_ARRAY_SIZE];
     shuttleClearToMove = SHUTTLE_CLEAR_TO_MOVE;
     itoa(shuttleClearToMove, clearToMoveArr, 10);
+
+    // get batt volts limit
+    char battVoltsLowerLimit[DEFAULT_CHAR_ARRAY_SIZE];
+    itoa(BATT_VOLTS_LOWER_LIMIT, battVoltsLowerLimit, 10);
     
     // get position that shuttle should move to
     char binPosArr[DEFAULT_CHAR_ARRAY_SIZE];
@@ -657,6 +690,7 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
     GET_TWO_DIGIT_STRING(checkBinPushedToBufferSlotArr, binPosState);
 
     //steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
+<<<<<<< HEAD
     steps[0].setStep(MOVE_TO_BIN, binPosArr);
     steps[1].setStep(CHECK_RACK_BIN_SLOT, binInRackSlotArr);
     steps[2].setStep(EXTEND_ARM, extensionResultArr);
@@ -673,6 +707,25 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
     steps[13].setStep(RETRACT_ARM, armHomeArr);
     steps[14].setStep(RETRACT_FINGERS, pushingFingersArr);
     steps[15].setStep(CHECK_BUFFER_BIN_SLOT, checkBinPushedToBufferSlotArr);
+=======
+    steps[0].setStep(BATT_VOLTS_READ, battVoltsLowerLimit);
+    steps[1].setStep(MOVE_TO_BIN, binPosArr);
+    steps[2].setStep(CHECK_RACK_BIN_SLOT, binInRackSlotArr);
+    steps[3].setStep(EXTEND_ARM, extensionResultArr);
+    steps[4].setStep(EXTEND_FINGERS, pullingFingersId); 
+    steps[5].setStep(RETRACT_ARM, armHomeMore);
+    steps[6].setStep(RETRACT_ARM, armHomeArr);
+    steps[7].setStep(RETRACT_FINGERS, pullingFingersId);
+    steps[8].setStep(CHECK_RACK_BIN_SLOT, checkBinInRackRetrievedArr);
+    steps[9].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
+    steps[10].setStep(MOVE_TO_POS, bufferPosArr);
+    steps[11].setStep(CHECK_BUFFER_BIN_SLOT, noBinInRetrievalBufferArr);
+    steps[12].setStep(EXTEND_FINGERS, pushingFingersArr);
+    steps[13].setStep(EXTEND_ARM, retrievalBufferArr);
+    steps[14].setStep(RETRACT_ARM, armHomeArr);
+    steps[15].setStep(RETRACT_FINGERS, pushingFingersArr);
+    steps[16].setStep(CHECK_BUFFER_BIN_SLOT, checkBinPushedToBufferSlotArr);
+>>>>>>> 9fd0bbf5cc442dba93bc859b6ffeb8534b9912d4
 
     // set overall completion to false
     this->setOverallStepsCompleted(false);

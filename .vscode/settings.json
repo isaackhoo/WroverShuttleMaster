@@ -3,6 +3,20 @@
         "*.tcc": "cpp",
         "sstream": "cpp",
         "istream": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "atomic": "cpp",
+        "deque": "cpp",
+        "ios": "cpp",
+        "list": "cpp",
+        "system_error": "cpp",
+        "vector": "cpp",
+        "xhash": "cpp",
+        "xiosbase": "cpp",
+        "xstring": "cpp",
+        "xtree": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "ostream": "cpp"
     }
 }

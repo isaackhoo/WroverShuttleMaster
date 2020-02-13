@@ -44,3 +44,10 @@ bool TcpWrite(char *toWrite)
     client.print(toWrite);
     return true;
 };
+
+bool TcpClose() {
+    client.stop();
+    if (client.connected())
+        return false;
+    return true;
+}
