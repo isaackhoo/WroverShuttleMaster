@@ -3,31 +3,43 @@
 
 void beginEEPROM()
 {
-    if(EEPROM.begin(EEPROM_SIZE))
+    if (EEPROM.begin(EEPROM_MSG_SIZE))
+    {
         info("EEPROM initialized");
+    }
     else
         info("Failed to initialize EEPROM");
 }
 
-void writeEEPROM(char *input) {
-    for (int i = 0; i < strlen(input); i++) {
-        EEPROM.write(i, input[i]);
+// msg
+void writeEEPROMMsg(char *input)
+{
+    // write to eeprom
+    for (int i = EEPROM_MSG_START_POS; i < EEPROM_MSG_START_POS + strlen(input); i++)
+    {
+        EEPROM.write(i, input[i - EEPROM_MSG_START_POS]);
     }
+    EEPROM.write(EEPROM_MSG_START_POS + strlen(input), '\0');
     EEPROM.commit();
 };
 
-void clearEEPROM() {
-    for (int i = 0; i < EEPROM_SIZE; i++) {
+void clearEEPROMMsg()
+{
+    for (int i = EEPROM_MSG_START_POS; i < EEPROM_MSG_START_POS + EEPROM_MSG_SIZE; i++)
+    {
         EEPROM.write(i, '\0');
     }
     EEPROM.commit();
 };
 
-char *readEEPROM() {
-    static char output[EEPROM_SIZE + 1];
-    for(int i = 0; i < EEPROM_SIZE; i++) {
-        output[i] = (char)EEPROM.read(i);
+char *readEEPROMMsg()
+{
+
+    static char output[EEPROM_MSG_SIZE];
+    for (int i = EEPROM_MSG_START_POS; i < EEPROM_MSG_START_POS + EEPROM_MSG_SIZE; i++)
+    {
+        output[i - EEPROM_MSG_START_POS] = (char)EEPROM.read(i);
     }
-    output[EEPROM_SIZE + 1] = '\0';
+    output[EEPROM_MSG_SIZE] = '\0';
     return output;
 };

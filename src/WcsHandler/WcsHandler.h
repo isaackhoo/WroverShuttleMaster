@@ -64,6 +64,9 @@ private:
   WcsFormat wcsIn;
   WcsFormat wcsOut;
   unsigned long lastPingMillis;
+  unsigned long echoTimeoutMillis;
+  int echoRetries;
+
   bool interpret(char *);
   void perform();
   void handle();
@@ -75,6 +78,11 @@ private:
   void pullCurrentStatus();
   void updateLastPing();
   bool isPingAlive();
+  void setEchoTimeout();
+  bool isEchoTimeout();
+  bool clearEchoTimeout();
+  bool incEchoRetries();
+  bool resetEchoRetries();
 
 public:
   WcsHandler();

@@ -25,6 +25,7 @@ void setup()
   // initialize EEPROM to handle microchip echos
   info("Start Initializing EEPROM");
   beginEEPROM();
+  clearEEPROMMsg();
 }
 
 void loop()
