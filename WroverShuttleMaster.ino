@@ -19,6 +19,8 @@ void setup()
   info("Start Initializing WcsHandler");
   wcsHandler.init();
   info("wcsHandler");
+
+  // removed echo code
 }
 
 void loop()
