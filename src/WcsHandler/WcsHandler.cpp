@@ -43,7 +43,8 @@ bool WcsHandler::interpret(char *input)
         strcpy(this->wcsIn.instructions, copyInput);
 
     // set information on shuttle status as well
-    if ((ENUM_WCS_ACTIONS)atoi(this->wcsIn.actionEnum) != PING)
+
+    if ((ENUM_WCS_ACTIONS)atoi(this->wcsIn.actionEnum) != PING && (ENUM_WCS_ACTIONS)atoi(this->wcsIn.actionEnum) != ECHO)
         status.setWcsInputs(this->wcsIn.actionEnum, this->wcsIn.instructions);
 };
 
@@ -81,22 +82,19 @@ void WcsHandler::perform()
     {
         info("REC WCS::RETRIEVAL");
 #ifdef TCP_STRESS_TEST
-        char stateAction[3];
-        GET_TWO_DIGIT_STRING(stateAction, STATE);
-        strcpy(this->wcsOut.actionEnum, stateAction);
+        // set status active
+        status.setState(RETRIEVING);
 
-        char workingState[3];
-        GET_TWO_DIGIT_STRING(workingState, RETRIEVING);
-        strcpy(this->wcsOut.instructions, workingState);
+        delay(1000);
 
-        this->send();
+        // set status idle
+        status.setState(IDLE);
 
-        GET_TWO_DIGIT_STRING(workingState, IDLE);
-        strcpy(this->wcsOut.instructions, workingState);
+        delay(50);
 
-        this->send();
+        // send completion notification
+        this->sendJobCompletionNotification(this->wcsIn.actionEnum, "01");
 #else
-
         slaveHandler.createRetrievalSteps(this->wcsIn.instructions);
         slaveHandler.beginNextStep();
 #endif
@@ -107,20 +105,18 @@ void WcsHandler::perform()
     {
         info("REC WCS::STORAGE");
 #ifdef TCP_STRESS_TEST
-        char stateAction[3];
-        GET_TWO_DIGIT_STRING(stateAction, STATE);
-        strcpy(this->wcsOut.actionEnum, stateAction);
+        //set status active
+        status.setState(STORING);
 
-        char workingState[3];
-        GET_TWO_DIGIT_STRING(workingState, STORING);
-        strcpy(this->wcsOut.instructions, workingState);
+        delay(1000);
 
-        this->send();
+        // set status idle
+        status.setState(IDLE);
 
-        GET_TWO_DIGIT_STRING(workingState, IDLE);
-        strcpy(this->wcsOut.instructions, workingState);
+        delay(50);
 
-        this->send();
+        // send completion notification
+        this->sendJobCompletionNotification(this->wcsIn.actionEnum, "01");
 #else
         slaveHandler.createStorageSteps(this->wcsIn.instructions);
         slaveHandler.beginNextStep();
@@ -131,8 +127,23 @@ void WcsHandler::perform()
     case MOVE:
     {
         info("REC WCS::MOVE");
+#ifdef TCP_STRESS_TEST
+        //set status active
+        status.setState(MOVING);
+
+        delay(1000);
+
+        // set status idle
+        status.setState(IDLE);
+
+        delay(50);
+
+        // send completion notification
+        this->sendJobCompletionNotification(this->wcsIn.actionEnum, "01");
+#else
         slaveHandler.createMovementSteps(this->wcsIn.instructions);
         slaveHandler.beginNextStep();
+#endif
         break;
     }
     case BATTERY:
@@ -260,7 +271,7 @@ void WcsHandler::handle()
             return;
 
         // echo back what was received
-        if (this->wcsIn.action != ECHO)
+        if (this->wcsIn.action != ECHO && this->wcsIn.action != PING)
             this->sendEcho(cleanInput);
 
         // perform
@@ -315,6 +326,9 @@ bool WcsHandler::send(char *str, bool shouldLog, bool awaitEcho)
         writeEEPROMMsg(str);
         this->setEchoTimeout();
     }
+
+    delay(1000); // forced artificial delay to await any echos
+
     return res;
 }
 
@@ -328,7 +342,13 @@ bool WcsHandler::send(bool shouldLog, bool awaitEcho)
     strcat(wcsOutString, this->wcsOut.actionEnum);
     if (strlen(this->wcsOut.instructions) > 0)
         strcat(wcsOutString, this->wcsOut.instructions);
-    return this->send(wcsOutString, shouldLog, awaitEcho);
+    bool res = this->send(wcsOutString, shouldLog, awaitEcho);
+
+    // empty out wcsOut
+    this->wcsOut.actionEnum[0] = '\0';
+    this->wcsOut.instructions[0] = '\0';
+
+    return res;
 };
 
 bool WcsHandler::send(bool shouldLog)
@@ -495,6 +515,9 @@ void WcsHandler::run(void)
 
 bool WcsHandler::sendJobCompletionNotification(const char *actionEnum, const char *inst)
 {
+    char completionString[DEFAULT_CHAR_ARRAY_SIZE * 2];
+    sprintf(completionString, "Notify steps completion for action %s, inst %s", actionEnum, inst);
+    info(completionString);
     strcpy(this->wcsOut.id, status.getId());
     strcpy(this->wcsOut.actionEnum, actionEnum);
     if (strlen(inst) > 0)
