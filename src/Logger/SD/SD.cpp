@@ -13,6 +13,8 @@
 const char *LogsDirectory = "/Logs";
 const char *StatusDirectory = "/Status";
 const char *StatusFile = "/status.txt";
+const char *EchoDirectory = "/Echo";
+const char *EchoFile = "/echo.txt";
 
 const int timestampInterval = 1000 * 60 * 5; // every 5 minutes
 const int batchLogInterval = 1000 * 60;      // every minute
@@ -251,6 +253,28 @@ char *readStatus()
 
     String output = readFile(SD_MMC, statusFileName);
     static char outputCStr[DEFAULT_CHAR_ARRAY_SIZE * 2];
+    strcpy(outputCStr, output.c_str());
+    return outputCStr;
+};
+
+void logEcho(char *echoStr)
+{
+    createDir(SD_MMC, EchoDirectory);
+    char echoFileName[DEFAULT_CHAR_ARRAY_SIZE];
+    strcpy(echoFileName, EchoDirectory);
+    strcat(echoFileName, EchoFile);
+
+    writeFile(SD_MMC, echoFileName, echoStr);
+};
+
+char *readEcho()
+{
+    char echoFileName[DEFAULT_CHAR_ARRAY_SIZE];
+    strcpy(echoFileName, EchoDirectory);
+    strcat(echoFileName, EchoFile);
+
+    String output = readFile(SD_MMC, echoFileName);
+    static char outputCStr[DEFAULT_CHAR_ARRAY_SIZE];
     strcpy(outputCStr, output.c_str());
     return outputCStr;
 };

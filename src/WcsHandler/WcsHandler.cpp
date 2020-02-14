@@ -7,6 +7,7 @@
 #include "../Network/Wifi/WifiNetwork.h"
 #include "../Status/Status.h"
 #include "../SlaveHandler/SlaveHandler.h"
+#include "../Logger/EEPROM/ELog.h"
 
 // --------------------------
 // Wcs Public Variables
@@ -56,6 +57,9 @@ void WcsHandler::perform()
         info("REC WCS::LOGIN");
         status.setId(this->wcsIn.id);
         status.saveStatus(); // forced to perform the save outside here, or wrover will not load up. No idea why
+
+        // check eeprom for messages unsent, try resending it
+
         break;
     }
     case LOGOUT:
@@ -69,7 +73,7 @@ void WcsHandler::perform()
         // no need to edit anything,
         // just reply ping
         this->wcsOut = this->wcsIn;
-        this->send(false);
+        this->send(false, false);
         this->updateLastPing();
         break;
     }
@@ -202,6 +206,27 @@ void WcsHandler::perform()
         status.saveStatus();
         break;
     }
+    // Handle echos received from wcs
+    case ECHO:
+    {
+        char *awaitingEcho = readEEPROMMsg();
+        if (strncmp(awaitingEcho, this->wcsIn.instructions, strlen(this->wcsIn.instructions)) == 0)
+        {
+            char echoReply[DEFAULT_CHAR_ARRAY_SIZE];
+            sprintf(echoReply, "%s echo received", this->wcsIn.instructions);
+            info(echoReply);
+            clearEEPROMMsg();
+            this->resetEchoRetries();
+            this->clearEchoTimeout();
+        }
+        else
+        {
+            char echoReply[DEFAULT_CHAR_ARRAY_SIZE * 4];
+            sprintf(echoReply, "%s - %s echo not equal", awaitingEcho, this->wcsIn.instructions);
+            info(echoReply);
+        }
+        break;
+    }
     case ERROR:
     {
         break;
@@ -219,50 +244,43 @@ void WcsHandler::handle()
     int headerIndex = findIndex(this->readBuffer, STX[0]);
     int footerIndex = findIndex(this->readBuffer, ETX[0]);
 
-    if (footerIndex < 0)
+    while (headerIndex >= 0 && footerIndex > headerIndex)
     {
-        // add timeout code
-        // TODO
-    }
-    else
-    {
-        // clear timeout
-        // TODO
+        // extract input
+        char temp[DEFAULT_CHAR_ARRAY_SIZE];
+        strcut(temp, this->readBuffer, headerIndex, footerIndex - headerIndex + 1);
 
-        while (headerIndex >= 0 && footerIndex > headerIndex)
+        // clean out STX and ETX chars
+        char cleanInput[DEFAULT_CHAR_ARRAY_SIZE];
+        strcut(cleanInput, temp, 1, strlen(temp) - 2);
+
+        // interpret input
+        bool interpretRes = this->interpret(cleanInput);
+        if (!interpretRes)
+            return;
+
+        // echo back what was received
+        if (this->wcsIn.action != ECHO)
+            this->sendEcho(cleanInput);
+
+        // perform
+        this->perform();
+
+        // check for more inputs
+        if (strlen(this->readBuffer) > 0)
         {
-            // extract input
-            char temp[DEFAULT_CHAR_ARRAY_SIZE];
-            strcut(temp, this->readBuffer, headerIndex, footerIndex - headerIndex + 1);
-
-            // clean out STX and ETX chars
-            char cleanInput[DEFAULT_CHAR_ARRAY_SIZE];
-            strcut(cleanInput, temp, 1, strlen(temp) - 2);
-
-            // interpret input
-            bool interpretRes = this->interpret(cleanInput);
-            if (!interpretRes)
-                return;
-
-            // perform
-            this->perform();
-
-            // check for more inputs
-            if (strlen(this->readBuffer) > 0)
-            {
-                headerIndex = findIndex(this->readBuffer, STX[0]);
-                footerIndex = findIndex(this->readBuffer, ETX[0]);
-            }
-            else
-            {
-                headerIndex = -1;
-                footerIndex = -1;
-            }
+            headerIndex = findIndex(this->readBuffer, STX[0]);
+            footerIndex = findIndex(this->readBuffer, ETX[0]);
+        }
+        else
+        {
+            headerIndex = -1;
+            footerIndex = -1;
         }
     }
 }
 
-bool WcsHandler::send(char *str, bool shouldLog = true)
+bool WcsHandler::send(char *str, bool shouldLog, bool awaitEcho)
 {
     // 1    - STX
     // 2-5  - shuttle ID
@@ -287,10 +305,20 @@ bool WcsHandler::send(char *str, bool shouldLog = true)
     if (shouldLog)
         logSd(wcsSendLog);
     writeString[0] = '\0';
+
+    if (awaitEcho)
+    {
+        char echoLog[DEFAULT_CHAR_ARRAY_SIZE];
+        sprintf(echoLog, "%s expecting echo", str);
+        info(echoLog);
+        // save echo to eeprom
+        writeEEPROMMsg(str);
+        this->setEchoTimeout();
+    }
     return res;
 }
 
-bool WcsHandler::send(bool shouldLog)
+bool WcsHandler::send(bool shouldLog, bool awaitEcho)
 {
     // WcsHandler::send overload.
     // compiles wcsOut into a cstring to send
@@ -300,12 +328,28 @@ bool WcsHandler::send(bool shouldLog)
     strcat(wcsOutString, this->wcsOut.actionEnum);
     if (strlen(this->wcsOut.instructions) > 0)
         strcat(wcsOutString, this->wcsOut.instructions);
-    return this->send(wcsOutString, shouldLog);
+    return this->send(wcsOutString, shouldLog, awaitEcho);
 };
+
+bool WcsHandler::send(bool shouldLog)
+{
+    return this->send(shouldLog, true);
+}
 
 bool WcsHandler::send()
 {
-    return this->send(true);
+    return this->send(true, true);
+}
+
+bool WcsHandler::sendEcho(char *echo)
+{
+    char wcsOutString[DEFAULT_CHAR_ARRAY_SIZE];
+    strcpy(wcsOutString, this->wcsOut.id);
+    char echoActionString[3];
+    GET_TWO_DIGIT_STRING(echoActionString, ECHO);
+    strcat(wcsOutString, echoActionString);
+    strcat(wcsOutString, echo);
+    return this->send(wcsOutString, false, false);
 }
 
 void WcsHandler::pullCurrentStatus()
@@ -333,12 +377,47 @@ bool WcsHandler::isPingAlive()
     return true;
 };
 
+void WcsHandler::setEchoTimeout()
+{
+    this->echoTimeoutMillis = millis() + (1000 * 2);
+};
+
+bool WcsHandler::isEchoTimeout()
+{
+    if (this->echoTimeoutMillis <= 0)
+        return false;
+
+    if (millis() >= this->echoTimeoutMillis)
+        return true;
+    return false;
+};
+
+bool WcsHandler::clearEchoTimeout()
+{
+    this->echoTimeoutMillis = 0;
+    return true;
+};
+
+bool WcsHandler::incEchoRetries()
+{
+    this->echoRetries++;
+    return true;
+};
+
+bool WcsHandler::resetEchoRetries()
+{
+    this->echoRetries = 0;
+    return true;
+};
+
 // --------------------------
 // Wcs Public Methods
 // --------------------------
 WcsHandler::WcsHandler()
 {
     this->lastPingMillis = millis();
+    this->echoTimeoutMillis = 0;
+    this->echoRetries = 0;
 };
 
 void WcsHandler::init(void)
@@ -373,7 +452,7 @@ void WcsHandler::init(void)
     char loginEnumString[3];
     GET_TWO_DIGIT_STRING(loginEnumString, LOGIN);
     strcpy(this->wcsOut.actionEnum, loginEnumString);
-    this->send();
+    this->send(true, false);
 }
 
 void WcsHandler::run(void)
@@ -384,10 +463,33 @@ void WcsHandler::run(void)
         logSd("No pings from server. Restarting chip.");
         resetChip();
     }
-
-    if (TcpRead(this->readBuffer))
+    else
     {
-        this->handle();
+        // check for eeprom timeout
+        if (this->isEchoTimeout())
+        {
+            // inc retries count
+            this->incEchoRetries();
+            // clear timeout
+            this->clearEchoTimeout();
+            info("increased echo retries count");
+
+            if (this->echoRetries <= 3)
+            {
+                info("Resending unechoed message");
+                // resend unreplied message
+                this->send(readEEPROMMsg(), true, true);
+            }
+            else
+            {
+                logSd("Failed 3 send retries. Resetting chip");
+                resetChip();
+            }
+        }
+
+        // check for input from wcs
+        if (TcpRead(this->readBuffer))
+            this->handle();
     }
 }
 

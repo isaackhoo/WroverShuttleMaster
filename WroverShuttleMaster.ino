@@ -4,6 +4,8 @@
 #include "./src/WcsHandler/WcsHandler.h"
 #include "./src/SlaveHandler/SlaveHandler.h"
 
+#include "./src/Logger/EEPROM/ELog.h"
+
 void setup()
 {
   // initializes logger. Serial if dev_env, or lcd and sd if prod
