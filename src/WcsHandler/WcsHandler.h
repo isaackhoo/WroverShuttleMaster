@@ -5,7 +5,8 @@
 
 #include "../Helper/Helper.h"
 
-// #define TCP_STRESS_TEST
+#define TCP_STRESS_TEST
+#define ECHO_BUFFER_SIZE 5
 
 // --------------------------
 // Wcs Private Variables
@@ -31,9 +32,10 @@ const int DEFAULT_ACTION_ENUM_LENGTH = 2;
 typedef enum
 {
   SET_DEFAULT = 0,
-  SET_ID,       // 01
-  SET_LEVEL,    // 02
-  SET_STATE,   // 03
+  SET_ID,    // 01
+  SET_LEVEL, // 02
+  SET_STATE, // 03
+  SET_ECHO,  // 04
   Num_Of_Manual_Set_Types_Enums
 } ENUM_MANUAL_SET_TYPES;
 const int DEFAULT_SET_TYPE_ENUM_LENGTH = 2;
@@ -55,6 +57,11 @@ class WcsHandler;
 extern WcsHandler wcsHandler;
 
 // --------------------------
+// Wcs Echos
+// --------------------------
+static const long ECHO_TIMEOUT_DURATION = 1000 * (5); // 5s after sending out
+
+// --------------------------
 // Wcs Public Methods
 // --------------------------
 class WcsHandler
@@ -63,9 +70,15 @@ private:
   char readBuffer[DEFAULT_CHAR_ARRAY_SIZE * 2];
   WcsFormat wcsIn;
   WcsFormat wcsOut;
-  unsigned long lastPingMillis;
+
+  char echoBuffer[ECHO_BUFFER_SIZE][DEFAULT_CHAR_ARRAY_SIZE];
+  int echoBufferWritePointer;
+  int echoBufferReadPointer;
+  bool echoBufferPointerLapping;
   unsigned long echoTimeoutMillis;
   int echoRetries;
+
+  unsigned long lastPingMillis;
 
   bool interpret(char *);
   void perform();
@@ -74,15 +87,24 @@ private:
   bool send(bool);
   bool send(bool, bool);
   bool send();
-  bool sendEcho(char *);
+
   void pullCurrentStatus();
+
   void updateLastPing();
   bool isPingAlive();
+
+  bool sendEcho(char *);
   void setEchoTimeout();
   bool isEchoTimeout();
   bool clearEchoTimeout();
   bool incEchoRetries();
   bool resetEchoRetries();
+  bool addEcho(char *);
+  char *getEcho();
+  bool confirmEcho();
+  bool resetEcho();
+
+  void saveAndResetChip();
 
 public:
   WcsHandler();

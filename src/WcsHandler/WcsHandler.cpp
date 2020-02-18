@@ -60,7 +60,12 @@ void WcsHandler::perform()
         status.saveStatus(); // forced to perform the save outside here, or wrover will not load up. No idea why
 
         // check eeprom for messages unsent, try resending it
-
+        char *unrepliedEcho = readEEPROMMsg();
+        clearEEPROMMsg();
+        if (strlen(unrepliedEcho) > 0)
+        {
+            this->send(unrepliedEcho, true, true);
+        }
         break;
     }
     case LOGOUT:
@@ -210,6 +215,11 @@ void WcsHandler::perform()
             info("State updated");
             break;
         }
+        case SET_ECHO:
+        {
+            resetEcho();
+            break;
+        }
         default:
             break;
         }
@@ -220,19 +230,32 @@ void WcsHandler::perform()
     // Handle echos received from wcs
     case ECHO:
     {
-        char *awaitingEcho = readEEPROMMsg();
-        if (strncmp(awaitingEcho, this->wcsIn.instructions, strlen(this->wcsIn.instructions)) == 0)
+        char *awaitingEcho = this->getEcho();
+        char echoReply[DEFAULT_CHAR_ARRAY_SIZE];
+        if (strlen(awaitingEcho) <= 0)
         {
-            char echoReply[DEFAULT_CHAR_ARRAY_SIZE];
-            sprintf(echoReply, "%s echo received", this->wcsIn.instructions);
+            // for whatever reason, echo to check is missing
+            sprintf(echoReply, "Echo record is empty against %s", this->wcsIn.instructions);
             info(echoReply);
-            clearEEPROMMsg();
             this->resetEchoRetries();
             this->clearEchoTimeout();
+            this->confirmEcho();
+        }
+        else if (strncmp(awaitingEcho, this->wcsIn.instructions, strlen(this->wcsIn.instructions)) == 0)
+        {
+            sprintf(echoReply, "%s echo received", this->wcsIn.instructions);
+            info(echoReply);
+            this->confirmEcho();
+            this->resetEchoRetries();
+            this->clearEchoTimeout();
+
+            // check if expecting more echos
+            // set timeout if more echos are unanswered
+            if (this->echoBufferReadPointer != this->echoBufferWritePointer)
+                this->setEchoTimeout();
         }
         else
         {
-            char echoReply[DEFAULT_CHAR_ARRAY_SIZE * 4];
             sprintf(echoReply, "%s - %s echo not equal", awaitingEcho, this->wcsIn.instructions);
             info(echoReply);
         }
@@ -322,12 +345,12 @@ bool WcsHandler::send(char *str, bool shouldLog, bool awaitEcho)
         char echoLog[DEFAULT_CHAR_ARRAY_SIZE];
         sprintf(echoLog, "%s expecting echo", str);
         info(echoLog);
-        // save echo to eeprom
-        writeEEPROMMsg(str);
+        // save echo to echo buffer
+        this->addEcho(str);
         this->setEchoTimeout();
     }
 
-    delay(1000); // forced artificial delay to await any echos
+    delay(200); // forced artificial delay to await any echos
 
     return res;
 }
@@ -399,7 +422,8 @@ bool WcsHandler::isPingAlive()
 
 void WcsHandler::setEchoTimeout()
 {
-    this->echoTimeoutMillis = millis() + (1000 * 2);
+    if (this->echoTimeoutMillis == 0)
+        this->echoTimeoutMillis = millis() + ECHO_TIMEOUT_DURATION;
 };
 
 bool WcsHandler::isEchoTimeout()
@@ -430,14 +454,79 @@ bool WcsHandler::resetEchoRetries()
     return true;
 };
 
+bool WcsHandler::addEcho(char *str)
+{
+    // if write pointer is lapping, do no overwrite un read read pointer
+    if (this->echoBufferPointerLapping && this->echoBufferWritePointer == this->echoBufferReadPointer)
+        return false;
+
+    // write to buffer
+    strcpy(this->echoBuffer[this->echoBufferWritePointer], str);
+    // move write pointer
+    this->echoBufferWritePointer = (this->echoBufferWritePointer + 1) % ECHO_BUFFER_SIZE;
+    if (this->echoBufferWritePointer == 0 && this->echoBufferWritePointer < this->echoBufferReadPointer)
+        this->echoBufferPointerLapping = true;
+    return true;
+};
+
+char *WcsHandler::getEcho()
+{
+    static char output[DEFAULT_CHAR_ARRAY_SIZE];
+    strcpy(output, this->echoBuffer[this->echoBufferReadPointer]);
+    return output;
+};
+
+bool WcsHandler::confirmEcho()
+{
+    // read pointer should not overrun write pointer.
+    if (!this->echoBufferPointerLapping && this->echoBufferReadPointer == this->echoBufferWritePointer)
+        return false;
+
+    // move read pointer
+    this->echoBufferReadPointer = (this->echoBufferReadPointer + 1) % ECHO_BUFFER_SIZE;
+
+    // check if read pointer has caught up with write pointer
+    if (this->echoBufferReadPointer == 0 && this->echoBufferPointerLapping)
+        this->echoBufferPointerLapping = false;
+
+    return true;
+};
+
+bool WcsHandler::resetEcho()
+{
+    this->echoBufferWritePointer = 0;
+    this->echoBufferReadPointer = 0;
+    for (int i = 0; i < ECHO_BUFFER_SIZE; i++)
+    {
+        this->echoBuffer[i][0] = '\0';
+    }
+    this->clearEchoTimeout();
+    this->resetEchoRetries();
+};
+
+void WcsHandler::saveAndResetChip()
+{
+    // write unreplied echo to chip EEPROM
+    if (
+        (this->echoBufferPointerLapping && this->echoBufferReadPointer > this->echoBufferWritePointer) 
+        || (!this->echoBufferPointerLapping && this->echoBufferReadPointer < this->echoBufferWritePointer))
+        writeEEPROMMsg(this->echoBuffer[this->echoBufferReadPointer]);
+    // reset the chip
+    resetChip();
+};
+
 // --------------------------
 // Wcs Public Methods
 // --------------------------
 WcsHandler::WcsHandler()
 {
-    this->lastPingMillis = millis();
+    this->echoBufferWritePointer = 0;
+    this->echoBufferReadPointer = 0;
+    this->echoBufferPointerLapping = false;
     this->echoTimeoutMillis = 0;
     this->echoRetries = 0;
+
+    this->lastPingMillis = millis();
 };
 
 void WcsHandler::init(void)
@@ -453,7 +542,7 @@ void WcsHandler::init(void)
     if (!wifiConnectionRes)
     {
         info("Failed to connect to wifi.");
-        resetChip();
+        this->saveAndResetChip();
     }
     info("Wifi connected");
 
@@ -463,7 +552,7 @@ void WcsHandler::init(void)
     if (!tcpConnectionRes)
     {
         logSd("Failed to connect to server.");
-        resetChip();
+        this->saveAndResetChip();
     }
     info("server connected");
     // retrieve existing shuttle id
@@ -481,11 +570,11 @@ void WcsHandler::run(void)
     {
         // no more pings are received from server. restart chip to attempt reconnection
         logSd("No pings from server. Restarting chip.");
-        resetChip();
+        this->saveAndResetChip();
     }
     else
     {
-        // check for eeprom timeout
+        // check for echo buffer timeout
         if (this->isEchoTimeout())
         {
             // inc retries count
@@ -498,12 +587,12 @@ void WcsHandler::run(void)
             {
                 info("Resending unechoed message");
                 // resend unreplied message
-                this->send(readEEPROMMsg(), true, true);
+                this->send(this->getEcho(), true, false);
             }
             else
             {
                 logSd("Failed 3 send retries. Resetting chip");
-                resetChip();
+                this->saveAndResetChip();
             }
         }
 
