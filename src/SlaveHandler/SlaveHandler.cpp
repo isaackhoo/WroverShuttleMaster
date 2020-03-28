@@ -25,6 +25,20 @@ bool SlaveHandler::serialRead()
     {
         String in = this->ss->readStringUntil('\n');
         in.trim();
+
+        // check if its an echo reply
+        if (strncmp(this->getSlaveEcho(), in.c_str(), strlen(this->getSlaveEcho())) == 0)
+        {
+            // is echo
+            char slaveEchoReply[DEFAULT_CHAR_ARRAY_SIZE];
+            sprintf(slaveEchoReply, "%s slave echo received", this->getSlaveEcho());
+            // clear echo
+            this->confirmSlaveEcho();
+            // return false to main since this is not something to process.
+            return false;
+        }
+
+        // process as per normal if not echo
         if (strlen(this->readString) > 0)
             strcat(this->readString, in.c_str());
         else
@@ -48,10 +62,30 @@ bool SlaveHandler::serialRead()
 
 bool SlaveHandler::serialWrite(char *slaveInst)
 {
+    // if (strlen(slaveInst) <= 0)
+    //     return false;
+    // logSd(slaveInst);
+    // return this->ss->println(slaveInst);
+    return this->serialWrite(slaveInst, true);
+};
+
+bool SlaveHandler::serialWrite(char *slaveInst, bool awaitEcho)
+{
     if (strlen(slaveInst) <= 0)
         return false;
     logSd(slaveInst);
-    return this->ss->println(slaveInst);
+    this->ss->println(slaveInst);
+
+    if (awaitEcho)
+    {
+        char slaveEchoLog[DEFAULT_CHAR_ARRAY_SIZE];
+        sprintf(slaveEchoLog, "%s expecting slave echo", slaveInst);
+        info(slaveEchoLog);
+        // save echo to echo buffer
+        this->setSlaveEcho(slaveInst);
+        // set echo reply timeout
+        this->setSlaveEchoTimeout();
+    }
 };
 
 void SlaveHandler::setTotalSteps(int total)
@@ -87,7 +121,7 @@ void SlaveHandler::getBinPosition(char *inCol, char *binInColPos, char *output)
     // gap between column and bin is different from gap between bin and bin
 
     long pos = 0;
-                                
+
     int col = atoi(inCol);       // convert col char to long
     int bin = atoi(binInColPos); // convert bin char to long
 
@@ -115,11 +149,10 @@ void SlaveHandler::getBinPosition(char *inCol, char *binInColPos, char *output)
 
     int binCol = ((bin + 1) / 2); //  (1) + 1 / 2 = 1; (2) + 1 / 2 = 1; (3) + 1 / 2 = 2 etc.. Not using this atm...
 
-    pos += MOTORCOUNT_BUFFER_HOLE_TO_CENTER_OF_PILLAR;                 // for buffer
-    pos += ((col - 1) * MOTORCOUNT_PER_COLUMN);      // for full columns
+    pos += MOTORCOUNT_BUFFER_HOLE_TO_CENTER_OF_PILLAR;                                                                 // for buffer
+    pos += ((col - 1) * MOTORCOUNT_PER_COLUMN);                                                                        // for full columns
     pos += (MOTORCOUNT_CENTER_OF_PILLAR_TO_ADAJ_SLOTHOLE_CENTER + ((binCol - 1) * MOTORCOUNT_BTWN_SLOTS_WITHIN_RAIL)); // for in between bin slots
 
-    
     /*pos += A;                            // for const buffer area to first pillar
     pos += (col - 1) * D;                  // for whole columns
     pos += B + (((bin + 1) / 2) - 1) * C) // for bin in col
@@ -283,6 +316,9 @@ void SlaveHandler::handle()
             case BATT_VOLTS_READ:
             {
                 // status.set??? what is this for, all the sets.. doesnt seem to do anything yet?
+                // ** yupp doesnt do anything yet. Supposed to track every last shuttle action.
+                // allow shuttle to resume from last action if it stops half way. -zac
+
                 break;
             }
             default:
@@ -347,9 +383,75 @@ void SlaveHandler::reset()
     this->setOverallStepsCompleted(false);
 };
 
+// Slave Echo
+bool SlaveHandler::setSlaveEcho(char *echo)
+{
+    strcpy(this->slaveEchoBuffer, echo);
+    return true;
+};
+char *SlaveHandler::getSlaveEcho()
+{
+    return this->slaveEchoBuffer;
+};
+bool SlaveHandler::resetSlaveEcho()
+{
+    this->slaveEchoBuffer[0] = '\0';
+    return true;
+};
+
+void SlaveHandler::setSlaveEchoTimeout()
+{
+    this->slaveEchoTimeoutMillis = millis() + SLAVE_ECHO_TIMEOUT_DURATION;
+};
+bool SlaveHandler::isSlaveEchoTimeout()
+{
+    if (this->slaveEchoTimeoutMillis <= 0)
+        return false;
+    if (millis() >= this->slaveEchoTimeoutMillis)
+        return true;
+    return false;
+};
+bool SlaveHandler::clearSlaveEchoTimeout()
+{
+    this->slaveEchoTimeoutMillis = 0;
+    return true;
+};
+
+bool SlaveHandler::incSlaveEchoRetries()
+{
+    this->slaveEchoRetries++;
+    return true;
+};
+bool SlaveHandler::resetSlaveEchoRetries()
+{
+    this->slaveEchoRetries = 0;
+    return true;
+};
+int SlaveHandler::getSlaveEchoRetries()
+{
+    return this->slaveEchoRetries;
+};
+
+bool SlaveHandler::confirmSlaveEcho()
+{
+    this->resetSlaveEcho();
+    this->clearSlaveEchoTimeout();
+    this->resetSlaveEchoRetries();
+};
+
 // --------------------------------
 // SLAVE HANDLER PUBLIC METHODS
 // --------------------------------
+SlaveHandler::SlaveHandler()
+{
+    // intialize slave serial variables
+    this->readString[0] = '\0';
+
+    // initialize slave echo variables
+    this->slaveEchoBuffer[0] = '\0';
+    this->slaveEchoRetries = 0;
+}
+
 void SlaveHandler::init(HardwareSerial *serialPort)
 {
     this->ss = serialPort;
@@ -360,6 +462,27 @@ void SlaveHandler::init(HardwareSerial *serialPort)
 
 void SlaveHandler::run()
 {
+    // check for echo timeout
+    if (this->isSlaveEchoTimeout())
+    {
+        // inc retries count
+        this->incSlaveEchoRetries();
+        // clear timeout
+        this->clearSlaveEchoTimeout();
+        info("increased slave echo retries count");
+
+        if (this->getSlaveEchoRetries() <= 5)
+        {
+            info("Resending unreplied slave echo");
+            // resend
+            this->serialWrite(this->getSlaveEcho(), true);
+        }
+        else
+        {
+            logSd("Failed 5 slave echo retries.");
+        }
+    }
+
     // checks slave serial for input
     if (this->serialRead())
     {
@@ -574,7 +697,7 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
     // get batt volts limit
     char battVoltsLowerLimit[DEFAULT_CHAR_ARRAY_SIZE];
     itoa(BATT_VOLTS_LOWER_LIMIT, battVoltsLowerLimit, 10);
-    
+
     // get position that shuttle should move to
     char binPosArr[DEFAULT_CHAR_ARRAY_SIZE];
     this->getBinPosition(inCol, binInColPos, binPosArr); // bin pos
@@ -676,7 +799,7 @@ bool SlaveHandler::createRetrievalSteps(char *retrievalInst)
     steps[0].setStep(MOVE_TO_BIN, binPosArr);
     steps[1].setStep(CHECK_RACK_BIN_SLOT, binInRackSlotArr);
     steps[2].setStep(EXTEND_ARM, extensionResultArr);
-    steps[3].setStep(EXTEND_FINGERS, pullingFingersId); 
+    steps[3].setStep(EXTEND_FINGERS, pullingFingersId);
     steps[4].setStep(RETRACT_ARM, armHomeMore);
     steps[5].setStep(RETRACT_ARM, armHomeArr);
     steps[6].setStep(RETRACT_FINGERS, pullingFingersId);

@@ -88,6 +88,9 @@ typedef enum
 } SHUTTLECLEARTOMOVE;
 static SHUTTLECLEARTOMOVE shuttleClearToMove;
 
+// echo
+static const long SLAVE_ECHO_TIMEOUT_DURATION = 1000 * 5; // 5s timeout after sending out
+
 // --------------------------------
 // SLAVE HANDLER PUBLIC VARIABLES
 // --------------------------------
@@ -109,6 +112,7 @@ private:
   char readString[DEFAULT_CHAR_ARRAY_SIZE];
   bool serialRead();
   bool serialWrite(char *);
+  bool serialWrite(char *, bool);
 
   // steps handler
   Step steps[MAX_STEP_SIZE];
@@ -134,7 +138,26 @@ private:
   void handle();
   void reset();
 
+  // slave echos
+  char slaveEchoBuffer[DEFAULT_CHAR_ARRAY_SIZE];
+  unsigned long slaveEchoTimeoutMillis;
+  int slaveEchoRetries;
+
+  bool setSlaveEcho(char *);
+  char *getSlaveEcho();
+
+  void setSlaveEchoTimeout();
+  bool isSlaveEchoTimeout();
+  bool clearSlaveEchoTimeout();
+  bool confirmSlaveEcho();
+  bool resetSlaveEcho();
+
+  bool incSlaveEchoRetries();
+  bool resetSlaveEchoRetries();
+  int getSlaveEchoRetries();
+
 public:
+  SlaveHandler();
   void init(HardwareSerial *);
   void init(HardwareSerial *, int, int);
   void run();
