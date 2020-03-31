@@ -26,36 +26,46 @@ bool SlaveHandler::serialRead()
         String in = this->ss->readStringUntil('\n');
         in.trim();
 
+        char tempIn[DEFAULT_CHAR_ARRAY_SIZE];
+        strcpy(tempIn, in.c_str());
+
         // check if its an echo reply
-        if (strncmp(this->getSlaveEcho(), in.c_str(), strlen(this->getSlaveEcho())) == 0)
+        if (strlen(this->getSlaveEcho()) > 0 && strncmp(this->getSlaveEcho(), in.c_str(), strlen(this->getSlaveEcho())) == 0)
         {
             // is echo
-            char slaveEchoReply[DEFAULT_CHAR_ARRAY_SIZE];
-            sprintf(slaveEchoReply, "%s slave echo received", this->getSlaveEcho());
             // clear echo
             this->confirmSlaveEcho();
+            // log feedback
+            char slaveEchoReply[DEFAULT_CHAR_ARRAY_SIZE];
+            sprintf(slaveEchoReply, "%s slave echo received", this->getSlaveEcho());
+            logSd(slaveEchoReply);
             // return false to main since this is not something to process.
             return false;
         }
-
-        // process as per normal if not echo
-        if (strlen(this->readString) > 0)
-            strcat(this->readString, in.c_str());
         else
-            strcpy(this->readString, in.c_str());
+        {
+            // is not an echo. reply echo
+            this->serialWrite(tempIn, false);
 
-        // remove newline character
-        if (this->readString[strlen(this->readString) - 2] == '\r')
-            this->readString[strlen(this->readString) - 2] = '\0';
-        if (this->readString[strlen(this->readString) - 2] == '\n')
-            this->readString[strlen(this->readString) - 2] = '\0';
-        if (this->readString[strlen(this->readString) - 1] == '\n')
-            this->readString[strlen(this->readString) - 1] = '\0';
+            // process as per normal if not echo
+            if (strlen(this->readString) > 0)
+                strcat(this->readString, in.c_str());
+            else
+                strcpy(this->readString, in.c_str());
 
-        info("read from slave serial");
-        info(this->readString);
+            // remove newline character
+            if (this->readString[strlen(this->readString) - 2] == '\r')
+                this->readString[strlen(this->readString) - 2] = '\0';
+            if (this->readString[strlen(this->readString) - 2] == '\n')
+                this->readString[strlen(this->readString) - 2] = '\0';
+            if (this->readString[strlen(this->readString) - 1] == '\n')
+                this->readString[strlen(this->readString) - 1] = '\0';
 
-        return true;
+            info("read from slave serial");
+            info(this->readString);
+
+            return true;
+        }
     }
     return false;
 };
@@ -86,6 +96,8 @@ bool SlaveHandler::serialWrite(char *slaveInst, bool awaitEcho)
         // set echo reply timeout
         this->setSlaveEchoTimeout();
     }
+
+    return true;
 };
 
 void SlaveHandler::setTotalSteps(int total)
@@ -480,6 +492,8 @@ void SlaveHandler::run()
         else
         {
             logSd("Failed 5 slave echo retries.");
+            // just clear echo to prevent jam
+            this->confirmSlaveEcho();
         }
     }
 
