@@ -89,7 +89,12 @@ typedef enum
 static SHUTTLECLEARTOMOVE shuttleClearToMove;
 
 // echo
-static const long SLAVE_ECHO_TIMEOUT_DURATION = 1000 * 5; // 5s timeout after sending out
+static const long SLAVE_ECHO_TIMEOUT_DURATION = 1000 * 3; // 3s timeout after sending out
+
+// slave echo STX and ETX
+static const char *slaveEchoSTX = "\001";
+static const char *slaveEchoETX = "\002";
+
 
 // --------------------------------
 // SLAVE HANDLER PUBLIC VARIABLES
@@ -142,6 +147,9 @@ private:
   char slaveEchoBuffer[DEFAULT_CHAR_ARRAY_SIZE];
   unsigned long slaveEchoTimeoutMillis;
   int slaveEchoRetries;
+
+  bool cutStr(char *, char *, int , int);
+  bool extractSlaveEcho(char *, char *);
 
   bool setSlaveEcho(char *);
   char *getSlaveEcho();
