@@ -145,11 +145,13 @@ private:
 
   // slave echos
   char slaveEchoBuffer[DEFAULT_CHAR_ARRAY_SIZE];
+  char slaveEchoExtract[DEFAULT_CHAR_ARRAY_SIZE];
   unsigned long slaveEchoTimeoutMillis;
   int slaveEchoRetries;
 
-  bool cutStr(char *, char *, int , int);
+  bool extractStr(char *, char *, int , int);
   bool extractSlaveEcho(char *, char *);
+  bool resetSlaveEchoExtract();
 
   bool setSlaveEcho(char *);
   char *getSlaveEcho();
