@@ -28,22 +28,29 @@ bool SlaveHandler::serialRead()
 
         char tempIn[DEFAULT_CHAR_ARRAY_SIZE];
         strcpy(tempIn, in.c_str());
+        //info("tempIn (from strcpy) is");
+        //info(tempIn);
 
         // check if its an echo reply
-        if (strlen(this->getSlaveEcho()) > 0 && strncmp(this->getSlaveEcho(), in.c_str(), strlen(this->getSlaveEcho())) == 0)
+        //if (strlen(this->getSlaveEcho()) > 0 && strncmp(this->getSlaveEcho(), in.c_str(), strlen(this->getSlaveEcho())) == 0)
+        if (extractSlaveEcho(tempIn, slaveEchoExtract) && strlen(tempIn) > 2)
         {
+            info("Slave returning task Echo, NO NEED REPLY");
             // is echo
             // clear echo
             this->confirmSlaveEcho();
             // log feedback
             char slaveEchoReply[DEFAULT_CHAR_ARRAY_SIZE];
-            sprintf(slaveEchoReply, "%s slave echo received", this->getSlaveEcho());
+            sprintf(slaveEchoReply, "%s slave echo received", this->slaveEchoExtract);
             logSd(slaveEchoReply);
+            // reset slaveEchoExtract so if the next read comes back into the Master, it does not contain prev slaveEcho Command
+            resetSlaveEchoExtract();
             // return false to main since this is not something to process.
             return false;
         }
         else
         {
+            info("Slave returning stepTarget, REPLY");
             // is not an echo. reply echo
             this->serialWrite(tempIn, false);
 
@@ -354,6 +361,7 @@ void SlaveHandler::handle()
         // there are more steps to do
         if (steps[this->currentStepIndex].getStepAction() != DUMMY_STEP)
         {
+            info("Job INCOMPLETE! More steps to do...");
             this->beginNextStep();
         }
     }
@@ -362,6 +370,7 @@ void SlaveHandler::handle()
         if (steps[this->currentStepIndex].getStepStatus() == STEP_ERROR)
         {
             // notify wcs of error in step
+            info("JOB ERROR!");
             wcsHandler.sendJobCompletionNotification(status.getActionEnum(), steps[this->currentStepIndex].getStepErrorDetails());
             status.setState(SHUTTLE_ERROR);
         }
@@ -369,8 +378,9 @@ void SlaveHandler::handle()
         {
             // job completed
             // set status to idle
+            info("Job COMPLETE!");
             status.setState(IDLE);
-            delay(50);
+            delay(15);
             // update wcs on job completion
             wcsHandler.sendJobCompletionNotification(status.getActionEnum(), "01");
         }
@@ -396,6 +406,89 @@ void SlaveHandler::reset()
 };
 
 // Slave Echo
+bool SlaveHandler::extractStr(char *source, char *output, int from, int to)
+{
+  // takes a source string and replaces it with the remainders after the cut.
+  // cut out portion is return via output.
+
+  int sourceLength = strlen(source);
+
+  if (from < 0 || to < 0)
+  {
+    return false;
+  }
+  if (from > sourceLength)
+  {
+    return false;
+  }
+  if (to <= from)
+  {
+    return false;
+  }
+
+  // extract cut portion to output
+  int i = 0, j;
+  for (j = from; j < to; j++, i++)
+  {
+    output[i] = source[j];
+  }
+  output[i] = '\0'; // terminates output
+
+//   // replace source with remainder of string
+//   if (to < sourceLength)
+//   {
+//     for (i = 0, j = to; j < sourceLength; j++, i++)
+//     {
+//       source[i] = source[j];
+//     }
+//     source[i] = '\0';
+//   }
+//   else
+//   {
+//     source[0] = '\0'; // empty string
+//   }
+};
+
+bool SlaveHandler::extractSlaveEcho(char *source, char *output)
+{
+    char *pSTX = strchr(source, slaveEchoSTX[0]);
+    char *pETX = strchr(source, slaveEchoETX[0]);
+
+    info("source    = "); info(source);
+    //info("output    = "); info(output);
+
+    if ((pSTX != NULL) && (pETX != NULL))
+    {
+      extractStr(source, output, pSTX - source + 1, pETX - source);
+      //info("source    = "); info(source);
+      info("output    = "); info(output);
+      info("Start and End Char found");
+      return true;
+    }
+    else
+    {
+      if ((pSTX != NULL) && (pETX == NULL))
+      {
+        info("End Char NOT found");
+      }
+      else if ((pSTX == NULL) && (pETX != NULL))
+      {        
+        info("Start Char NOT found");
+      }
+      else
+      {        
+        info("Start and End Char NOT found");
+      }
+      return false;
+    }
+}
+
+bool SlaveHandler::resetSlaveEchoExtract()
+{
+    this->slaveEchoExtract[0] = '\0';
+    return true;
+}
+
 bool SlaveHandler::setSlaveEcho(char *echo)
 {
     strcpy(this->slaveEchoBuffer, echo);
@@ -858,6 +951,17 @@ bool SlaveHandler::createMovementSteps(char *movementInst)
     toCString(posArr, posLong);
 
     steps[0].setStep(MOVE_TO_POS, posArr);
+
+    // clear to move arr
+    // char clearToMoveArr[DEFAULT_CHAR_ARRAY_SIZE];
+    // shuttleClearToMove = SHUTTLE_CLEAR_TO_MOVE;
+    // itoa(shuttleClearToMove, clearToMoveArr, 10);
+    // steps[0].setStep(CHECK_CLEAR_TO_MOVE, clearToMoveArr);
+
+    // char checkBinInRackRetrievedArr[DEFAULT_CHAR_ARRAY_SIZE];
+    // binPosState = LEFT_SECOND_DEPTH_OCCUPIED; // retrieve 1st depth, 2nd depth there
+    // GET_TWO_DIGIT_STRING(checkBinInRackRetrievedArr, binPosState);
+    // steps[0].setStep(CHECK_RACK_BIN_SLOT, checkBinInRackRetrievedArr);
 
     // set overall completion to false
     this->setOverallStepsCompleted(false);
