@@ -380,7 +380,7 @@ void SlaveHandler::handle()
             // set status to idle
             info("Job COMPLETE!");
             status.setState(IDLE);
-            delay(50);
+            delay(15);
             // update wcs on job completion
             wcsHandler.sendJobCompletionNotification(status.getActionEnum(), "01");
         }
